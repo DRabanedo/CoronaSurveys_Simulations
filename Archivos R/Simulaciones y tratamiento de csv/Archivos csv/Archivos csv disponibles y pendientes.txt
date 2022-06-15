@@ -1,0 +1,77 @@
+SIMULACIONES
+
+Factores a cambiar para cada una de las caracerísticas:
+N = 10000, 25 iteraciones.
+
+-Poblaciones iguales: rep(1/length(poblaciones_dis), length(poblaciones_dis)) 
+-Poblaciones desiguales:
+-Factor memoria: 0.1
+-Factor memoria subpoblaciones: 0.05
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SIMULACIONES PARA ESTUDIAR EL SESGO DE CADA CASO %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+**Factor visibilidad** 
+
+-Poblaciones desiguales:  HECHO 
+-Poblaciones iguales:     HECHO 
+
+
+**Factor memoria** 
+
+-Poblaciones desiguales:  HECHO
+-Poblaciones iguales:     HECHO
+ 
+
+**Factor memoria subpoblaciones** (ESPERAR QUE QUIERO REVISAR EL CÓDIGO BIEN)
+
+-Poblaciones desiguales: HACER 
+-Poblaciones iguales:    HACER 
+
+
+**Número de subpoblaciones**
+
+-Poblaciones iguales:  REMOTO
+
+
+**Tamaño de las subpoblaciones**
+
+-Sin ningún sesgo:  HECHO (MCLAPPLY)
+
+**Tamaño de la encuesta**
+
+-Poblaciones iguales:    HECHO 
+-Poblaciones desiguales: HECHO 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SIMULACIONES CON TODOS LOS SESGOS PARA VER COMO SE COMPORTAN LOS ESTIMADORES %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+**Factor visibilidad** 
+
+-Poblaciones desiguales + factor memoria + factor memoria subpoblaciones:  HACER 
+-Poblaciones iguales + factor memoria + factor memoria subpoblaciones:     MAQUINA VIRTUAL 
+
+
+
+**Factor memoria**
+
+-Poblaciones desiguales + factor visibilidad + factor memoria subpoblaciones:  HACER 
+-Poblaciones iguales + factor visibilidad + factor memoria subpoblaciones:     HACER 
+
+
+**Factor memoria subpoblaciones** (ESPERAR QUE QUIERO REVISAR EL CÓDIGO BIEN)
+
+-Poblaciones desiguales + factor memoria + factor memoria subpoblaciones:  HACER 
+-Poblaciones iguales + factor memoria + factor memoria subpoblaciones:     HACER 
+
+
+
+
+
+
+
