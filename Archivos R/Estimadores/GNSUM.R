@@ -1,59 +1,90 @@
-# Prueba GNSUM
+###########################
+# General estimator of NSUM
+###########################
+
+############################
 library(igraph)
 library(igraph)
 library(tidyverse)
 library(stringr)
 library(ggplot2)
 
-######################
-getNh_GNSUM = function(enc, enc_hp, v_pob, N, visibility_factor){
-  #enc es la encuesta realizada
-  #N es el tamaño de la poblacion general
-  #v_pob el vector de probabilidades de las poblaciones
+N = 1000                 # Population size
+v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
+n_pop = length(v_pop)-1   # Number of subpopulations
+v_pop_prob = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probability of each subpopulation
+hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
+n_survey = 300            # Number of individuals we draw in the survey
+n_survey_hp = 100         # Number of individuals we draw in the hidden population survey 
+
+memory_factor = 0         # Reach memory factor (parameter to change variance of the perturbations' normal)
+sub_memory_factor = 0     # Subpopulation's memory factor (parameter to change variance of the perturbations' normal)
+visibility_factor = 1     # Visibility factor (Binomial's probability)
+seed = 207                # Seed
+set.seed(seed)
+
+#Graph
+dim = 1    # Graph dimension 
+nei = 75   # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
+# before applying the randomization.
+p   = 0.1  # Probability of randomize a connection. It is applied to all connections
+
+
+#Population and Survey
+
+Graph_population_matrix = getData(N, v_pop, v_pop_prob, hp_prob, dim, nei, p, visibility_factor, memory_factor,sub_memory_factor)
+
+net_sw = Graph_population_matrix[[1]]      # Population´s graph
+Population = Graph_population_matrix[[2]]  # Population
+Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
+
+survey = getSurvey(n_survey,Population)
+survey_hp = getSurvey(n_survey_hp,Population)
+#Vector with the number of people in each subpopulation
+
+v_pop_total = rep(NA, n_pop)
+for (k in 1:n_pop) {
+  v_pop_total[k] = sum(Population$Population == k) # N_k
   
-  #Calculamos la estimador del numerador de la fórmula, correspondiente al número de personas que se conocen de la población oculta
+}
+
+
+################################
+
+getNh_GNSUM  = function(Pob, enc, enc_hp, Mhp_vis, v_pob, N){
+  #General NSUM (GNSUM) (Formula from "GENERALIZING THE NETWORK SCALE-UP METHOD")
+  #Pob: Population
+  #enc: survey
+  #enc_hp: hidden population's survey
+  #Mhp_vis: matrix of the graph connections visibility (see getDatos)
+  #v_pob: vector with the number of people in each subpopulation
+  #N: population's size
+  #vis: estimation of the visibility factor
+  
+  #Numerator estimate
   n_enc = nrow(enc)
   prob_inc = n_enc/N
-  numerador = (1/prob_inc) * sum(enc$HP_total_apvis) #En nuestro caso la probabilidad de inclusión es la misma para todos los elementos, la sacamos del sumatorio
+  numerador = (1/prob_inc) * sum(enc$HP_total_apvis) #Same inclusion probability for all samples
   
+  #Denominator estimate
+  ind1 = as.numeric(rownames(enc_hp))
+  ind2 = as.numeric(rownames(Pob[Pob$Population != 0,]))
+  suma = sum(Mhp_vis[ind2,ind1])
   
-  #Calculamos la estimación del denominador
-  #Para ello necesitamos una encuesta a la población oculta
-  #enc[enc$Poblacion_Oculta ==1,] -> Usamos la encuesta que ya teníamos y entrevistamos a esos elementos
-  denominador = (N/sum(v_pob)) * rbinom(1,sum(enc_hp[,(ncol(enc_hp)-length(v_pob)+1):(ncol(enc_hp))-(length(v_pob)+1)]),visibility_factor)/nrow(enc_hp)
+  denominador = N/sum(v_pob)*suma/nrow(enc_hp)
   
   Nh = numerador/denominador
   return(Nh)
 }
 
-#############################
-N = 10000 #Tamaño de la población
-poblaciones_dis = c(0:10) #Poblaciones a distinguir. Son disjuntas y el 0 corresponde a no clasificar al individuo en ninguna
-v_probabilidades = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probabilidad de cada una de las poblaciones anteriores
-PropHiddenPop = 0.1 #Probabilidad de un individuo de pertenecer a la población oculta
-n_encuesta = 300 #Número de muestras que extraemos en la encuesta
-n_poblaciones = length(poblaciones_dis)-1 #Número de poblaciones en las que clasificamos
-par_poison = 20  #Parámetro de la Poisson con la que vamos a sobreestimar la variable Reach
-vect_memory_subpob = c(0.8,0.9,1,1.1,1.2) #Vector del factor memoria que vamos a aplicar a las subpoblaciones
-vect_prob_memory_subpob = c(0.1,0.2,0.4,0.2,0.1) #Probabilidad de aplicar cada una de las componentes del vector
-memory_factor = 0.6      #Factor de memoria 
-visibility_factor = 0.7  #Factor visibilidad
-semilla = 207            #Está guay cambiarla pq aunque se mantenga la estructura, los resultados cambian
 
-#Grafo
-dim = 1    #Dimensión del grafo
-nei = 52   #Número de vecinos con los que vamos a conectar. Son vecinos a cada lado del nodo, luego son 2*nei
-p   = 0.1  #Probabilidad de aleatorizar una conexión. Cuanto más grande más aleatorio
+#################################
+
+# Value of the estimations
+
+Nh_GNSUM = getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
+Nh_GNSUM
 
 
-Poblacion = getPoblacionTotal(N, poblaciones_dis,v_probabilidades,PropHiddenPop, dim, nei, p, visibility_factor, memory_factor,vect_memory_subpob, vect_prob_memory_subpob,par_poison)
-encuesta = getEncuesta(300,Poblacion)
-encuesta_hp = getEncuesta(50, Poblacion[Poblacion$Poblacion_Oculta==1,])
-
-v_pob_totales = rep(NA, n_poblaciones)
-for (j in 1:n_poblaciones) {
-  v_pob_totales[j] = sum(Poblacion$Poblacion == j)
-}
-
-getNh_GNSUM(encuesta, encuesta_hp, v_pob_totales, N, visibility_factor)
-sum(Poblacion$Poblacion_Oculta)
+# Real value
+sum(Population$Hidden_Population)

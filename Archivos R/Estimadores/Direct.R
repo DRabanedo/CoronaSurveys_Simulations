@@ -1,8 +1,6 @@
-#########################
-# Basic estimator of NSUM
-#########################
-
-
+##################
+# Direct estimator 
+##################
 N = 10000                 # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
@@ -19,7 +17,7 @@ set.seed(seed)
 #Graph
 dim = 1    # Graph dimension 
 nei = 75   # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
-# before applying the randomization.
+           # before applying the randomization.
 p   = 0.1  # Probability of randomize a connection. It is applied to all connections
 
 
@@ -32,40 +30,33 @@ Population = Graph_population_matrix[[2]]  # Population
 Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
 survey = getSurvey(n_survey,Population)
-
 ################################################################################
 
-getNh_basic = function(survey,N) {
-  #NSUM Basic estimator  
+getNh_Direct = function(survey,N){
+  #Direct estimation
   #survey: survey
   #N: Population size
   
-  Nh_f =  N*sum(survey$HP_total_apvis)/sum(survey$Reach_memory)
-  
-  return(Nh_f)
+  Nh = sum(survey$Hidden_Population)/nrow(survey) * N
+  return(Nh)
 }
 
-
-getNh_basicvis = function(survey,N,vis) {
-  #NSUM Basic estimator  
+getNh_Direct_dplyr = function(survey,N){
+  #Direct estimation
   #survey: survey
   #N: Population size
-  #vis: estimation of the visibility factor
   
-  Nh_f =  N*sum(survey$HP_total_apvis)/sum(survey$Reach_memory) * (1/vis)
-  
-  return(Nh_f)
+  Nh = summarise(survey, sum(Hidden_Population))/nrow(survey) * N
+  return(Nh)
 }
+
 
 
 ################################################################################
 
-#Value of the estimations 
-Nh_basic =getNh_basic(survey,N) 
-Nh_basic
 
-Nh_basicvis =getNh_basicvis(survey,N,visibility_factor) 
-Nh_basicvis
+#Value of the estimations
+getNh_Direct(survey,N)
 
 # Real value
 sum(Population$Hidden_Population) 

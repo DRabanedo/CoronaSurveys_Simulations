@@ -1,95 +1,99 @@
-######################################
-# Metodo de máxima verosimilitud (MLE)
-######################################
+#######################
+# MLE estimator of NSUM
+#######################
 
-#Cargamos todos los datos necesarios para que funcionen bien los programas
-N = 10000 #Tamaño de la población
-poblaciones_dis = c(0:10) #Poblaciones a distinguir. Son disjuntas y el 0 corresponde a no clasificar al individuo en ninguna
-v_probabilidades = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probabilidad de cada una de las poblaciones anteriores
-PropHiddenPop = 0.1 #Probabilidad de un individuo de pertenecer a la población oculta
-n_encuesta = 300 #Número de muestras que extraemos en la encuesta
-n_poblaciones = length(poblaciones_dis)-1 #Número de poblaciones en las que clasificamos
-par_poison = 20  #Parámetro de la Poisson con la que vamos a sobreestimar la variable Reach
-vect_memory_subpob = c(0.8,0.9,1,1.1,1.2) #Vector del factor memoria que vamos a aplicar a las subpoblaciones
-vect_prob_memory_subpob = c(0.1,0.2,0.4,0.2,0.1) #Probabilidad de aplicar cada una de las componentes del vector
-memory_factor = 0.7      #Factor de memoria 
-visibility_factor = 0.8  #Factor visibilidad
-semilla = 207            #Está guay cambiarla pq aunque se mantenga la estructura, los resultados cambian
-set.seed(semilla)
+N = 10000                 # Population size
+v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
+n_pop = length(v_pop)-1   # Number of subpopulations
+v_pop_prob = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probability of each subpopulation
+hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
+n_survey = 300            # Number of individuals we draw in the survey
 
-#Grafo
-dim = 1    #Dimensión del grafo
-nei = 52   #Número de vecinos con los que vamos a conectar. Son vecinos a cada lado del nodo, luego son 2*nei
-p   = 0.1  #Probabilidad de aleatorizar una conexión. Cuanto más grande más aleatorio
+memory_factor = 0         # Reach memory factor (parameter to change variance of the perturbations' normal)
+sub_memory_factor = 0        # Subpopulation's memory factor (parameter to change variance of the perturbations' normal)
+visibility_factor = 1     # Visibility factor (Binomial's probability)
+seed = 207                # Seed
+set.seed(seed)
 
-
-#Generamos la poblacion y la encuesta
-Poblacion = getPoblacionTotal(N, poblaciones_dis,v_probabilidades,PropHiddenPop, dim, nei, p, visibility_factor, memory_factor,vect_memory_subpob, vect_prob_memory_subpob,par_poison)
-encuesta = getEncuesta(n_encuesta,Poblacion)
+#Graph
+dim = 1    # Graph dimension 
+nei = 75   # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
+# before applying the randomization.
+p   = 0.1  # Probability of randomize a connection. It is applied to all connections
 
 
-#Vector de poblaciones, calcula el número de personas en cada subpoblación
+#Population and Survey
 
-v_pob_totales = rep(NA, n_poblaciones)
-for (k in 1:n_poblaciones) {
-  v_pob_totales[k] = sum(Poblacion$Poblacion == k) # N_k
+Graph_population_matrix = getData(N, v_pop, v_pop_prob, hp_prob, dim, nei, p, visibility_factor, memory_factor,sub_memory_factor)
+
+net_sw = Graph_population_matrix[[1]]      # Population´s graph
+Population = Graph_population_matrix[[2]]  # Population
+Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
+
+survey = getSurvey(n_survey,Population)
+
+#Vector with the number of people in each subpopulation
+
+v_pop_total = rep(NA, n_pop)
+for (k in 1:n_pop) {
+  v_pop_total[k] = sum(Population$Population == k) # N_k
   
 }
+
+##### DPLYR sintax (same speed as R sintax) #####
+# t <- Sys.time()
+# v_pop_total = rep(NA, n_pop)
+# v_pop_total = as.vector((Population %>% group_by(Population) %>% summarise(n = n()))[,2])
+# Sys.time() - t
+
 ################################################################################
 
-
 getNh_MLE = function(enc,v_pob) {
-  #Aplicando la fórmula del paper Thirty Years of NSUM obtenemos la estimacion de la encuesta realizada
-  #En esta fórmula tenemos en cuenta el error de memoria pero no el de visibilidad
-  #enc es la encuesta, ?ltimos valores para las preguntas de la poblaci?n conocida
-  #v_pob es un vector con los valores de las poblaciones conocidas
-
+  #NSUM maximum likelihood estimator(MLE) (Formula from "Thirty Years of the NSUM method")
+  #enc: survey
+  #v_pob: vector with the number of people in each subpopulation
   suma_KP = sum(enc[tail(names(enc),length(v_pob))]) # suma de la Known Population
   # (\sum y_{iu})/(\frac{\sum N_k}{\sum \sum y_{ik}} )
   Nh_f = sum(enc$HP_total_apvis)*(sum(v_pob)/suma_KP)
   Nh_f
 }
 
+
+##### DPLYR sintax (less velocity than R sintax) #####
+
+#getNh_MLEdplyr = function(enc,v_pob) {
+  #NSUM maximum likelihood estimator(MLE) (Formula from "Thirty Years of the NSUM method")
+  #enc: survey
+  #v_pob: vector with the number of people in each subpopulationKnown Population
+  #Nh_f = sum(select(enc,HP_total_apvis))*sum(v_pob)/sum(select(enc, starts_with("KP_total_apvis") & -KP_total_apvis0))
+  
+  #return(Nh_f)
+#}
+
+
+
 getNh_MLEvis = function(enc,v_pob,vis) {
-  #Aplicando la fórmula del paper Thirty Years of NSUM obtenemos la estimacion de la encuesta realizada
-  #En esta fórmula tenemos en cuenta el error de memoria y el de visibilidad, y lo corregimos.
-  #enc es la encuesta, ?ltimos valores para las preguntas de la poblaci?n conocida
-  #v_pob es un vector con los valores de las poblaciones conocidas
-  #vis es el factor de visibilidad
+  #NSUM maximum likelihood estimator(MLE) (Formula from "Thirty Years of the NSUM method")
+  #enc: survey
+  #v_pob: vector with the number of people in each subpopulation
+  #vis: estimation of the visibility factor  
   
   suma_KP = sum(enc[tail(names(enc),length(v_pob))])
   Nh_f = (sum(enc$HP_total_apvis))*(sum(v_pob)/suma_KP)*(1/vis)
   Nh_f
 }
 
-getNh_MLEsinvis =  function(enc,v_pob) {
-  #Aplicando la fórmula del paper Thirty Years of NSUM obtenemos la estimacion de la encuesta realizada
-  #En este caso no hay error de visibilidad, y tenemos en cuenta el error de memoria si lo hubiera
-  #enc es la encuesta, ?ltimos valores para las preguntas de la poblaci?n conocida
-  #v_pob es un vector con los valores de las poblaciones conocidas
-  
-  suma_KP = sum(enc[tail(names(enc),length(v_pob))])
-  Nh_f = (sum(enc$HP_total_conocida))*(sum(v_pob)/suma_KP) 
-  Nh_f
-}
 
 ################################################################################
 
-#Como vemos, se obtiene una muy buena aproximación de la variable Reach media de
-#la población, luego el error de memoria se elimina gracias a la incorporación de
-#las poblaciones auxiliares conocidas
-sum(encuesta[8:dim(encuesta)[2]])/sum(v_pob_totales)*(N/n_encuesta)  #Estimación de la variable Reach de media
-sum(Poblacion$Reach)/N                                             #Valor real
 
-
-#Valores de los estimadores
-Nh_MLE = getNh_MLE(encuesta, v_pob_totales)
+# Value of the estimations 
+Nh_MLE = getNh_MLE(survey, v_pop_total)
 Nh_MLE
-Nh_MLEvis = getNh_MLEvis(encuesta, v_pob_totales, visibility_factor)
+
+Nh_MLEvis = getNh_MLEvis(survey, v_pop_total, visibility_factor)
 Nh_MLEvis
-Nh_MLESsinvis = getNh_MLEsinvis(encuesta, v_pob_totales)
-Nh_MLESsinvis
 
 
-#Valor real del tamaño de la población oculta
-sum(Poblacion$Poblacion_Oculta) 
+# Real value
+sum(Population$Hidden_Population) 
