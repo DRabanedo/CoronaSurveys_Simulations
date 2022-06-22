@@ -53,7 +53,11 @@ Mhp = Graph_population_matrix[[3]]         # Population's visibility matrix
 ################################################################################
 
 #Simulation
-for (l in 1:25) {
+
+#Number of simulations
+b = 25 
+
+for (l in 1:b) {
   
   Nh_real =  rep(NA,length(parameters)) 
   
@@ -159,7 +163,7 @@ timer
 #################### COMPUTATION TIME ANALYSIS ###########################
 
 # Computation time (N=1000) (my PC)
-#timer ->      
+#timer -> 30.06389 mins     
 
 # Computation time (N=10000) (office PC)
 #timer ->  
