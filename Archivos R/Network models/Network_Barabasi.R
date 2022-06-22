@@ -1,5 +1,3 @@
-#No creo que nos sirvan pero los dejo aquí mencionados
-
 #Dinamic mode
 
 #In this model, an edge is most likely to attach to nodes with higher degrees. 

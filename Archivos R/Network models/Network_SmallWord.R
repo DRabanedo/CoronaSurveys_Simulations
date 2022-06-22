@@ -18,11 +18,11 @@ multiple	#Logical scalar, whether multiple edges are allowed int the generated g
 net_sw = sample_smallworld(1, 20, 4, 0.1, loops = FALSE, multiple = FALSE)
 plot(net_sw, xlab = "Small world model")
 net_sw
-#Otra forma de ponerlo
+
 net_sw2 <- watts.strogatz.game(1, 500, 1, 0.35, loops = FALSE, multiple = FALSE)
 plot(net_sw2, vertex.label= NA, edge.arrow.size=0.02,vertex.size = 0.5, xlab = "Small world model")
 
-#Bucle para contar las conexiones
+# Verification
 total_edges = 0
 for (i in 1:20) {
   total_edges = total_edges + length(net_sw[[i]][[1]])
