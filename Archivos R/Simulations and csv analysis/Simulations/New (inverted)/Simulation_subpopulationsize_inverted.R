@@ -1,13 +1,8 @@
-###########################################################################################################
-# Graph based on the value of the memory factor of the subpopulations, leaving the rest of parameters fixed
-###########################################################################################################
+######################################################################################
+# Simulation based on the size of subpopulations, leaving the rest of parameters fixed
+######################################################################################
 
 t = Sys.time()
-################ WARNING #########################################################
-# IT IS IMPORTANT TO LEAVE THIS FACTOR AS 0, SINCE THE FIRST POPULATION THAT WE ARE 
-# GOING TO BUILD WILL BE A BASIS FOR THE REST
-sub_memory_factor = 0      #Subpopulation memory factor (parameter to change variance of the perturbations' normal)
-################################################################################
 
 N = 1000                  # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
@@ -17,16 +12,24 @@ hp_prob = 0.1             # Probability for an individual to be in the hidden po
 n_survey = 300            # Number of individuals we draw in the survey
 n_survey_hp = 50          # Number of individuals we draw in the hidden population survey 
 
+sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
 memory_factor = 0         # Reach memory factor (parameter to change variance of the perturbations' normal)
 visibility_factor = 1     # Visibility factor (Binomial's probability)
 seed = 207                # Seed
 set.seed(seed)
+
 
 #Graph
 dim = 1    # Graph dimension 
 nei = 75   # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
 # before applying the randomization.
 p   = 0.1  # Probability of randomize a connection. It is applied to all connections
+
+
+# Study parameters
+parameters = list(rep(1/length(v_pop), length(v_pop)), c(0.5,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05),
+                  c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025), c(0.2, 0.5, 0.1, 0.01, 0.01, 0.01, 0.01, 0.01, 0.05, 0.05,0.05))
+
 
 
 #Population and Survey
@@ -37,33 +40,14 @@ net_sw = Graph_population_matrix[[1]]      # Population´s graph
 Population = Graph_population_matrix[[2]]  # Population
 Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
-
-
-#Vector with the number of people in each subpopulation
-
-v_pop_total = rep(NA, n_pop)
-for (k in 1:n_pop) {
-  v_pop_total[k] = sum(Population$Population == k) # N_k
-  
-}
-
-
-# Study parameters
-parameters = seq(from = 0, to = 1, length.out = 21)
-
-#Dataframe to save the data
-simulaciones = data.frame(datos =  parameters)
-
-################################################################################
-
-# AUXILIARY DATA FOR THE SIMULATION
-
-vis_pob_reset = Population[,(ncol(Population)-(n_pop)):ncol(Population)]
-b = 25 #Number of iterations for the simulation
+#Auxiliar data for the simulation
+b = 25 #Number of simulations
 lista_simulacion = list()
+lista_sim = list()
+k = length(v_pop)
 
-# Surveys representing the different iterations. 
-# The surveys are fixed so the variance and bias can be calculated.
+
+#Surveys
 list_surveys = list()
 for (h in 1:b) {
   list_surveys[[h]] = sample(nrow(Population), n_survey, replace = FALSE)
@@ -75,21 +59,39 @@ for (h in 1:b) {
 }
 
 
+#Dataframe for the data
+simulaciones = data.frame(data =  1:length(parameters))
   
-  
+################################################################################
   
 for (i in 1:length(parameters)) {
+  v_pop_prob = parameters[[i]]
+  m_pob = length(parameters[[i]])-1
+  n_columnas = ncol(Population)
+  v_pop = c(0:m_pob)
+  n_pop = length(v_pop)-1 
     
-  sub_memory_factor = parameters[i]   
+  Population$Population = sample(v_pop, N, replace = TRUE, p = v_pop_prob)
+  Population = Population[,1:(ncol(Population)-k)]
     
   for(j in 0:n_pop){
-    v_1 = rep(NA,nrow(Population))
-    vis_pob = Population[,ncol(Population)-(n_pop-j)]
-    for(k in 1:nrow(Population)) {
-      v_1[k] = max(round(rnorm(1, mean = vis_pob[k], sd = sub_memory_factor*vis_pob[k])),0)
+    v_1 = rep(NA,N)
+    for(v in 1:N) {
+      vis_pob = sum(Population[net_sw[[v]][[1]],]$Population == j)
+      v_1[v] = round(rnorm(1, mean = vis_pob, sd = sub_memory_factor*vis_pob))
     }
-    Population[,ncol(Population)-(n_pop-j)] = v_1
+      
+    Population = cbind(Population,SubPopulation_total = v_1)
+    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j)
   }
+    
+  k = length(v_pop)
+    
+  v_pop_total = rep(NA, n_pop)
+  for (j in 1:n_pop) {
+    v_pop_total[j] = sum(Population$Population == j)
+  }
+    
   
   Nh_real =  rep(NA,b) 
   
@@ -113,7 +115,7 @@ for (i in 1:length(parameters)) {
     #We choose the same survey for each l in order to calculate the bias and variance
     #Surveys
     survey = Population[list_surveys[[l]],]
-    survey_hp = Population[list_surveys_hp[[l]],]
+    survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],]
     
     Nh_real = sum(Population$Hidden_Population) 
     
@@ -169,27 +171,26 @@ for (i in 1:length(parameters)) {
   print(i)
   
 }
-  
-simulaciones = bind_rows(lista_simulacion)
-  
 
+simulaciones = bind_rows(lista_simulacion)
 
 
 ################################################################################
 simulaciones
-write.csv(simulaciones,                        # Data frame
-          file = "Simulaciones_subpopulation'smemoryfactor", # Csv's name
-          row.names = TRUE )                   # Row names: TRUE o FALSE 
+write.csv(simulaciones,                                # Data frame
+          file = "Simulations_subpopulationsize", # CSV name
+          row.names = TRUE )                           # Row names: TRUE or FALSE
 ################################################################################
 
 timer = Sys.time() - t
 timer
-#################### COMPUTATION TIME ANALYSIS ###########################
+
+#################### COMPUTATION TIME ANALYSIS #############################
 
 # Computation time (N=1000) (my PC)
-#timer -> 1.044038 mins    
+#timer ->     
 
-# Computation time (N=10000) (office PC)
+# Computation time (N=10000) (my PC)
 #timer ->  
 
-###########################################################################
+############################################################################

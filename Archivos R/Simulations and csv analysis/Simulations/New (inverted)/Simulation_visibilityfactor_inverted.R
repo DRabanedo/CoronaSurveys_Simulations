@@ -124,7 +124,7 @@ for (i in 1:length(parameters)) {
       #We choose the same survey for each l in order to calculate the bias and variance
       #Surveys
       survey = Population[list_surveys[[l]],]
-      survey_hp = Population[list_surveys_hp[[l]],]
+      survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],]
       
     
       Nh_real = sum(Population$Hidden_Population) 

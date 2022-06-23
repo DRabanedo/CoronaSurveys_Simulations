@@ -26,7 +26,7 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = round(seq(from = 2, to = 30, length.out = 10))
+parameters = round(seq(from = 2, to = 20, length.out = 10))
 
 
 Nh_real =  rep(NA,length(parameters)) 
@@ -63,21 +63,20 @@ survey_hp = getSurvey(n_survey_hp,Population[Population$Hidden_Population==1,])
 k = length(v_pop)
 
 for (i in 1:length(parameters)) {
-  print(i)
   m_pop = parameters[i]
   n_colum = ncol(Population)
   v_pop = c(0:m_pop)
   n_pop = length(v_pop)-1 
   v_pop_prob = rep(1/length(v_pop), length(v_pop))
+  print(ncol(Population))
   
   Population$Population = sample(v_pop, N, replace = TRUE, p = v_pop_prob)
   Population = Population[,1:(ncol(Population)-k)]
-  
+  print(ncol(Population))
   for(j in 0:n_pop){
     v_1 = rep(NA,N)
     for(v in 1:N) {
       vis_pob = sum(Population[net_sw[[v]][[1]],]$Population == j)
-      # Visibilidad de la poblaci?n j por i aplicando un factor de visibilidad para las subPopulationes
       v_1[v] = round(rnorm(1, mean = vis_pob, sd = sub_memory_factor*vis_pob))
     }
     
@@ -113,6 +112,7 @@ for (i in 1:length(parameters)) {
   Nh_MoSvis[i] = getNh_MoSvis(survey, v_pop_total, N, visibility_factor)
   
   Nh_GNSUM[i] =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
+  print(ncol(Population))
 }
 
 
