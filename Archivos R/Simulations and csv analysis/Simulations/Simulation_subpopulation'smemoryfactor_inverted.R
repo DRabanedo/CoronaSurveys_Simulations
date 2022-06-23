@@ -111,7 +111,6 @@ for (i in 1:length(parameters)) {
   
   for (l in 1:b) {
     #We choose the same survey for each l in order to calculate the bias and variance
-    survey  = Population[list_surveys[[l]],]
     #Surveys
     survey = Population[list_surveys[[l]],]
     survey_hp = Population[list_surveys_hp[[l]],]
@@ -132,7 +131,7 @@ for (i in 1:length(parameters)) {
     
     #Nh_GNSUM   =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
     
-    sim = data_frame(Nh_real = Nh_real)
+    sim = data.frame(Nh_real = Nh_real)
     names(sim)[dim(sim)[2]] = str_c("Nh_real_",l)
     
     #sim = cbind(sim,Nh_basic = Nh_basic)

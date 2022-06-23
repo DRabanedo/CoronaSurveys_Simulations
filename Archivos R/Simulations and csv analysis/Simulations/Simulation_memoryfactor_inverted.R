@@ -69,6 +69,11 @@ for (h in 1:b) {
   list_surveys[[h]] = sample(nrow(Population), n_survey, replace = FALSE)
 }
 
+list_surveys_hp = list()
+for (h in 1:b) {
+  list_surveys_hp[[h]] = sample(nrow(Population[Population$Hidden_Population == 1,]), n_survey_hp, replace = FALSE)
+}
+
 
  
 for (i in 1:length(parameters)) {
@@ -101,7 +106,10 @@ for (i in 1:length(parameters)) {
   for (l in 1:b) {
     
     #We choose the same survey for each l in order to calculate the bias and variance
-    survey  = Population[list_surveys[[l]],]
+    #Surveys
+    survey = Population[list_surveys[[l]],]
+    survey_hp = Population[list_surveys_hp[[l]],]
+    
     
     Nh_real = sum(Population$Hidden_Population) 
     
@@ -119,7 +127,7 @@ for (i in 1:length(parameters)) {
     
     #Nh_GNSUM   =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
     
-    sim = data_frame(Nh_real = Nh_real)
+    sim = data.frame(Nh_real = Nh_real)
     names(sim)[dim(sim)[2]] = str_c("Nh_real_",l)
     
     sim = cbind(sim,Nh_basic = Nh_basic)
@@ -176,10 +184,10 @@ timer
 #################### COMPUTATION TIME ANALYSIS ###########################
 
 # Computation time (N=1000) (my PC)
-#timer -> 25.76853 secs not saving all the unnecessary estimators 
+#timer -> 12.56321 secs not saving all the unnecessary estimators 
 
 # Computation time (N=10000) (office PC)
-#timer -> 7.941009 not saving all the unnecessary estimators 
+#timer -> 7.521129 mins not saving all the unnecessary estimators 
 
 #Problem: MoS and PIMLE have computation time of 0.2 per iteration
 # 0.2 * 25 * 41 = 200 sec -> 3,33 min

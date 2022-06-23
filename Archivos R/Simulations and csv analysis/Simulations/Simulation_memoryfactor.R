@@ -9,7 +9,7 @@ memory_factor = 0      #Reach memory factor (parameter to change variance of the
 ################################################################################
 
 t = Sys.time()
-N = 10000                 # Population size
+N = 1000                 # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
 v_pop_prob = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probability of each subpopulation
@@ -164,7 +164,7 @@ timer
 #################### COMPUTATION TIME ANALYSIS ###########################
 
 # Computation time (N=1000) (my PC)
-#timer -> 12.71428 secs not saving all the unnecessary estimators 
+#timer -> 11.06498 secs not saving all the unnecessary estimators 
 #timer -> 16.75759 mins saving all the unnecessary estimators     
 
 # Computation time (N=10000) (office PC)
