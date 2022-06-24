@@ -91,13 +91,10 @@ getData = function(N, dis_populations,prob_vector,PropHiddenPop, dim, nei, p, vi
   #p: Real constant between zero and one, the rewiring probability.
   #visibility_factor: the visibility factor
   #memory factor: numeric value, Reach divided by the standard deviation of the normal we use to correct the Reach
-<<<<<<< HEAD
   # sub_memory_factor: the subpopulations visibility divided by the standard deviation of the normal distributions we use to correct the subpopulations visibility
   #                    it is applied to each subpopulation
-=======
   # sub_memory_factor: the subpopulations' visibility divided by the standard deviation of the normals we use to correct the subpopulations' visibility
   
->>>>>>> parent of 3072e64 (Update Functions script.R)
   Population = genPopulation(N, dis_populations, prob_vector,PropHiddenPop)
   
   net_sw = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
