@@ -233,11 +233,12 @@ getMuestraEstrat = function(n_enc,dataframe){
 }
 ############################
 
+
 #################
 # Basic estimator
 #################
 
-getNh_basic = function(survey,N) {
+getNh_basic_sum = function(survey,N) {
   #NSUM Basic estimator  
   #survey: survey
   #N: Population size
@@ -247,8 +248,29 @@ getNh_basic = function(survey,N) {
   return(Nh_f)
 }
 
+getNh_basic_mean = function(survey,N) {
+  #NSUM Basic estimator  
+  #survey: survey
+  #N: Population size
+  
+  Nh_f =  N*mean(survey$HP_total_apvis/survey$Reach_memory)
+  
+  return(Nh_f)
+}
 
-getNh_basicvis = function(survey,N,vis) {
+getNh_basicvis_sum = function(survey,N,vis) {
+  #NSUM Basic estimator  
+  #survey: survey
+  #N: Population size
+  #vis: estimation of the visibility factor
+  
+  Nh_f =  N*sum(survey$HP_total_apvis)/sum(survey$Reach_memory) * (1/vis)
+  
+  return(Nh_f)
+}
+
+
+getNh_basicvis_mean = function(survey,N,vis) {
   #NSUM Basic estimator  
   #survey: survey
   #N: Population size
@@ -268,7 +290,8 @@ getNh_MLE = function(enc,v_pob) {
   #NSUM maximum likelihood estimator(MLE) (Formula from "Thirty Years of the NSUM method")
   #enc: survey
   #v_pob: vector with the number of people in each subpopulation
-  suma_KP = sum(enc[tail(names(enc),length(v_pob))]) # suma de la Known Population
+  
+  suma_KP = sum(enc[tail(names(enc),length(v_pob))]) # Known Population sum
   # (\sum y_{iu})/(\frac{\sum N_k}{\sum \sum y_{ik}} )
   Nh_f = sum(enc$HP_total_apvis)*(sum(v_pob)/suma_KP)
   Nh_f
@@ -300,6 +323,7 @@ getNh_PIMLE = function(enc,v_pob,N) {
   #N: population's size
   #vis: estimation of the visibility factor
   
+  #Reach estimate
   d_iest = c()
   for (i in 1:nrow(enc)) {
     d_iest[i] = N * sum(enc[i,tail(names(enc),length(v_pob))])/sum(v_pob)
@@ -316,17 +340,20 @@ getNh_PIMLEvis = function(enc,v_pob,N,vis) {
   #N: population's size
   #vis: estimation of the visibility factor
   
+  #Reach estimate
   d_iest = c()
   for (i in 1:nrow(enc)) {
     d_iest[i] = N * sum(enc[i,tail(names(enc),length(v_pob))])/sum(v_pob)
   }
-  Nh_f = N * mean(enc$HP_total_apvis/d_iest) * (1/vis) # media de N \frac{y_{iu}}{\hat{d_i}}
+  Nh_f = N * mean(enc$HP_total_apvis/d_iest) * (1/vis) # \frac{y_{iu}}{\hat{d_i}}
   Nh_f
 }
+
 
 ###############
 # MoS estimator
 ###############
+
 
 getNh_MoS = function(enc, v_pob, N){
   #NSUM Mean of Sums(MoS) (Formula from "Thirty Years of the NSUM method")
@@ -356,6 +383,7 @@ getNh_MoSvis = function(enc, v_pob, N, vis){
   
   # \hat{d_i} = N/L \sum_k (y_{ik}/N_k)
   
+  # Reach estimate
   d_i_est = rep(NA, nrow(enc))
   for (i in 1:nrow(enc)) {
     d_i_est[i] = (sum((enc[i,tail(names(enc),length(v_pob))])/v_pob))/length(v_pob) * N
@@ -373,25 +401,25 @@ getNh_MoSvis = function(enc, v_pob, N, vis){
 
 getNh_GNSUM  = function(Pob, enc, enc_hp, Mhp_vis, v_pob, N){
   #General NSUM (GNSUM) (Formula from "GENERALIZING THE NETWORK SCALE-UP METHOD")
-  #Pob: Population
-  #enc: survey
-  #enc_hp: hidden population's survey
+  #Pob:     Population
+  #enc:     survey
+  #enc_hp:  hidden population's survey
   #Mhp_vis: matrix of the graph connections visibility (see getDatos)
-  #v_pob: vector with the number of people in each subpopulation
-  #N: population's size
-  #vis: estimation of the visibility factor
+  #v_pob:   vector with the number of people in each subpopulation
+  #N:       population's size
+  #vis:     estimation of the visibility factor
   
   #Numerator estimate
   n_enc = nrow(enc)
-  prob_inc = n_enc/N
-  numerador = (1/prob_inc) * sum(enc$HP_total_apvis) #Same inclusion probability for all samples
+  prob_inc = n_enc/N  #Same inclusion probability for all samples
+  numerador = (1/prob_inc) * sum(enc$HP_total_apvis) #Numerator estimate
   
   #Denominator estimate
   ind1 = as.numeric(rownames(enc_hp))
   ind2 = as.numeric(rownames(Pob[Pob$Population != 0,]))
   suma = sum(Mhp_vis[ind2,ind1])
   
-  denominador = N/sum(v_pob)*suma/nrow(enc_hp)
+  denominador = N/sum(v_pob)*suma/nrow(enc_hp)      #Denominator estimate
   
   Nh = numerador/denominador
   return(Nh)
@@ -409,7 +437,6 @@ getNh_Direct = function(survey,N){
   Nh = sum(survey$Hidden_Population)/nrow(survey) * N
   return(Nh)
 }
-
 
 
 
