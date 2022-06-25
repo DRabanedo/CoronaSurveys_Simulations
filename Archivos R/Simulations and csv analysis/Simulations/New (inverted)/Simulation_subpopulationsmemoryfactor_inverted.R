@@ -76,7 +76,7 @@ for (h in 1:b) {
 
 
   
-  
+#Simulation  
   
 for (i in 1:length(parameters)) {
     
@@ -93,8 +93,10 @@ for (i in 1:length(parameters)) {
   
   Nh_real =  rep(NA,b) 
   
-  #Nh_basic = rep(NA,b) 
-  #Nh_basicvis = rep(NA,b)                                      
+  #Nh_basic_sum = rep(NA,b) 
+  #Nh_basicvis_sum = rep(NA,b) 
+  #Nh_basic_mean = rep(NA,b) 
+  #Nh_basicvis_mean = rep(NA,b)                                      
   
   Nh_PIMLE = rep(NA,b) 
   #Nh_PIMLEvis = rep(NA,b) 
@@ -112,13 +114,16 @@ for (i in 1:length(parameters)) {
   for (l in 1:b) {
     #We choose the same survey for each l in order to calculate the bias and variance
     #Surveys
-    survey = Population[list_surveys[[l]],]
-    survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],]
+    survey = Population[list_surveys[[l]],] #Survey
+    survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],] #Hidden population survey
     
+    #Hidden population estimates
     Nh_real = sum(Population$Hidden_Population) 
     
-    #Nh_basic    = getNh_basic(survey,N) 
-    #Nh_basicvis = getNh_basicvis(survey,N,visibility_factor) 
+    #Nh_basic_sum    = getNh_basic(survey,N) 
+    #Nh_basicvis_sum = getNh_basicvis(survey,N,visibility_factor) 
+    #Nh_basic_mean    = getNh_basic(survey,N) 
+    #Nh_basicvis_mean = getNh_basicvis(survey,N,visibility_factor) 
     
     Nh_PIMLE    = getNh_PIMLE(survey, v_pop_total, N)
     #Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, visibility_factor)
@@ -131,14 +136,22 @@ for (i in 1:length(parameters)) {
     
     #Nh_GNSUM   =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
     
+    
+    #Dataframe for saving the estimates
     sim = data.frame(Nh_real = Nh_real)
     names(sim)[dim(sim)[2]] = str_c("Nh_real_",l)
     
-    #sim = cbind(sim,Nh_basic = Nh_basic)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_basic",l)
+    sim = cbind(sim,Nh_basic_sum = Nh_basic_sum)
+    names(sim)[dim(sim)[2]] = str_c("Nh_basic_sum_",l)
     
-    #sim = cbind(sim,Nh_basicvis = Nh_basicvis)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_",l)
+    sim = cbind(sim,Nh_basicvis_sum = Nh_basicvis_sum)
+    names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_sum_",l)
+    
+    sim = cbind(sim,Nh_basic_mean = Nh_basic_mean)
+    names(sim)[dim(sim)[2]] = str_c("Nh_basic_mean_",l)
+    
+    sim = cbind(sim,Nh_basicvis = Nh_basicvis)
+    names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_mean_",l)
     
     sim = cbind(sim,Nh_PIMLE = Nh_PIMLE)
     names(sim)[dim(sim)[2]] = str_c("Nh_PIMLE_",l)
@@ -177,9 +190,9 @@ simulaciones = bind_rows(lista_simulacion)
 
 ################################################################################
 simulaciones
-write.csv(simulaciones,                        # Data frame
-          file = "Simulaciones_subpopulation'smemoryfactor", # Csv's name
-          row.names = TRUE )                   # Row names: TRUE o FALSE 
+write.csv(simulaciones,                                  # Data frame
+          file = "Simulation_subpopulationmemoryfactor", # Csv's name
+          row.names = TRUE )                             # Row names: TRUE o FALSE 
 ################################################################################
 
 timer = Sys.time() - t

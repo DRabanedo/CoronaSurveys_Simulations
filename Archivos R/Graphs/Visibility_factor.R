@@ -33,11 +33,14 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 # Study parameters
 parameters = seq(from = 0.1, to = 1, length.out = 19)
 
+# Variable reset
 
 Nh_real =  rep(NA,length(parameters)) 
 
-Nh_basic = rep(NA,length(parameters)) 
-Nh_basicvis = rep(NA,length(parameters)) 
+Nh_basic_sum = rep(NA,length(parameters)) 
+Nh_basic_mean = rep(NA,length(parameters)) 
+Nh_basicvis_sum = rep(NA,length(parameters)) 
+Nh_basicvis_mean = rep(NA,length(parameters)) 
 
 Nh_PIMLE = rep(NA,length(parameters)) 
 Nh_PIMLEvis = rep(NA,length(parameters)) 
@@ -77,8 +80,12 @@ for (k in 1:n_pop) {
 vect_hp_vis = rep(NA,nrow(survey))
 vect_hp = survey$HP_total
 
+################################################################################
+# Estimation based on the different parameters
 
 for (i in 1:length(parameters)) {
+  
+  # Parameter Choice
   visibility_factor = parameters[i]
   Mhp_vis =  apply(Mhp,c(1,2), berHP, p = visibility_factor)
   k = 1
@@ -89,11 +96,13 @@ for (i in 1:length(parameters)) {
 
   survey$HP_total_apvis = vect_hp_vis
  
-   
+  # Hidden population estimates
   Nh_real[i] = sum(Population$Hidden_Population) 
   
-  Nh_basic[i] = getNh_basic(survey,N) 
-  Nh_basicvis[i] = getNh_basicvis(survey,N,visibility_factor) 
+  Nh_basic_sum[i] = getNh_basic_sum(survey,N) 
+  Nh_basicvis_sum[i] = getNh_basicvis_sum(survey,N,visibility_factor) 
+  Nh_basic_mean[i] = getNh_basic_mean(survey,N) 
+  Nh_basicvis_mean[i] = getNh_basicvis_mean(survey,N,visibility_factor)
   
   Nh_PIMLE[i] = getNh_PIMLE(survey, v_pop_total, N)
   Nh_PIMLEvis[i] = getNh_PIMLEvis(survey, v_pop_total, N, visibility_factor)
@@ -110,10 +119,13 @@ for (i in 1:length(parameters)) {
 
 ################################################################################
 
+# Graph 
 x_1 = parameters
 ggplot() + 
-  geom_line(aes(x = x_1, y =  Nh_basic, col = "Basic")) + 
-  geom_line(aes(x = x_1, y =  Nh_basicvis, col = "Basic_vis")) + 
+  geom_line(aes(x = x_1, y =  Nh_basic_sum, col = "Basic_sum")) + 
+  geom_line(aes(x = x_1, y =  Nh_basicvis_sum, col = "Basic_vis_sum")) + 
+  geom_line(aes(x = x_1, y =  Nh_basic_mean, col = "Basic_mean")) + 
+  geom_line(aes(x = x_1, y =  Nh_basicvis_mean, col = "Basic_vis_mean")) + 
   geom_line(aes(x = x_1, y =  Nh_PIMLEvis, col = "PIMLE_vis")) + 
   geom_line(aes(x = x_1, y =  Nh_PIMLE, col = "PIMLE")) + 
   geom_line(aes(x = x_1, y =  Nh_MLE, col = "MLE")) + 
@@ -127,4 +139,9 @@ ggplot() +
   labs(title = "Prediction variability according to the visibility factor",
        x = "Visibility factor",
        y = "Hidden population estimate")
+################################################################################
 
+#################### COMPUTATION TIME ANALYSIS ###########################
+# Computation time (N=1000)  (my PC)
+#timer ->  12.79305 secs
+###########################################################################

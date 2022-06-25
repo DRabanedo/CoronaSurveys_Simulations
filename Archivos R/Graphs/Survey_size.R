@@ -1,7 +1,7 @@
 #############################################################################
 # Graph based on the size of the survey, leaving the rest of parameters fixed
 #############################################################################
-
+t = Sys.time()
 
 N = 1000                 # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
@@ -37,7 +37,7 @@ net_sw = Graph_population_matrix[[1]]      # Population´s graph
 Population = Graph_population_matrix[[2]]  # Population
 Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
-survey_hp = getSurvey(n_survey_hp,Population[Population$Hidden_Population==1,])
+survey_hp = getSurvey(n_survey_hp,Population[Population$Hidden_Population==1,]) #Survey
 
 #Vector with the number of people in each subpopulation
 
@@ -48,45 +48,53 @@ for (k in 1:n_pop) {
 }
 
 
+# Variables reset
 Nh_real =  rep(NA,length(parameters)) 
 
-Nh_basic = rep(NA,length(parameters)) 
-Nh_basicvis = rep(NA,length(parameters)) 
+Nh_basic_sum = rep(NA,length(parameters)) 
+Nh_basic_mean = rep(NA,length(parameters)) 
+#Nh_basicvis_sum = rep(NA,length(parameters)) 
+#Nh_basicvis_mean = rep(NA,length(parameters)) 
 
 Nh_PIMLE = rep(NA,length(parameters)) 
-Nh_PIMLEvis = rep(NA,length(parameters)) 
+#Nh_PIMLEvis = rep(NA,length(parameters)) 
 
 Nh_MLE = rep(NA,length(parameters)) 
-Nh_MLEvis = rep(NA,length(parameters)) 
+#Nh_MLEvis = rep(NA,length(parameters)) 
 
 Nh_MoS = rep(NA,length(parameters)) 
-Nh_MoSvis = rep(NA,length(parameters)) 
+#Nh_MoSvis = rep(NA,length(parameters)) 
 
 Nh_GNSUM = rep(NA,length(parameters))  
 
 Nh_Direct = rep(NA,length(parameters))  
 
+################################################################################
+# Estimation based on the different parameters
 
 for (i in 1:length(parameters)) {
   
+  # Parameter Choice
   n_survey = parameters[i]
   survey = getSurvey(n_survey,Population)
   
   
-  
+  # Hidden population estimates
   Nh_real[i] = sum(Population$Hidden_Population) 
   
-  Nh_basic[i] = getNh_basic(survey,N) 
-  Nh_basicvis[i] = getNh_basicvis(survey,N,visibility_factor) 
+  Nh_basic_sum[i] = getNh_basic_sum(survey,N) 
+  #Nh_basicvis_sum[i] = getNh_basicvis_sum(survey,N,visibility_factor) 
+  Nh_basic_mean[i] = getNh_basic_mean(survey,N) 
+  #Nh_basicvis_mean[i] = getNh_basicvis_mean(survey,N,visibility_factor) 
   
   Nh_PIMLE[i] = getNh_PIMLE(survey, v_pop_total, N)
-  Nh_PIMLEvis[i] = getNh_PIMLEvis(survey, v_pop_total, N, visibility_factor)
+  #Nh_PIMLEvis[i] = getNh_PIMLEvis(survey, v_pop_total, N, visibility_factor)
   
   Nh_MLE[i] = getNh_MLE(survey, v_pop_total)
-  Nh_MLEvis[i] = getNh_MLEvis(survey, v_pop_total, visibility_factor)
+  #Nh_MLEvis[i] = getNh_MLEvis(survey, v_pop_total, visibility_factor)
   
   Nh_MoS[i] = getNh_MoS(survey, v_pop_total, N)
-  Nh_MoSvis[i] = getNh_MoSvis(survey, v_pop_total, N, visibility_factor)
+  #Nh_MoSvis[i] = getNh_MoSvis(survey, v_pop_total, N, visibility_factor)
   
   Nh_GNSUM[i] =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
   
@@ -96,12 +104,13 @@ for (i in 1:length(parameters)) {
 
 ################################################################################
 
-
-
+# Graph 
 x_1 = parameters
 ggplot() + 
-  geom_line(aes(x = x_1, y =  Nh_basic, col = "Basic")) + 
-  #geom_line(aes(x = x_1, y =  Nh_basicvis, col = "Basic_vis")) + 
+  geom_line(aes(x = x_1, y =  Nh_basic_sum, col = "Basic_sum")) + 
+  #geom_line(aes(x = x_1, y =  Nh_basicvis_sum, col = "Basic_vis_sum")) + 
+  geom_line(aes(x = x_1, y =  Nh_basic_mean, col = "Basic_mean")) + 
+  #geom_line(aes(x = x_1, y =  Nh_basicvis_mean, col = "Basic_vis_mean")) + 
   #geom_line(aes(x = x_1, y =  Nh_PIMLEvis, col = "PIMLE_vis")) + 
   geom_line(aes(x = x_1, y =  Nh_PIMLE, col = "PIMLE")) + 
   geom_line(aes(x = x_1, y =  Nh_MLE, col = "MLE")) + 
@@ -113,8 +122,18 @@ ggplot() +
   geom_line(aes(x = x_1, y =  Nh_real, col = "Real value")) +
   scale_color_discrete("Estimators") + 
   labs(title = "Prediction variability according to the survey's size",
-       x = "Survey's size",
+       x = "Survey size",
        y = "Hidden population estimate")
+
+################################################################################
+
+timer = Sys.time() - t
+timer
+
+#################### COMPUTATION TIME ANALYSIS ###########################
+# Computation time (N=1000)  (my PC)
+#timer ->  12.50798 secs
+###########################################################################
 
 
 

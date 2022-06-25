@@ -1,10 +1,9 @@
 ##########################################################################
 # Graph based on the graph structure, leaving the rest of parameters fixed
 ##########################################################################
-
 t = Sys.time()
 
-N = 1000                 # Population size
+N = 1000                  # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
 v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
@@ -27,7 +26,7 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = seq(from = 0.05, to = 1, length.out = 21)
+parameters = round(seq(from = 2, to = 100, length.out = 41))
 
 
 # Variable reset
@@ -54,13 +53,15 @@ Population_ref = genPopulation(N, v_pop, v_pop_prob,hp_prob)
 survey_hp_ref = sample(nrow(Population[Population$Hidden_Population==1,]), n_survey_hp, replace = FALSE)
 survey_ref = sample(nrow(Population), n_survey, replace = FALSE)
 
+survey_hp_ref
+
 ################################################################################
 # Estimation based on the different parameters
 
 
 for (i in 1:length(parameters)) {
   # Parameter Choice
-  p = parameters[i]
+  nei = parameters[i]
   
   #Population
   Population = Population_ref
@@ -107,8 +108,8 @@ for (i in 1:length(parameters)) {
   }
   
   #Surveys
-  survey = getSurvey(n_survey,Population)    # Population survey
-  survey_hp = getSurvey(n_survey_hp,Population[Population$Hidden_Population==1,]) # Hiddden population survey
+  survey = Population[survey_ref,]
+  survey_hp = Population[Population$Hidden_Population==1,][survey_hp_ref,]
   
   #Vector with the number of people in each subpopulation
   
@@ -158,15 +159,14 @@ ggplot() +
   geom_line(aes(x = x_1, y =  Nh_real, col = "Real value")) +
   scale_color_discrete("Estimators") + 
   labs(title = "Prediction variability according to network structure",
-       x = "Aleatorization of connections",
+       x = "Number of neighbours",
        y = "Hidden population estimate")
 ################################################################################
 
-Sys.time() - t
+Sys.time()-t
 
 #################### COMPUTATION TIME ANALYSIS ###########################
 # Computation time (N=1000)  (my PC)
-#timer ->  3.394592 mins 
+#timer ->  3.518286 mins 
 ###########################################################################
-
 

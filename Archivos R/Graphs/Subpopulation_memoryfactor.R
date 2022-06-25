@@ -2,6 +2,8 @@
 # Graph based on the value of the memory factor of the subpopulations, leaving the rest of parameters fixed
 ###########################################################################################################
 
+t = Sys.time()
+
 ################ WARNING #########################################################
 # IT IS IMPORTANT TO LEAVE THIS FACTOR AS 0, SINCE THE FIRST POPULATION THAT WE ARE 
 # GOING TO BUILD WILL BE A BASIS FOR THE REST
@@ -36,8 +38,8 @@ net_sw = Graph_population_matrix[[1]]      # Population´s graph
 Population = Graph_population_matrix[[2]]  # Population
 Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
-survey = getSurvey(n_survey,Population)
-survey_hp = getSurvey(n_survey_hp,Population[Population$Hidden_Population==1,])
+survey = getSurvey(n_survey,Population)    #Survey
+survey_hp = getSurvey(n_survey_hp,Population[Population$Hidden_Population==1,]) #Hidden population survey
 
 #Vector with the number of people in each subpopulation
 
@@ -52,19 +54,23 @@ for (k in 1:n_pop) {
 parameters = seq(from = 0, to = 0.25, length.out = 21)
 
 
+# Variable reset
+
 Nh_real =  rep(NA,length(parameters)) 
 
-Nh_basic = rep(NA,length(parameters)) 
-Nh_basicvis = rep(NA,length(parameters)) 
+#Nh_basic_sum = rep(NA,length(parameters)) 
+#Nh_basic_mean = rep(NA,length(parameters)) 
+#Nh_basicvis_sum = rep(NA,length(parameters)) 
+#Nh_basicvis_mean = rep(NA,length(parameters)) 
 
 Nh_PIMLE = rep(NA,length(parameters)) 
-Nh_PIMLEvis = rep(NA,length(parameters)) 
+#Nh_PIMLEvis = rep(NA,length(parameters)) 
 
 Nh_MLE = rep(NA,length(parameters)) 
-Nh_MLEvis = rep(NA,length(parameters)) 
+#Nh_MLEvis = rep(NA,length(parameters)) 
 
 Nh_MoS = rep(NA,length(parameters)) 
-Nh_MoSvis = rep(NA,length(parameters)) 
+#Nh_MoSvis = rep(NA,length(parameters)) 
 
 Nh_GNSUM = rep(NA,length(parameters))  
 
@@ -74,8 +80,12 @@ Nh_GNSUM = rep(NA,length(parameters))
 vect_reach = survey$Reach
 vect_reach_re =  rep(NA, nrow(survey))
 
+################################################################################
+# Estimation based on the different parameters
+
 for (i in 1:length(parameters)) {
   
+  # Parameter Choice
   sub_memory_factor = parameters[i] 
   
   for(j in 0:n_pop){
@@ -88,19 +98,22 @@ for (i in 1:length(parameters)) {
   }
   
   
+  # Hidden population estimates
   Nh_real[i] = sum(Population$Hidden_Population) 
   
-  Nh_basic[i] = getNh_basic(survey,N) 
-  Nh_basicvis[i] = getNh_basicvis(survey,N,visibility_factor) 
+  #Nh_basic_sum[i] = getNh_basic_sum(survey,N) 
+  #Nh_basicvis_sum[i] = getNh_basicvis_sum(survey,N,visibility_factor) 
+  #Nh_basic_mean[i] = getNh_basic_mean(survey,N) 
+  #Nh_basicvis_mean[i] = getNh_basicvis_mean(survey,N,visibility_factor) 
   
   Nh_PIMLE[i] = getNh_PIMLE(survey, v_pop_total, N)
-  Nh_PIMLEvis[i] = getNh_PIMLEvis(survey, v_pop_total, N, visibility_factor)
+  #Nh_PIMLEvis[i] = getNh_PIMLEvis(survey, v_pop_total, N, visibility_factor)
   
   Nh_MLE[i] = getNh_MLE(survey, v_pop_total)
-  Nh_MLEvis[i] = getNh_MLEvis(survey, v_pop_total, visibility_factor)
+  #Nh_MLEvis[i] = getNh_MLEvis(survey, v_pop_total, visibility_factor)
   
   Nh_MoS[i] = getNh_MoS(survey, v_pop_total, N)
-  Nh_MoSvis[i] = getNh_MoSvis(survey, v_pop_total, N, visibility_factor)
+  #Nh_MoSvis[i] = getNh_MoSvis(survey, v_pop_total, N, visibility_factor)
   
   Nh_GNSUM[i] =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
 }
@@ -108,12 +121,13 @@ for (i in 1:length(parameters)) {
 
 
 ################################################################################
-
-
+# Graph 
 x_1 = parameters
 ggplot() + 
-  #geom_line(aes(x = x_1, y =  Nh_basic, col = "Basic")) + 
-  #geom_line(aes(x = x_1, y =  Nh_basicvis, col = "Basic_vis")) + 
+  geom_line(aes(x = x_1, y =  Nh_basic_sum, col = "Basic_sum")) + 
+  #geom_line(aes(x = x_1, y =  Nh_basicvis_sum, col = "Basic_vis_sum")) + 
+  geom_line(aes(x = x_1, y =  Nh_basic_mean, col = "Basic_mean")) + 
+  #geom_line(aes(x = x_1, y =  Nh_basicvis_mean, col = "Basic_vis_mean")) +  
   #geom_line(aes(x = x_1, y =  Nh_PIMLEvis, col = "PIMLE_vis")) + 
   geom_line(aes(x = x_1, y =  Nh_PIMLE, col = "PIMLE")) + 
   geom_line(aes(x = x_1, y =  Nh_MLE, col = "MLE")) + 
@@ -127,3 +141,11 @@ ggplot() +
   labs(title = "Prediction variability according to the subpopulations memory factor",
        x = "Subpopulation memory factor ",
        y = "Hidden population estimate")
+################################################################################
+Sys.time() - t
+
+#################### COMPUTATION TIME ANALYSIS ###########################
+# Computation time (N=1000)  (my PC)
+#timer ->  20.19942 secs 
+###########################################################################
+
