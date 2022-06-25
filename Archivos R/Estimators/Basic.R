@@ -3,7 +3,7 @@
 #########################
 
 
-N = 10000                 # Population size
+N = 1000                 # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
 v_pop_prob = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probability of each subpopulation
@@ -31,11 +31,11 @@ net_sw = Graph_population_matrix[[1]]      # Population´s graph
 Population = Graph_population_matrix[[2]]  # Population
 Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
-survey = getSurvey(n_survey,Population)
+survey = getSurvey(n_survey,Population)    # Survey
 
 ################################################################################
 
-getNh_basic = function(survey,N) {
+getNh_basic_sum = function(survey,N) {
   #NSUM Basic estimator  
   #survey: survey
   #N: Population size
@@ -45,8 +45,29 @@ getNh_basic = function(survey,N) {
   return(Nh_f)
 }
 
+getNh_basic_mean = function(survey,N) {
+  #NSUM Basic estimator  
+  #survey: survey
+  #N: Population size
+  
+  Nh_f =  N*mean(survey$HP_total_apvis/survey$Reach_memory)
+  
+  return(Nh_f)
+}
 
-getNh_basicvis = function(survey,N,vis) {
+getNh_basicvis_sum = function(survey,N,vis) {
+  #NSUM Basic estimator  
+  #survey: survey
+  #N: Population size
+  #vis: estimation of the visibility factor
+  
+  Nh_f =  N*sum(survey$HP_total_apvis)/sum(survey$Reach_memory) * (1/vis)
+  
+  return(Nh_f)
+}
+
+
+getNh_basicvis_mean = function(survey,N,vis) {
   #NSUM Basic estimator  
   #survey: survey
   #N: Population size
@@ -60,12 +81,35 @@ getNh_basicvis = function(survey,N,vis) {
 
 ################################################################################
 
-#Value of the estimations 
-Nh_basic =getNh_basic(survey,N) 
-Nh_basic
 
-Nh_basicvis =getNh_basicvis(survey,N,visibility_factor) 
-Nh_basicvis
+# Value of estimates
+t = Sys.time()
+Nh_basic = getNh_basic_mean(survey,N) 
+Nh_basic
+Sys.time() - t
+
+t = Sys.time()
+Nh_basic =getNh_basic_sum(survey,N) 
+Nh_basic
+Sys.time() - t
+
+t = Sys.time()
+Nh_basicvis_mean =getNh_basicvis_mean(survey,N,visibility_factor) 
+Nh_basicvis_mean
+Sys.time() - t
+
+t = Sys.time()
+Nh_basicvis_sum =getNh_basicvis_sum(survey,N,visibility_factor) 
+Nh_basicvis_sum
+Sys.time() - t
+
 
 # Real value
 sum(Population$Hidden_Population) 
+
+
+#################### COMPUTATION TIME ANALYSIS ###########################
+# Computation time (N=1000)  (my PC)
+#timer ->  0.003814936 secs 
+###########################################################################
+

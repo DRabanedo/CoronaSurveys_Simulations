@@ -2,7 +2,7 @@
 # Plug-in-MLE estimator (PIMLE)
 ###############################
 
-N = 1000                 # Population size
+N = 1000                  # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
 v_pop_prob = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probability of each subpopulation
@@ -30,7 +30,8 @@ net_sw = Graph_population_matrix[[1]]      # Population´s graph
 Population = Graph_population_matrix[[2]]  # Population
 Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
-survey = getSurvey(n_survey,Population)
+survey = getSurvey(n_survey,Population)    # Survey
+
 
 #Vector with the number of people in each subpopulation
 
@@ -57,6 +58,7 @@ getNh_PIMLE = function(enc,v_pob,N) {
   #N: population's size
   #vis: estimation of the visibility factor
   
+  #Reach estimate
   d_iest = c()
   for (i in 1:nrow(enc)) {
     d_iest[i] = N * sum(enc[i,tail(names(enc),length(v_pob))])/sum(v_pob)
@@ -74,21 +76,25 @@ getNh_PIMLEvis = function(enc,v_pob,N,vis) {
   #N: population's size
   #vis: estimation of the visibility factor
   
+  #Reach estimate
   d_iest = c()
   for (i in 1:nrow(enc)) {
     d_iest[i] = N * sum(enc[i,tail(names(enc),length(v_pob))])/sum(v_pob)
   }
-  Nh_f = N * mean(enc$HP_total_apvis/d_iest) * (1/vis) # media de N \frac{y_{iu}}{\hat{d_i}}
+  Nh_f = N * mean(enc$HP_total_apvis/d_iest) * (1/vis) # \frac{y_{iu}}{\hat{d_i}}
   Nh_f
 }
 
 
 ################################################################################
 
-# Value of the estimations
 
+# Value of estimates
+
+t = Sys.time()
 Nh_PIMLE = getNh_PIMLE(survey, v_pop_total, N)
 Nh_PIMLE
+Sys.time() - t
 
 Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, visibility_factor)
 Nh_PIMLEvis
@@ -96,5 +102,10 @@ Nh_PIMLEvis
 
 #Real Value
 sum(Population$Hidden_Population) 
+
+#################### COMPUTATION TIME ANALYSIS ###########################
+# Computation time (N=1000)  (my PC)
+#timer ->  0.188868 secs 
+###########################################################################
 
 
