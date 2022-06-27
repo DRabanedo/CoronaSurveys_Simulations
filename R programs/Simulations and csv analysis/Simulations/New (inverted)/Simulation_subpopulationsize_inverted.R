@@ -4,7 +4,7 @@
 
 t = Sys.time()
 
-N = 1000                  # Population size
+N = 10000                  # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
 v_pop_prob = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probability of each subpopulation
@@ -125,10 +125,10 @@ for (i in 1:length(parameters)) {
     # Hidden population estimates
     Nh_real = sum(Population$Hidden_Population) 
     
-    #Nh_basic_sum    = getNh_basic(survey,N) 
-    #Nh_basicvis_sum = getNh_basicvis(survey,N,visibility_factor) 
-    #Nh_basic_mean    = getNh_basic(survey,N) 
-    #Nh_basicvis_mean = getNh_basicvis(survey,N,visibility_factor) 
+    #Nh_basic_sum    = getNh_basic_sum(survey,N) 
+    #Nh_basicvis_sum = getNh_basicvis_sum(survey,N,visibility_factor) 
+    #Nh_basic_mean    = getNh_basic_mean(survey,N) 
+    #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,visibility_factor) 
     
     Nh_PIMLE    = getNh_PIMLE(survey, v_pop_total, N)
     #Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, visibility_factor)
@@ -146,17 +146,17 @@ for (i in 1:length(parameters)) {
     sim = data.frame(Nh_real = Nh_real)
     names(sim)[dim(sim)[2]] = str_c("Nh_real_",l)
     
-    sim = cbind(sim,Nh_basic_sum = Nh_basic_sum)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basic_sum_",l)
+    #sim = cbind(sim,Nh_basic_sum = Nh_basic_sum)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basic_sum_",l)
     
-    sim = cbind(sim,Nh_basicvis_sum = Nh_basicvis_sum)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_sum_",l)
+    #sim = cbind(sim,Nh_basicvis_sum = Nh_basicvis_sum)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_sum_",l)
     
-    sim = cbind(sim,Nh_basic_mean = Nh_basic_mean)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basic_mean_",l)
+    #sim = cbind(sim,Nh_basic_mean = Nh_basic_mean)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basic_mean_",l)
     
-    sim = cbind(sim,Nh_basicvis = Nh_basicvis)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_mean_",l)
+    #sim = cbind(sim,Nh_basicvis_mean = Nh_basicvis_mean)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_mean_",l)
     
     sim = cbind(sim,Nh_PIMLE = Nh_PIMLE)
     names(sim)[dim(sim)[2]] = str_c("Nh_PIMLE_",l)
@@ -183,7 +183,6 @@ for (i in 1:length(parameters)) {
   }
   simulacion = bind_cols(lista_sim)
   lista_simulacion[[i]] = simulacion
-  Population[,(ncol(Population)-(n_pop)):ncol(Population)] = vis_pob_reset
   print(i)
   
 }
@@ -204,7 +203,7 @@ timer
 #################### COMPUTATION TIME ANALYSIS #############################
 
 # Computation time (N=1000) (my PC)
-#timer ->     
+#timer -> 1.211633 mins    
 
 # Computation time (N=10000) (my PC)
 #timer ->  

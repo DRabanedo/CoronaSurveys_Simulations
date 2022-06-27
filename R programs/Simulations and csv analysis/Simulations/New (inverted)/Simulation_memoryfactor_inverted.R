@@ -119,10 +119,10 @@ for (i in 1:length(parameters)) {
     #Hidden population estimates
     Nh_real = sum(Population$Hidden_Population) 
     
-    Nh_basic_sum    = getNh_basic(survey,N) 
-    #Nh_basicvis_sum = getNh_basicvis(survey,N,visibility_factor) 
-    Nh_basic_mean    = getNh_basic(survey,N) 
-    #Nh_basicvis_mean = getNh_basicvis(survey,N,visibility_factor) 
+    Nh_basic_sum    = getNh_basic_sum(survey,N) 
+    #Nh_basicvis_sum = getNh_basicvis_sum(survey,N,visibility_factor) 
+    Nh_basic_mean    = getNh_basic_mean(survey,N) 
+    #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,visibility_factor) 
     
     #Nh_PIMLE    = getNh_PIMLE(survey, v_pop_total, N)
     #Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, visibility_factor)
@@ -149,7 +149,7 @@ for (i in 1:length(parameters)) {
     sim = cbind(sim,Nh_basic_mean = Nh_basic_mean)
     names(sim)[dim(sim)[2]] = str_c("Nh_basic_mean_",l)
     
-    sim = cbind(sim,Nh_basicvis = Nh_basicvis)
+    sim = cbind(sim,Nh_basicvis_mean = Nh_basicvis_mean)
     names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_mean_",l)
     
     #sim = cbind(sim,Nh_PIMLE = Nh_PIMLE)
@@ -188,7 +188,7 @@ simulaciones = bind_rows(lista_simulacion)
 
 simulaciones
 write.csv(simulaciones,                        # Data frame 
-          file = "Simulaciones_factormemoria", # Csv name
+          file = "Simulations_memoryfactor",   # Csv name
           row.names = TRUE )                   # Row names: TRUE or FALSE 
 
 
