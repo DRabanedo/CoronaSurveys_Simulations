@@ -9,7 +9,7 @@ memory_factor = 0      #Reach memory factor (parameter to change variance of the
 ################################################################################
 
 t = Sys.time()
-N = 1000                 # Population size
+N = 10000                 # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
 v_pop_prob = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probability of each subpopulation
@@ -143,14 +143,14 @@ for (i in 1:length(parameters)) {
     sim = cbind(sim,Nh_basic_sum = Nh_basic_sum)
     names(sim)[dim(sim)[2]] = str_c("Nh_basic_sum_",l)
     
-    sim = cbind(sim,Nh_basicvis_sum = Nh_basicvis_sum)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_sum_",l)
+    #sim = cbind(sim,Nh_basicvis_sum = Nh_basicvis_sum)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_sum_",l)
     
     sim = cbind(sim,Nh_basic_mean = Nh_basic_mean)
     names(sim)[dim(sim)[2]] = str_c("Nh_basic_mean_",l)
     
-    sim = cbind(sim,Nh_basicvis_mean = Nh_basicvis_mean)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_mean_",l)
+    #sim = cbind(sim,Nh_basicvis_mean = Nh_basicvis_mean)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_mean_",l)
     
     #sim = cbind(sim,Nh_PIMLE = Nh_PIMLE)
     #names(sim)[dim(sim)[2]] = str_c("Nh_PIMLE_",l)
@@ -182,13 +182,14 @@ for (i in 1:length(parameters)) {
 }
 
 simulaciones = bind_rows(lista_simulacion)
+simulaciones = cbind(simulaciones, data = parameters)
 
 ################################################################################
 
 
 simulaciones
 write.csv(simulaciones,                        # Data frame 
-          file = "Simulations_memoryfactor",   # Csv name
+          file = "Simulations_memoryfactor_nh",   # Csv name
           row.names = TRUE )                   # Row names: TRUE or FALSE 
 
 

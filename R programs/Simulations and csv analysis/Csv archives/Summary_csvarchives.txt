@@ -16,24 +16,24 @@ N = 10000, 25 iteraciones.
 **Factor visibilidad** 
 
 -Poblaciones desiguales:  HECHO 
--Poblaciones iguales:     HECHO 
+-Poblaciones iguales:     In process (OFFICE PC)
 
 
 **Factor memoria** 
 
--Poblaciones desiguales:  HECHO
--Poblaciones iguales:     HECHO
+-Poblaciones desiguales:  Hacer
+-Poblaciones iguales:     Hacer
  
 
 **Factor memoria subpoblaciones** (ESPERAR QUE QUIERO REVISAR EL CÓDIGO BIEN)
 
--Poblaciones desiguales: HACER 
--Poblaciones iguales:    HACER 
+-Poblaciones desiguales: Hacer 
+-Poblaciones iguales:    Hacer 
 
 
 **Número de subpoblaciones**
 
--Poblaciones iguales:  REMOTO
+-Poblaciones iguales:  Hacer
 
 
 **Tamaño de las subpoblaciones**
@@ -42,8 +42,8 @@ N = 10000, 25 iteraciones.
 
 **Tamaño de la encuesta**
 
--Poblaciones iguales:    HECHO 
--Poblaciones desiguales: HECHO 
+-Poblaciones iguales:    Hacer 
+-Poblaciones desiguales: Hacer 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -211,6 +211,9 @@ write.csv(simulaciones,                          # Data frame
 # Computation time (N=1000) (my PC)
 #timer -> 16.54465 mins  
 
+# Computation time (N=1000) (office PC)
+#timer -> 
+
 # Computation time (N=10000) (office PC)
 #timer -> 
 
