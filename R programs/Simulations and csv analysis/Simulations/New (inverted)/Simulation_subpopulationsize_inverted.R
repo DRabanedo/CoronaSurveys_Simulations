@@ -41,7 +41,7 @@ Population = Graph_population_matrix[[2]]  # Population
 Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
 #Auxiliar data for the simulation
-b = 25 #Number of simulations
+b = 50 #Number of simulations
 lista_simulacion = list()
 lista_sim = list()
 k = length(v_pop)
@@ -57,10 +57,6 @@ list_surveys_hp = list()
 for (h in 1:b) {
   list_surveys_hp[[h]] = sample(nrow(Population[Population$Hidden_Population == 1,]), n_survey_hp, replace = FALSE)
 }
-
-
-#Dataframe for the data
-simulaciones = data.frame(data =  1:length(parameters))
   
 ################################################################################
 
@@ -112,7 +108,7 @@ for (i in 1:length(parameters)) {
   Nh_MoS = rep(NA,b) 
   #Nh_MoSvis = rep(NA,b) 
   
-  #Nh_GNSUM = rep(NA,b) 
+  Nh_GNSUM = rep(NA,b) 
   
   lista_sim = list() 
   
@@ -139,7 +135,7 @@ for (i in 1:length(parameters)) {
     Nh_MoS     = getNh_MoS(survey, v_pop_total, N)
     #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, visibility_factor)
     
-    #Nh_GNSUM   =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
+    Nh_GNSUM   =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
     
     
     #Dataframe for saving the estimates
@@ -176,8 +172,8 @@ for (i in 1:length(parameters)) {
     #sim = cbind(sim,Nh_MoSvis = Nh_MoSvis)
     #names(sim)[dim(sim)[2]] = str_c("Nh_MoSvis_",l)
     
-    #sim = cbind(sim,Nh_GNSUM = Nh_GNSUM)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_GNSUM_",l)
+    sim = cbind(sim,Nh_GNSUM = Nh_GNSUM)
+    names(sim)[dim(sim)[2]] = str_c("Nh_GNSUM_",l)
     
     lista_sim[[l]] = sim
   }
@@ -188,10 +184,9 @@ for (i in 1:length(parameters)) {
 }
 
 simulaciones = bind_rows(lista_simulacion)
-
+simulaciones = cbind(simulaciones, data = 1:length(parameters))
 
 ################################################################################
-simulaciones
 write.csv(simulaciones,                                # Data frame
           file = "Simulations_subpopulationsize", # CSV name
           row.names = TRUE )                           # Row names: TRUE or FALSE

@@ -12,7 +12,7 @@ sub_memory_factor = 0      #Subpopulation memory factor (parameter to change var
 N = 1000                  # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
-v_pop_prob = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probability of each subpopulation
+v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
 hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
 n_survey = 300            # Number of individuals we draw in the survey
 n_survey_hp = 50          # Number of individuals we draw in the hidden population survey 
@@ -51,15 +51,12 @@ for (k in 1:n_pop) {
 # Study parameters
 parameters = seq(from = 0, to = 1, length.out = 21)
 
-#Dataframe to save the data
-simulaciones = data.frame(data =  parameters)
-
 ################################################################################
 
 # AUXILIARY DATA FOR THE SIMULATION
 
 vis_pob_reset = Population[,(ncol(Population)-(n_pop)):ncol(Population)]
-b = 25 #Number of iterations for the simulation
+b = 50 #Number of iterations for the simulation
 lista_simulacion = list()
 
 # Surveys representing the different iterations. 
@@ -141,17 +138,17 @@ for (i in 1:length(parameters)) {
     sim = data.frame(Nh_real = Nh_real)
     names(sim)[dim(sim)[2]] = str_c("Nh_real_",l)
     
-    sim = cbind(sim,Nh_basic_sum = Nh_basic_sum)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basic_sum_",l)
+    #sim = cbind(sim,Nh_basic_sum = Nh_basic_sum)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basic_sum_",l)
     
-    sim = cbind(sim,Nh_basicvis_sum = Nh_basicvis_sum)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_sum_",l)
+    #sim = cbind(sim,Nh_basicvis_sum = Nh_basicvis_sum)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_sum_",l)
     
-    sim = cbind(sim,Nh_basic_mean = Nh_basic_mean)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basic_mean_",l)
+    #sim = cbind(sim,Nh_basic_mean = Nh_basic_mean)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basic_mean_",l)
     
-    sim = cbind(sim,Nh_basicvis_mean = Nh_basicvis_mean)
-    names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_mean_",l)
+    #sim = cbind(sim,Nh_basicvis_mean = Nh_basicvis_mean)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_basicvis_mean_",l)
     
     sim = cbind(sim,Nh_PIMLE = Nh_PIMLE)
     names(sim)[dim(sim)[2]] = str_c("Nh_PIMLE_",l)
@@ -184,16 +181,17 @@ for (i in 1:length(parameters)) {
 }
   
 simulaciones = bind_rows(lista_simulacion)
-  
+simulaciones = cbind(simulaciones, data = parameters)
 
 
 
 ################################################################################
-simulaciones
 write.csv(simulaciones,                                  # Data frame
           file = "Simulation_subpopulationmemoryfactor", # Csv's name
           row.names = TRUE )                             # Row names: TRUE o FALSE 
 ################################################################################
+
+
 
 timer = Sys.time() - t
 timer

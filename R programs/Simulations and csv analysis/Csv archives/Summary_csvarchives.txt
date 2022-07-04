@@ -14,36 +14,32 @@ N = 10000, 25 iteraciones.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 **Factor visibilidad** 
-
--Poblaciones desiguales:  HECHO 
--Poblaciones iguales:     In process (OFFICE PC)
+  
+-Poblaciones iguales:     
 
 
 **Factor memoria** 
-
--Poblaciones desiguales:  Hacer
--Poblaciones iguales:     Hacer
+  
+-Poblaciones iguales:     
  
 
-**Factor memoria subpoblaciones** (ESPERAR QUE QUIERO REVISAR EL CÓDIGO BIEN)
+**Factor memoria subpoblaciones** 
 
--Poblaciones desiguales: Hacer 
--Poblaciones iguales:    Hacer 
+-Poblaciones iguales:     
 
 
 **Número de subpoblaciones**
 
--Poblaciones iguales:  Hacer
+-Poblaciones iguales:  
 
 
 **Tamaño de las subpoblaciones**
 
--Sin ningún sesgo:  HECHO (MCLAPPLY)
+-Sin ningún sesgo:  
 
 **Tamaño de la encuesta**
 
--Poblaciones iguales:    Hacer 
--Poblaciones desiguales: Hacer 
+-Poblaciones iguales:     
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -53,21 +49,21 @@ N = 10000, 25 iteraciones.
 
 **Factor visibilidad** 
 
--Poblaciones desiguales + factor memoria + factor memoria subpoblaciones:  HACER 
--Poblaciones iguales + factor memoria + factor memoria subpoblaciones:     MAQUINA VIRTUAL 
+-Poblaciones desiguales + factor memoria + factor memoria subpoblaciones:  
+-Poblaciones iguales + factor memoria + factor memoria subpoblaciones:      
 
 
 
 **Factor memoria**
 
--Poblaciones desiguales + factor visibilidad + factor memoria subpoblaciones:  HACER 
--Poblaciones iguales + factor visibilidad + factor memoria subpoblaciones:     HACER 
+-Poblaciones desiguales + factor visibilidad + factor memoria subpoblaciones:  
+-Poblaciones iguales + factor visibilidad + factor memoria subpoblaciones:    
 
 
-**Factor memoria subpoblaciones** (ESPERAR QUE QUIERO REVISAR EL CÓDIGO BIEN)
+**Factor memoria subpoblaciones** 
 
--Poblaciones desiguales + factor memoria + factor memoria subpoblaciones:  HACER 
--Poblaciones iguales + factor memoria + factor memoria subpoblaciones:     HACER 
+-Poblaciones desiguales + factor memoria + factor memoria subpoblaciones:  
+-Poblaciones iguales + factor memoria + factor memoria subpoblaciones:   
 
 
 

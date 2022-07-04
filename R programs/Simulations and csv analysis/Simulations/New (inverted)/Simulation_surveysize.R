@@ -7,7 +7,7 @@ t = Sys.time()
 N = 10000                 # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
-v_pop_prob = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probability of each subpopulation
+v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
 hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
 n_survey = 300            # Number of individuals we draw in the survey
 n_survey_hp = 50          # Number of individuals we draw in the hidden population survey 
@@ -48,7 +48,11 @@ for (k in 1:n_pop) {
 
 ################################################################################
 
-for (l in 1:25) {
+simulaciones = data.frame(data = parameters)
+
+b = 50
+
+for (l in 1:b) {
 
   #Hidden's population survey
   survey_hp = getSurvey(n_survey_hp, Population[Population$Hidden_Population==1,])
@@ -56,10 +60,10 @@ for (l in 1:25) {
   
   Nh_real =  rep(NA,length(parameters)) 
   
-  Nh_basic_sum    = getNh_basic_sum(survey,N) 
-  Nh_basicvis_sum = getNh_basicvis_sum(survey,N,visibility_factor) 
-  Nh_basic_mean    = getNh_basic_mean(survey,N) 
-  Nh_basicvis_mean = getNh_basicvis_mean(survey,N,visibility_factor) 
+  Nh_basic_sum    = rep(NA,length(parameters)) 
+  Nh_basicvis_sum = rep(NA,length(parameters))  
+  Nh_basic_mean    = rep(NA,length(parameters)) 
+  Nh_basicvis_mean = rep(NA,length(parameters)) 
   
   Nh_PIMLE = rep(NA,length(parameters)) 
   #Nh_PIMLEvis = rep(NA,length(parameters)) 
@@ -102,10 +106,11 @@ for (l in 1:25) {
     Nh_GNSUM[i] =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
     
     Nh_Direct[i] = getNh_Direct(survey, N)
-    print(i)
+    
   }
   
   #Dataframe construction
+  
   simulaciones = cbind(simulaciones,Nh_real = Nh_real)
   names(simulaciones)[dim(simulaciones)[2]] = str_c("Nh_real_",l)
   
@@ -165,7 +170,7 @@ timer
 #################### COMPUTATION TIME ANALYSIS ###########################
 
 # Computation time (N=1000) (my PC)
-#timer -> 9.375838 secs    
+#timer ->  1.511148 mins   
 
 # Computation time (N=10000) (my PC)
 #timer ->  
