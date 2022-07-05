@@ -2,7 +2,6 @@
 # Simulation based on the number of subpopulations, leaving the rest of parameters fixed
 ########################################################################################
 
-
 t = Sys.time()
 
 N = 1000                  # Population size
@@ -198,8 +197,8 @@ timer
 
 #################### COMPUTATION TIME ANALYSIS ###########################
 
-# Computation time (N=1000) (my PC)
-#timer -> 2.020405 mins    
+# Computation time (N=1000) (virtual machine)
+#timer ->   5.898855 mins  
 
 # Computation time (N=10000) (my PC)
 #timer ->  

@@ -1,14 +1,9 @@
-################################################################################################################
-# Simulation based on the value of the memory factor of the Reach variable, leaving the rest of parameters fixed
-################################################################################################################
-
-################ WARNING #########################################################
-# IT IS IMPORTANT TO LEAVE THIS FACTOR AS 0, SINCE THE FIRST POPULATION THAT WE ARE 
-# GOING TO BUILD WILL BE A BASIS FOR THE REST
-memory_factor = 0      #Reach memory factor (parameter to change variance of the perturbations' normal)
-################################################################################
+#################################################################################################
+# Simulation based on the number of neighbours of each node, leaving the rest of parameters fixed
+#################################################################################################
 
 t = Sys.time()
+
 N = 1000                 # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
@@ -18,6 +13,7 @@ n_survey = 300            # Number of individuals we draw in the survey
 n_survey_hp = 50          # Number of individuals we draw in the hidden population survey 
 
 sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+memory_factor = 0         # Reach memory factor (parameter to change variance of the perturbations' normal)
 visibility_factor = 1     # Visibility factor (Binomial's probability)
 seed = 207                # Seed
 set.seed(seed)

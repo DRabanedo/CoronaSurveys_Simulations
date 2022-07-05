@@ -2,13 +2,16 @@
 # Simulation based on the value of the memory factor of the Reach variable, leaving the rest of parameters fixed
 ################################################################################################################
 
+t = Sys.time()
+
+
 ################ WARNING #########################################################
 # IT IS IMPORTANT TO LEAVE THIS FACTOR AS 0, SINCE THE FIRST POPULATION THAT WE ARE 
 # GOING TO BUILD WILL BE A BASIS FOR THE REST
 memory_factor = 0      #Reach memory factor (parameter to change variance of the perturbations' normal)
 ################################################################################
 
-t = Sys.time()
+
 N = 10000                 # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
@@ -188,9 +191,9 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 
 ################################################################################
-write.csv(simulaciones,                        # Data frame 
+write.csv(simulaciones,                           # Data frame 
           file = "Simulations_memoryfactor_nh",   # Csv name
-          row.names = TRUE )                   # Row names: TRUE or FALSE 
+          row.names = TRUE )                      # Row names: TRUE or FALSE 
 ################################################################################
 
 
@@ -202,7 +205,7 @@ timer
 #################### COMPUTATION TIME ANALYSIS ###########################
 
 # Computation time (N=1000) (my PC)
-#timer -> 12.56321 secs not saving all the unnecessary estimators 
+#timer -> 29.46286 secs not saving all the unnecessary estimators 
 
 # Computation time (N=10000) (office PC)
 #timer -> 7.521129 mins not saving all the unnecessary estimators 

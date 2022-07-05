@@ -156,12 +156,9 @@ for (l in 1:b) {
 }
 
 ################################################################################
-
-simulaciones
 write.csv(simulaciones,                       # Data frame
-          file = "Simulation_surveysize",    # Csv name
+          file = "Simulation_surveysize",     # Csv name
           row.names = TRUE )                  # Rownames TRUE o FALSE
-
 ################################################################################
 
 

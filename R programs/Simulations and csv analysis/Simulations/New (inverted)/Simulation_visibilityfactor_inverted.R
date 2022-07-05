@@ -2,7 +2,7 @@
 # Simulation based on the value of the visibility factor, leaving the rest of parameters fixed
 ##############################################################################################
 
-
+t = Sys.time()
 ################ WARNING #########################################################
 # IT IS IMPORTANT TO LEAVE THIS FACTOR AS 0, SINCE THE FIRST POPULATION THAT WE ARE 
 # GOING TO BUILD WILL BE A BASIS FOR THE REST
@@ -10,7 +10,7 @@ visibility_factor = 1
 ################################################################################
 
 
-N = 1000                  # Population size
+N = 10000                  # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
 v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
@@ -205,13 +205,17 @@ write.csv(simulaciones,                          # Data frame
           row.names = TRUE )                     # Row names: TRUE o FALSE 
 ################################################################################
 
+
+
+timer = Sys.time() - t
+timer
 #################### COMPUTATION TIME ANALYSIS ###########################
 
 # Computation time (N=1000) (my PC)
 #timer -> 16.54465 mins  
 
 # Computation time (N=1000) (office PC)
-#timer -> 
+#timer -> 12.12937 mins
 
 # Computation time (N=10000) (office PC)
 #timer -> 
