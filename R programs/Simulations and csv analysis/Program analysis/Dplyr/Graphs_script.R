@@ -2,7 +2,8 @@ library(dplyr)
 library(matrixStats)
 library(ggplot2)
 
-simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Simulations and csv analysis/Csv archives/Visibility factor/Simulations_visibilityfactor_h")
+simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Simulations and csv analysis/Csv archives/Memory factor/Simulations_memoryfactor")
+
 
 #Column selection
 
@@ -35,75 +36,76 @@ Nh_Direct_dataframe = select(simulation_data, starts_with("Nh_Direct"))
 
 Nh_basic_sum_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basic_sum_dataframe-Nh_real_dataframe))),
                                    mse = rowMeans(as.matrix((Nh_basic_sum_dataframe-Nh_real_dataframe)^2)),
-                                   bias = rowMeans(as.matrix(Nh_basic_sum_dataframe-Nh_real_dataframe)),
+                                   bias = rowMeans(as.matrix(Nh_basic_sum_dataframe)),
                                    sd = rowSds(as.matrix(Nh_basic_sum_dataframe))) 
 
 Nh_basicvis_sum_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basicvis_sum_dataframe-Nh_real_dataframe))),
                                       mse = rowMeans(as.matrix((Nh_basicvis_sum_dataframe-Nh_real_dataframe)^2)),
-                                      bias = rowMeans(as.matrix(Nh_basicvis_sum_dataframe-Nh_real_dataframe)),
+                                      bias = rowMeans(as.matrix(Nh_basicvis_sum_dataframe)),
                                       sd = rowSds(as.matrix(Nh_basicvis_sum_dataframe)))
 
 
 
 Nh_basic_mean_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basic_mean_dataframe-Nh_real_dataframe))),
                                     mse = rowMeans(as.matrix((Nh_basic_mean_dataframe-Nh_real_dataframe)^2)),
-                                    bias = rowMeans(as.matrix(Nh_basic_mean_dataframe-Nh_real_dataframe)),
+                                    bias = rowMeans(as.matrix(Nh_basic_mean_dataframe)),
                                     sd = rowSds(as.matrix(Nh_basic_mean_dataframe)))
 
 Nh_basicvis_mean_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basicvis_mean_dataframe-Nh_real_dataframe))),
                                        mse = rowMeans(as.matrix((Nh_basicvis_mean_dataframe-Nh_real_dataframe)^2)),
-                                       bias = rowMeans(as.matrix(Nh_basicvis_mean_dataframe-Nh_real_dataframe)),
+                                       bias = rowMeans(as.matrix(Nh_basicvis_mean_dataframe)),
                                        sd = rowSds(as.matrix(Nh_basicvis_mean_dataframe)))
 
 
 
 Nh_PIMLE_analysis    = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_PIMLE_dataframe-Nh_real_dataframe))),
                                   mse = rowMeans(as.matrix((Nh_PIMLE_dataframe-Nh_real_dataframe)^2)),
-                                  bias = rowMeans(as.matrix(Nh_PIMLE_dataframe-Nh_real_dataframe)),
+                                  bias = rowMeans(as.matrix(Nh_PIMLE_dataframe)),
                                   sd = rowSds(as.matrix(Nh_PIMLE_dataframe)))
 
 Nh_PIMLEvis_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_PIMLEvis_dataframe-Nh_real_dataframe))),
                                   mse = rowMeans(as.matrix((Nh_PIMLEvis_dataframe-Nh_real_dataframe)^2)),
-                                  bias = rowMeans(as.matrix(Nh_PIMLEvis_dataframe-Nh_real_dataframe)),
+                                  bias = rowMeans(as.matrix(Nh_PIMLEvis_dataframe)),
                                   sd = rowSds(as.matrix(Nh_PIMLEvis_dataframe)))
 
 
 
 Nh_MLE_analysis     = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MLE_dataframe-Nh_real_dataframe))),
                                  mse = rowMeans(as.matrix((Nh_MLE_dataframe-Nh_real_dataframe)^2)),
-                                 bias = rowMeans(as.matrix(Nh_MLE_dataframe-Nh_real_dataframe)),
+                                 bias = rowMeans(as.matrix(Nh_MLE_dataframe)),
                                  sd = rowSds(as.matrix(Nh_MLE_dataframe)))
 
 Nh_MLEvis_analysis  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MLEvis_dataframe-Nh_real_dataframe))),
                                  mse = rowMeans(as.matrix((Nh_MLEvis_dataframe-Nh_real_dataframe)^2)),
-                                 bias = rowMeans(as.matrix(Nh_MLEvis_dataframe-Nh_real_dataframe)),
+                                 bias = rowMeans(as.matrix(Nh_MLEvis_dataframe)),
                                  sd = rowSds(as.matrix(Nh_MLEvis_dataframe)))
 
 
 
 Nh_MoS_analysis     = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MoS_dataframe-Nh_real_dataframe))),
                                  mse = rowMeans(as.matrix((Nh_MoS_dataframe-Nh_real_dataframe)^2)),
-                                 bias = rowMeans(as.matrix(Nh_MoS_dataframe-Nh_real_dataframe)),
+                                 bias = rowMeans(as.matrix(Nh_MoS_dataframe)),
                                  sd = rowSds(as.matrix(Nh_MoS_dataframe)))
 
 Nh_MoSvis_analysis  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MoSvis_dataframe-Nh_real_dataframe))),
                                  mse = rowMeans(as.matrix((Nh_MoSvis_dataframe-Nh_real_dataframe)^2)),
-                                 bias = rowMeans(as.matrix(Nh_MoSvis_dataframe-Nh_real_dataframe)),
+                                 bias = rowMeans(as.matrix(Nh_MoSvis_dataframe)),
                                  sd = rowSds(as.matrix(Nh_MoSvis_dataframe)))
 
 
 
 Nh_GNSUM_analysis  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_GNSUM_dataframe-Nh_real_dataframe))),
                                 mse = rowMeans(as.matrix((Nh_GNSUM_dataframe-Nh_real_dataframe)^2)),
-                                bias = rowMeans(as.matrix(Nh_GNSUM_dataframe-Nh_real_dataframe)),
+                                bias = rowMeans(as.matrix(Nh_GNSUM_dataframe)),
                                 sd = rowSds(as.matrix(Nh_GNSUM_dataframe)))
 
 
 
 Nh_Direct_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_Direct_dataframe-Nh_real_dataframe))),
                                 mse = rowMeans(as.matrix((Nh_Direct_dataframe-Nh_real_dataframe)^2)),
-                                bias = rowMeans(as.matrix(Nh_Direct_dataframe-Nh_real_dataframe)),
+                                bias = rowMeans(as.matrix(Nh_Direct_dataframe)),
                                 sd = rowSds(as.matrix(Nh_Direct_dataframe)))
+
 
 
 
@@ -185,27 +187,27 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 ggplot(graph_data_abserror) + 
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
   geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
-  geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  #geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
-  labs(title = "",
-       x = "",
-       y = "Mean Absolute Error (MAE")
+  labs(title = "Simulations based on the memory factor",
+       x = "Memory factor",
+       y = "Mean Absolute Error")
 
 
 ################################################################################
@@ -283,26 +285,26 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 ggplot(graph_data_mse) + 
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
   geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
-  geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
-  
-  #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
-  scale_color_discrete("Legend") + 
-  labs(title = "",
-       x = "",
+#geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+
+#geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
+scale_color_discrete("Legend") + 
+  labs(title = "Mean squared error based on the memory factor",
+       x = "Memory factor",
        y = "Mean Squared Error (MSE)")
 
 
@@ -313,6 +315,7 @@ ggplot(graph_data_mse) +
 
 graph_data_bias = data.frame( data = simulation_data$data)
 
+graph_data_bias = cbind(graph_data_bias, Nh_real =  simulation_data$Nh_real_1)
 
 if(ncol(Nh_basic_sum_dataframe) !=  0) {
   graph_data_bias = cbind(graph_data_bias, Nh_basic_sum =  Nh_basic_sum_analysis$bias)
@@ -376,36 +379,127 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 }
 
 
-
 ggplot(graph_data_bias) + 
+  
+  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) + 
+  
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
   geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
-  geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
-  
-  #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
-  scale_color_discrete("Legend") + 
-  labs(title = "",
-       x = "",
+#geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+
+#geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
+scale_color_discrete("Legend") + 
+  labs(title = "Hidden population estimate based on the memory factor",
+       x = "Memory factor",
        y = "Hidden population estimate")
 
 
 
 ################################################################################
 
+#### Standard deviation analysis ####
+
+#Dataframe creation
+
+graph_data_sd = data.frame( data = simulation_data$data)
+
+
+if(ncol(Nh_basic_sum_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_basic_sum =  Nh_basic_sum_analysis$sd)
+}
+
+if(ncol(Nh_basicvis_sum_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$sd)
+}
+
+
+
+if(ncol(Nh_basic_mean_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_basic_mean =  Nh_basic_mean_analysis$sd)
+}
+
+if(ncol(Nh_basicvis_mean_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$sd)
+}
 
 
 
 
+if(ncol(Nh_PIMLE_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_PIMLE =  Nh_PIMLE_analysis$sd)
+}
+
+if(ncol(Nh_PIMLEvis_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_PIMLEvis =  Nh_PIMLEvis_analysis$sd)
+}
+
+
+
+
+if(ncol(Nh_MLE_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_MLE =  Nh_MLE_analysis$sd)
+}
+
+if(ncol(Nh_MLEvis_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_MLEvis =  Nh_MLEvis_analysis$sd)
+}
+
+
+
+
+if(ncol(Nh_MoS_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_MoS =  Nh_MoS_analysis$sd)
+}
+
+if(ncol(Nh_MoSvis_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_MoSvis =  Nh_MoSvis_analysis$sd)
+}
+
+
+
+if(ncol(Nh_GNSUM_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_GNSUM  =  Nh_GNSUM_analysis$sd)
+}
+
+if(ncol(Nh_Direct_dataframe) !=  0) {
+  graph_data_sd = cbind(graph_data_sd, Nh_Direct  =  Nh_Direct_analysis$sd)
+}
+
+
+
+ggplot(graph_data_sd) + 
+  geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
+  
+  geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
+  
+  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  
+  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  
+  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  
+#geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+
+#geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
+scale_color_discrete("Legend") + 
+  labs(title = "Standard error based on the memory factor",
+       x = "Memory factor",
+       y = "Standard deviation")

@@ -35,74 +35,74 @@ Nh_Direct_dataframe = select(simulation_data, starts_with("Nh_Direct"))
 
 Nh_basic_sum_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basic_sum_dataframe-Nh_real_dataframe))),
                                    mse = rowMeans(as.matrix((Nh_basic_sum_dataframe-Nh_real_dataframe)^2)),
-                                   bias = rowMeans(as.matrix(Nh_basic_sum_dataframe-Nh_real_dataframe)),
+                                   bias = rowMeans(as.matrix(Nh_basic_sum_dataframe)),
                                    sd = rowSds(as.matrix(Nh_basic_sum_dataframe))) 
 
 Nh_basicvis_sum_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basicvis_sum_dataframe-Nh_real_dataframe))),
                                       mse = rowMeans(as.matrix((Nh_basicvis_sum_dataframe-Nh_real_dataframe)^2)),
-                                      bias = rowMeans(as.matrix(Nh_basicvis_sum_dataframe-Nh_real_dataframe)),
+                                      bias = rowMeans(as.matrix(Nh_basicvis_sum_dataframe)),
                                       sd = rowSds(as.matrix(Nh_basicvis_sum_dataframe)))
 
 
 
 Nh_basic_mean_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basic_mean_dataframe-Nh_real_dataframe))),
                                     mse = rowMeans(as.matrix((Nh_basic_mean_dataframe-Nh_real_dataframe)^2)),
-                                    bias = rowMeans(as.matrix(Nh_basic_mean_dataframe-Nh_real_dataframe)),
+                                    bias = rowMeans(as.matrix(Nh_basic_mean_dataframe)),
                                     sd = rowSds(as.matrix(Nh_basic_mean_dataframe)))
 
 Nh_basicvis_mean_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basicvis_mean_dataframe-Nh_real_dataframe))),
                                        mse = rowMeans(as.matrix((Nh_basicvis_mean_dataframe-Nh_real_dataframe)^2)),
-                                       bias = rowMeans(as.matrix(Nh_basicvis_mean_dataframe-Nh_real_dataframe)),
+                                       bias = rowMeans(as.matrix(Nh_basicvis_mean_dataframe)),
                                        sd = rowSds(as.matrix(Nh_basicvis_mean_dataframe)))
 
 
 
 Nh_PIMLE_analysis    = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_PIMLE_dataframe-Nh_real_dataframe))),
                                   mse = rowMeans(as.matrix((Nh_PIMLE_dataframe-Nh_real_dataframe)^2)),
-                                  bias = rowMeans(as.matrix(Nh_PIMLE_dataframe-Nh_real_dataframe)),
+                                  bias = rowMeans(as.matrix(Nh_PIMLE_dataframe)),
                                   sd = rowSds(as.matrix(Nh_PIMLE_dataframe)))
 
 Nh_PIMLEvis_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_PIMLEvis_dataframe-Nh_real_dataframe))),
                                   mse = rowMeans(as.matrix((Nh_PIMLEvis_dataframe-Nh_real_dataframe)^2)),
-                                  bias = rowMeans(as.matrix(Nh_PIMLEvis_dataframe-Nh_real_dataframe)),
+                                  bias = rowMeans(as.matrix(Nh_PIMLEvis_dataframe)),
                                   sd = rowSds(as.matrix(Nh_PIMLEvis_dataframe)))
 
 
 
 Nh_MLE_analysis     = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MLE_dataframe-Nh_real_dataframe))),
                                  mse = rowMeans(as.matrix((Nh_MLE_dataframe-Nh_real_dataframe)^2)),
-                                 bias = rowMeans(as.matrix(Nh_MLE_dataframe-Nh_real_dataframe)),
+                                 bias = rowMeans(as.matrix(Nh_MLE_dataframe)),
                                  sd = rowSds(as.matrix(Nh_MLE_dataframe)))
 
 Nh_MLEvis_analysis  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MLEvis_dataframe-Nh_real_dataframe))),
                                  mse = rowMeans(as.matrix((Nh_MLEvis_dataframe-Nh_real_dataframe)^2)),
-                                 bias = rowMeans(as.matrix(Nh_MLEvis_dataframe-Nh_real_dataframe)),
+                                 bias = rowMeans(as.matrix(Nh_MLEvis_dataframe)),
                                  sd = rowSds(as.matrix(Nh_MLEvis_dataframe)))
 
 
 
 Nh_MoS_analysis     = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MoS_dataframe-Nh_real_dataframe))),
                                  mse = rowMeans(as.matrix((Nh_MoS_dataframe-Nh_real_dataframe)^2)),
-                                 bias = rowMeans(as.matrix(Nh_MoS_dataframe-Nh_real_dataframe)),
+                                 bias = rowMeans(as.matrix(Nh_MoS_dataframe)),
                                  sd = rowSds(as.matrix(Nh_MoS_dataframe)))
 
 Nh_MoSvis_analysis  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MoSvis_dataframe-Nh_real_dataframe))),
                                  mse = rowMeans(as.matrix((Nh_MoSvis_dataframe-Nh_real_dataframe)^2)),
-                                 bias = rowMeans(as.matrix(Nh_MoSvis_dataframe-Nh_real_dataframe)),
+                                 bias = rowMeans(as.matrix(Nh_MoSvis_dataframe)),
                                  sd = rowSds(as.matrix(Nh_MoSvis_dataframe)))
 
 
 
 Nh_GNSUM_analysis  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_GNSUM_dataframe-Nh_real_dataframe))),
                                 mse = rowMeans(as.matrix((Nh_GNSUM_dataframe-Nh_real_dataframe)^2)),
-                                bias = rowMeans(as.matrix(Nh_GNSUM_dataframe-Nh_real_dataframe)),
+                                bias = rowMeans(as.matrix(Nh_GNSUM_dataframe)),
                                 sd = rowSds(as.matrix(Nh_GNSUM_dataframe)))
 
 
 
 Nh_Direct_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_Direct_dataframe-Nh_real_dataframe))),
                                 mse = rowMeans(as.matrix((Nh_Direct_dataframe-Nh_real_dataframe)^2)),
-                                bias = rowMeans(as.matrix(Nh_Direct_dataframe-Nh_real_dataframe)),
+                                bias = rowMeans(as.matrix(Nh_Direct_dataframe)),
                                 sd = rowSds(as.matrix(Nh_Direct_dataframe)))
 
 
@@ -119,6 +119,7 @@ Nh_Direct_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_Direct_dat
 
 graph_data_bias = data.frame( data = simulation_data$data)
 
+graph_data_bias = cbind(graph_data_bias, Nh_real =  simulation_data$Nh_real_1)
 
 if(ncol(Nh_basic_sum_dataframe) !=  0) {
   graph_data_bias = cbind(graph_data_bias, Nh_basic_sum =  Nh_basic_sum_analysis$bias)
@@ -184,6 +185,9 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 
 ggplot(graph_data_bias) + 
+  
+  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) + 
+  
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
