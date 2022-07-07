@@ -240,8 +240,8 @@ timer
 # Computation time (N=1000) (my PC)
 #timer -> 17.22806 mins
 
-# Computation time (N=10000) (office PC)
-#timer ->  
+# Computation time (N=10000) (virtual machine)
+#timer ->  6.721422 hours
 
 ###########################################################################
 

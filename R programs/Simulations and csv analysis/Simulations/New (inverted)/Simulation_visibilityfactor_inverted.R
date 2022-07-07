@@ -31,7 +31,7 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = seq(from = 0.1, to = 1, length.out = 19)
+parameters = seq(from = 0.1, to = 1, length.out = 89)
 
 
 #Dataframe to save the data
@@ -199,6 +199,15 @@ for (i in 1:length(parameters)) {
 simulaciones = bind_rows(lista_simulacion)
 simulaciones = cbind(simulaciones, data = parameters)
 
+timer = Sys.time() - t
+timer
+#################### COMPUTATION TIME ANALYSIS ###########################
+
+# Computation time (N=1000) (my PC)
+#timer -> 16.54465 mins  
+
+simulaciones = cbind(simulaciones, data = parameters)
+
 ################################################################################
 write.csv(simulaciones,                          # Data frame 
           file = "Simulations_visibilityfactor", # Csv name
@@ -207,19 +216,14 @@ write.csv(simulaciones,                          # Data frame
 
 
 
-timer = Sys.time() - t
-timer
-#################### COMPUTATION TIME ANALYSIS ###########################
-
-# Computation time (N=1000) (my PC)
-#timer -> 16.54465 mins  
-
 # Computation time (N=1000) (office PC)
 #timer -> 12.12937 mins
 
 # Computation time (N=10000) (office PC)
-#timer -> 
+#timer ->  2.061217 hours
 
+#Computation time (N = 10000) (office PC) (89)
+#timer -> 6.721095 hours
 ###########################################################################
 
 

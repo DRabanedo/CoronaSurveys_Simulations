@@ -49,7 +49,7 @@ for (k in 1:n_pop) {
 
 
 # Study parameters
-parameters = seq(from = 0, to = 1, length.out = 21)
+parameters = seq(from = 0, to = 2, length.out = 81)
 
 ################################################################################
 
@@ -201,6 +201,6 @@ timer
 #timer ->  8.914944 mins   
 
 # Computation time (N=10000) (virtual machine) IN PROCESS
-#timer ->  
+#timer ->  1.x hours
 
 ###########################################################################

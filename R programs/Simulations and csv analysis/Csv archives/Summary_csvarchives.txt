@@ -15,31 +15,31 @@ N = 10000, 25 iteraciones.
 
 **Factor visibilidad** 
   
--Poblaciones iguales:     
+-Poblaciones iguales: Done    
 
 
 **Factor memoria** 
   
--Poblaciones iguales:     
+-Poblaciones iguales: Done    
  
 
 **Factor memoria subpoblaciones** 
 
--Poblaciones iguales:     
+-Poblaciones iguales: Done     
 
 
 **Número de subpoblaciones**
 
--Poblaciones iguales:  
+-Poblaciones iguales: (on process) 
 
 
 **Tamaño de las subpoblaciones**
 
--Sin ningún sesgo:  
+-Sin ningún sesgo: Done 
 
 **Tamaño de la encuesta**
 
--Poblaciones iguales:     
+-Poblaciones iguales: Done    
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

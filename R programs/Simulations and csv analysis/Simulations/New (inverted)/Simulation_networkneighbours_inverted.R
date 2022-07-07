@@ -4,7 +4,7 @@
 
 t = Sys.time()
 
-N = 1000                 # Population size
+N = 10000                 # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
 v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
@@ -240,8 +240,8 @@ timer
 
 #################### COMPUTATION TIME ANALYSIS ###########################
 
-# Computation time (N=1000) (my PC)
-#timer -> 
+# Computation time (N=10000) (virtual machine)
+#timer -> 6.755417 hours
 ###########################################################################
 
 

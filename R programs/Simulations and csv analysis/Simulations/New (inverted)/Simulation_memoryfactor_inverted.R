@@ -51,7 +51,7 @@ for (k in 1:n_pop) {
 }
 
 # Study parameters
-parameters = seq(from = 0, to = 0.50, length.out = 41)
+parameters = seq(from = 0, to = 1, length.out = 161)
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
@@ -192,7 +192,7 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 ################################################################################
 write.csv(simulaciones,                           # Data frame 
-          file = "Simulations_memoryfactor_nh",   # Csv name
+          file = "Simulations_memoryfactor",   # Csv name
           row.names = TRUE )                      # Row names: TRUE or FALSE 
 ################################################################################
 
@@ -207,8 +207,12 @@ timer
 # Computation time (N=1000) (my PC)
 #timer -> 29.46286 secs not saving all the unnecessary estimators 
 
-# Computation time (N=10000) (office PC)
-#timer -> 7.521129 mins not saving all the unnecessary estimators 
+# Computation time (N=10000) (office PC) (length(parameters) = 41)
+#timer -> 6.755314 mins not saving all the unnecessary estimators 
+
+# Computation time (N=10000) (office PC) (length(parameters) = 161)
+#timer -> 8.205191 mins not saving all the unnecessary estimators
+
 
 #Problem: MoS and PIMLE have computation time of 0.2 per iteration
 # 0.2 * 25 * 41 = 200 sec -> 3,33 min

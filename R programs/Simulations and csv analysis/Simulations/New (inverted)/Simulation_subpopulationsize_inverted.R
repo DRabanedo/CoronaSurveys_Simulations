@@ -204,7 +204,7 @@ timer
 # Computation time (N=1000) (my PC)
 #timer -> 2.826157 mins    
 
-# Computation time (N=10000) (my PC)
-#timer ->  
+# Computation time (N=10000) (office PC)
+#timer -> 13.3138 mins
 
 ############################################################################

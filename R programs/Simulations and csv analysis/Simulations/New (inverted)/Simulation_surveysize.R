@@ -27,7 +27,7 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = round(seq(from = 1, to = 100, length.out = 20))
+parameters = round(seq(from = 1, to = 1000, length.out = 400))
 
 
 #Population and Survey generation
@@ -170,7 +170,10 @@ timer
 #timer ->  1.511148 mins   
 
 # Computation time (N=10000) (my PC)
-#timer ->  
+#timer ->  9.369394 mins
+
+# Computation time (N=10000) (1-1000 // 400)
+# timer -> 4.234875 hours
 
 ###########################################################################
 

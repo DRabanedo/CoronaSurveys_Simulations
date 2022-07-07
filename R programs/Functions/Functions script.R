@@ -7,6 +7,7 @@ library(tidyverse)
 library(stringr)
 library(ggplot2)
 library(sampler)
+library(dplyr)
 
 
 #######################################
