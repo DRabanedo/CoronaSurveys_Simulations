@@ -4,7 +4,7 @@
 
 t = Sys.time()
 
-N = 1000                  # Population size
+N = 10000                 # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
 v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
@@ -27,7 +27,7 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = round(seq(from = 2, to = 20, length.out = 10))
+parameters = round(seq(from = 1, to = 30, length.out = 30))
 
 
 #Population
@@ -200,7 +200,7 @@ timer
 # Computation time (N=1000) (virtual machine)
 #timer ->   5.898855 mins  
 
-# Computation time (N=10000) (my PC)
-#timer ->  
+# Computation time (N=10000) (virtual machine)
+#timer ->  1.112204 hours
 
 ###########################################################################
