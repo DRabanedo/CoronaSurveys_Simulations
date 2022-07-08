@@ -2,8 +2,7 @@ library(dplyr)
 library(matrixStats)
 library(ggplot2)
 
-simulation_data =  read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Simulations and csv analysis/Csv archives/Visibility factor/Simulations_visibilityfactor")
-#Column selection
+simulation_data =  read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Simulations and csv analysis/Csv archives/Subpopulation memory factor/Normal/Simulation_subpopulationmemoryfactor")#Column selection
 
 Nh_real_dataframe = select(simulation_data, starts_with("Nh_real"))
 
@@ -185,26 +184,26 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 ggplot(graph_data_abserror) + 
   #geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
   #geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
-  geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  #geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the visibility factor",
-       x = "Visibility factor",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Mean Absolute Error")
 
 
@@ -283,26 +282,26 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 ggplot(graph_data_mse) + 
   #geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
   #geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
-  geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  #geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the visibility factor",
-       x = "Visibility factor",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Mean Squared Error (MSE)")
 
 
@@ -379,29 +378,29 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 ggplot(graph_data_bias) + 
   #geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
   #geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
-  geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  #geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   
   geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the visibility factor",
-       x = "Visibility factor",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Hidden population estimate")
 
 
@@ -479,24 +478,24 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 ggplot(graph_data_sd) + 
   #geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
   #geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
-  geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
+  #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
-  geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  #geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the visibility factor",
-       x = "Visibility factor",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Standard deviation")
