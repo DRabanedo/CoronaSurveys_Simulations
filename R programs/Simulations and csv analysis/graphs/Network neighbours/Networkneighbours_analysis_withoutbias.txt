@@ -1,0 +1,13 @@
+### Graphs from Simulation_networkneighbours ##
+
+This graphs represent the bias, standard error, mse (mean squared error) and absolute error of the simulation without including
+any bias except the variance of the variable we are analysing ("network neighbours"). This variable represents the number of "neighbours"
+has that every node before the randomization (see "Network probability" for further explanations).
+
+
+### Graph analysis ###
+
+As we see in the four graphs, we can conclude that the number of neighbours affects the prediction of the hidden population. As the bias graph 
+shows, the estimate of the hidden population gets better as the parameter grows. 
+
+Despite we can not control this parameter in a real world problem, as it is intrinsic to the network structure, it is an interesting finding.

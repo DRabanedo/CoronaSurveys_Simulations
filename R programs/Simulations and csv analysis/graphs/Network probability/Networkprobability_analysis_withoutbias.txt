@@ -1,0 +1,21 @@
+### Graphs from Simulation_networkprobability ##
+
+This graphs represent the bias, standard error, mse (mean squared error) and absolute error of the simulation without including
+any bias except the variance of the variable we are analysing (p = "network probability"). This variable represents the probability 
+of randomizing a connection once we have built the regular graph which represent the network of the population. Then, when p=0
+we have a regular graph where each node is connected to his closest 150 neighbours.
+
+Example: Since we have 10000 nodes, when p = 0:
+     - Node 1 is connected to nodes 2-76 and 9926-10000
+     - Node 2 is conected to nodes 3-77 and 9927-10000 and 1
+     ...
+     - Node 10000 is connected to nodes 1-75 and 9925-9999
+
+When p != 0, we randomize each one of the connections made whit pobability p, obtaining more irregularity as p increases. Then, when 
+p = 1, we work with an irregular graph, also known as Erdős–Rényi model.
+
+
+### Graph analysis ###
+
+As we see in the four graphs, we can conclude that the degree of randomization does not affect the prediction of the hidden population
+for none of the estimators since it is almost constant as the parameter varies.

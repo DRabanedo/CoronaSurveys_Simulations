@@ -1,0 +1,15 @@
+### Graphs from Simulation_visibilityfactor ##
+
+This graphs represent the bias, standard error, mse (mean squared error) and absolute error of the simulation without including
+any bias except the variance of the variable we are analysing (visibility factor). 
+
+
+### Graph analysis ###
+
+The visibility factor represents one of the bias that we have to correct if we want a good estimate of the hidden population number.
+In all this graphs we see the importance of this value, obtaining bias estimates when we do not apply the correct correction.
+The only estimator that stays almost constant with the variance of the visibility factor is the GNSUM, as it is not affected by this
+bias due to the second survey (direct survey) we make to the hidden population.
+
+
+
