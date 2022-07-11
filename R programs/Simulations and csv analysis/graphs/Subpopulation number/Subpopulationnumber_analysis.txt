@@ -1,0 +1,13 @@
+### Graphs from Simulation_surveysize ##
+
+This graphs represent the bias, standard error, mse (mean squared error) and absolute error of the simulation without including any bias except the variance of the variable we are analyzing (L = subpopulation_number). 
+
+
+### Graph analysis ###
+
+As it is concluded in the "The Network Scale-Up Method: A Simulation Study in Case of Overlapping Sub-Populations (Silvia Snidero, Roberto Corradetti and Dario Gregori):
+
+"The first goal of our analysis was to identify the optimal number of subpopulations of the known size to employ in planning investigations based on the scale-up method
+or the ML estimator. Killworth (Killworth, 1998a; Killworth, 1998b) suggested, based on a heuristic reasoning on a concrete data set, that the ”optimal” number of subpopulations is about 20, obtaining in this way substantially unbiased results. Our simulations show that the scale-up method, whatever number of subgroups is used, leads to biased estimates. On the contrary, the results for the maximum likelihood estimator, are clearly indicating that the estimates are unbiased for any number of subpopulation considered. This makes the Killworth’s suggestions too conservative for the latter estimator, where the biggest issue seems to be the sizes of the subpopulations. Our results indicate a marked loss in efficiency of the ML estimator as the size of the subpopulations tends to increase. Also the bias in the scale-up estimator seems to depend on the size of the social network considered, reducing markedly in presence of bigger social networks. However, this result is of little usefulness in planning the research, since it is not under direct control of the researcher, who usually doesn’t know the network of the people being interviewed a priori."
+
+Nevertheless, in our case we obtain biased estimates for all estimators, even the MLE.  ## Pending review ##
