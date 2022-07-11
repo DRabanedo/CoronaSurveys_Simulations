@@ -1,0 +1,3 @@
+Es importante tener en cuenta que las gráficas en las que no existe ningún sesgo ("Graphs without bias") a parte del que se presenta en la simulación ofrecen datos irreales de la eficiencia real de los diferentes métodos, ya que estaríamos tratando con la situación óptima. 
+
+Para ver el impacto real, hay que centrarse en las gráficas con los diferentes sesgos aplicados ("Graphs with bias")

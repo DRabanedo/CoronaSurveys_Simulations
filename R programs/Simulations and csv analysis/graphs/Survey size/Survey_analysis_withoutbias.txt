@@ -6,5 +6,5 @@ any bias except the variance of the variable we are analysing (n = survey_size).
 
 ### Graph analysis ###
 
-We are running the simulation with higher values for the survey's size (1-9995) to observe the real convergence ( or non convergence) of 
+We are running the simulation with higher values for the survey's size (1-9995) to observe the real convergence (or non convergence) of 
 all the estimators.

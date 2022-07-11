@@ -2,7 +2,7 @@
 
 This graphs represent the bias, standard error, mse (mean squared error) and absolute error of the simulation without including
 any bias except the variance of the variable we are analysing ("network neighbours"). This variable represents the number of "neighbours"
-has that every node before the randomization (see "Network probability" for further explanations).
+that has every node before the randomization (see "Network probability" for further explanations).
 
 
 ### Graph analysis ###

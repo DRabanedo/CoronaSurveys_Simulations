@@ -7,9 +7,16 @@ any bias except the variance of the variable we are analysing (visibility factor
 ### Graph analysis ###
 
 The visibility factor represents one of the bias that we have to correct if we want a good estimate of the hidden population number.
-In all this graphs we see the importance of this value, obtaining bias estimates when we do not apply the correct correction.
-The only estimator that stays almost constant with the variance of the visibility factor is the GNSUM, as it is not affected by this
-bias due to the second survey (direct survey) we make to the hidden population.
+In all this graphs we see the importance of this value, obtaining bias estimates when we do not apply the factor correction 
+- Estimators with visibility factor correction: Nh_basicvis_mean, Nh_basicvis_sum, Nh_MLEvis, Nh_PIMLEvis.
+- Estimators without visibility factor correction: Nh_basic_mean, Nh_basic_sum, Nh_MLE, Nh_PIMLE.
+
+## IMPORTANT WARNING ##
+-> We make the correction with the true value of the visibility factor, and in real cases we really do not know its value, so it
+should be estimated. There are several techniques to make this depending on the survey general estructure and the proyect budget.
+
+The only estimator that stays almost constant with the variance of the visibility factor is the GNSUM due to his structure, so it
+seems to be the only who is truly unbiased.
 
 
 
