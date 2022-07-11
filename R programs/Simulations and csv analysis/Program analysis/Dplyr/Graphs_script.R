@@ -2,8 +2,7 @@ library(dplyr)
 library(matrixStats)
 library(ggplot2)
 
-simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Simulations and csv analysis/Csv archives/Survey size/Simulation_surveysize_extended.txt")
-
+simulation_data = read.csv("~/GitHub/Proyect R/Simulaciones/Simulation_surveysize_bias")
 
 
 Nh_real_dataframe = select(simulation_data, starts_with("Nh_real"))
@@ -202,7 +201,7 @@ ggplot(graph_data_abserror) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
-  geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
+  #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the survey size",
        x = "Survey size",
@@ -300,7 +299,7 @@ ggplot(graph_data_mse) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
 
-  geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
+  #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the survey size",
        x = "Survey size",
@@ -396,7 +395,7 @@ ggplot(graph_data_bias) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
-  geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
+  #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   
   geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
@@ -496,7 +495,7 @@ ggplot(graph_data_sd) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
-  geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
+  #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the survey size",
        x = "Survey size",
