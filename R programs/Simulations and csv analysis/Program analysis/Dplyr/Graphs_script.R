@@ -204,8 +204,8 @@ ggplot(graph_data_abserror) +
   
   geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation memory factor",
-       x = "Subpopulation memory factor",
+  labs(title = "Simulations based on the survey size",
+       x = "Survey size",
        y = "Mean Absolute Error")
 
 
@@ -302,8 +302,8 @@ ggplot(graph_data_mse) +
 
   geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation memory factor",
-       x = "Subpopulation memory factor",
+  labs(title = "Simulations based on the survey size",
+       x = "Survey size",
        y = "Mean Squared Error (MSE)")
 
 
@@ -401,8 +401,8 @@ ggplot(graph_data_bias) +
   geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation memory factor",
-       x = "Subpopulation memory factor",
+  labs(title = "Simulations based on the survey size",
+       x = "Survey size",
        y = "Hidden population estimate")
 
 
@@ -498,6 +498,6 @@ ggplot(graph_data_sd) +
   
   geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation memory factor",
-       x = "Subpopulation memory factor",
+  labs(title = "Simulations based on the survey size",
+       x = "Survey size",
        y = "Standard deviation")
