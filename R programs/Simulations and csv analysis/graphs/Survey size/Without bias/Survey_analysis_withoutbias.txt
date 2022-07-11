@@ -1,0 +1,14 @@
+### Graphs from Simulation_surveysize ##
+
+This graphs represent the bias, standard error, mse (mean squared error) and absolute error of the simulation without including any bias except the variance of the variable we are analyzing (n = survey_size). 
+
+
+### Graph analysis ###
+
+Extended (1-9995)
+ We see that there is bias in the MLE, PIMLE, MoS and basic estimate even with a big sample of the population. This could be  a problem, so we have to analyze it carefully, even if it is a small deviation.
+The GNSUM method does not converge either, but it is closer to the real value.
+The direct method converges properly when the population sample is big enough.
+
+
+Simple (1-1000)
