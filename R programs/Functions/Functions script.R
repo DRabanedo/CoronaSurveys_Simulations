@@ -125,7 +125,7 @@ getData = function(N, dis_populations,prob_vector,PropHiddenPop, dim, nei, p, vi
     vect_reach[i] = length(net_sw[[i]][[1]])
     vect_hp_vis[i] = sum(Mhp_vis[i,])
     
-    vect_reach_re[i] = max(0,round(rnorm(1, mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
+    vect_reach_re[i] = max(1,round(rnorm(1, mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
   }
   
   Population = cbind(Population, Reach = vect_reach)
@@ -138,7 +138,7 @@ getData = function(N, dis_populations,prob_vector,PropHiddenPop, dim, nei, p, vi
     for(i in 1:N) {
       vis_pob = sum(Population[net_sw[[i]][[1]],]$Population == j)
       # Visibility of population j by i, applying a normal in order to represent the real visibility
-      v_1[i] = max(0,round(rnorm(1, mean = vis_pob, sd = sub_memory_factor*vis_pob)))
+      v_1[i] = max(1,round(rnorm(1, mean = vis_pob, sd = sub_memory_factor*vis_pob)))
     }
     
     Population = cbind(Population,Subpoblacion_total = v_1)

@@ -9,7 +9,7 @@ memory_factor = 0      #Reach memory factor (parameter to change variance of the
 ################################################################################
 
 
-N = 1000                  # Population size
+N = 10000                  # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
 v_pop_prob = c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025) #Probability of each subpopulation
@@ -70,7 +70,7 @@ for (k in 1:n_pop) {
 
 
 # Study parameters
-parameters = seq(from = 0, to = 0.50, length.out = 41)
+parameters = seq(from = 0, to = 1, length.out = 41)
 
 ################################################################################
 # Estimation based on the different parameters
@@ -79,6 +79,8 @@ for (i in 1:length(parameters)) {
   # Parameter choice
   memory_factor = parameters[i]   
   
+  vect_reach = survey$Reach
+  vect_reach_re = rep(NA,n_survey)
   for (j in 1:nrow(survey)) {
     vect_reach_re[j] = round(max(rnorm(1,mean = vect_reach[j], sd = memory_factor*vect_reach[j]),1))
   }
@@ -112,9 +114,9 @@ for (i in 1:length(parameters)) {
 x_1 = parameters
 ggplot() + 
   geom_line(aes(x = x_1, y =  Nh_basic_sum, col = "Basic_sum")) + 
-  geom_line(aes(x = x_1, y =  Nh_basicvis_sum, col = "Basic_vis_sum")) + 
-  geom_line(aes(x = x_1, y =  Nh_basic_mean, col = "Basic_mean")) + 
-  geom_line(aes(x = x_1, y =  Nh_basicvis_mean, col = "Basic_vis_mean")) + 
+  #geom_line(aes(x = x_1, y =  Nh_basicvis_sum, col = "Basic_vis_sum")) + 
+  #geom_line(aes(x = x_1, y =  Nh_basic_mean, col = "Basic_mean")) + 
+  #geom_line(aes(x = x_1, y =  Nh_basicvis_mean, col = "Basic_vis_mean")) + 
   #geom_line(aes(x = x_1, y =  Nh_PIMLEvis, col = "PIMLE_vis")) + 
   #geom_line(aes(x = x_1, y =  Nh_PIMLE, col = "PIMLE")) + 
   #geom_line(aes(x = x_1, y =  Nh_MLE, col = "MLE")) + 

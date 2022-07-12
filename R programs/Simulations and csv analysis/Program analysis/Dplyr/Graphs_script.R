@@ -2,8 +2,7 @@ library(dplyr)
 library(matrixStats)
 library(ggplot2)
 
-simulation_data = read.csv("~/GitHub/Proyect R/Simulaciones/Simulation_surveysize_bias")
-
+simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Simulations and csv analysis/Csv archives/Subpopulation number/Simulation_subpopulation_5000_500.txt")
 
 Nh_real_dataframe = select(simulation_data, starts_with("Nh_real"))
 
@@ -184,10 +183,10 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 
 ggplot(graph_data_abserror) + 
-  geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
-  geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
+  #geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
@@ -282,10 +281,10 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 
 ggplot(graph_data_mse) + 
-  geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
-  geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
+  #geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
@@ -378,10 +377,10 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 
 ggplot(graph_data_bias) + 
-  geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
-  geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
+  #geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
@@ -478,10 +477,10 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 
 ggplot(graph_data_sd) + 
-  geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
+  #geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
-  geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
+  #geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
