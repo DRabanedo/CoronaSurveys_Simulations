@@ -4,6 +4,7 @@
 
 t = Sys.time()
 
+
 N = 10000                 # Population size
 v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)-1   # Number of subpopulations
@@ -15,7 +16,7 @@ n_survey_hp = 50          # Number of individuals we draw in the hidden populati
 sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
 memory_factor = 0         # Reach memory factor (parameter to change variance of the perturbations' normal)
 visibility_factor = 1     # Visibility factor (Binomial's probability)
-seed = 207                # Seed
+seed = 2022                 # Seed
 set.seed(seed)
 
 #Graph
@@ -26,25 +27,8 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 
-#Population and Survey
-Graph_population_matrix = getData(N, v_pop, v_pop_prob, hp_prob, dim, nei, p, visibility_factor, memory_factor,sub_memory_factor)
-
-net_sw = Graph_population_matrix[[1]]      # Population´s graph
-Population = Graph_population_matrix[[2]]  # Population
-Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
-
-survey_hp = getSurvey(n_survey_hp,Population[Population$Hidden_Population==1,])
-
-
-#Vector with the number of people in each subpopulation
-v_pop_total = rep(NA, n_pop)
-for (k in 1:n_pop) {
-  v_pop_total[k] = sum(Population$Population == k) # N_k
-  
-}
-
 # Study parameters
-parameters = round(seq(from = 2, to = 100, length.out = 41))
+parameters = round(seq(from = 2, to = 100, length.out = 100))
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
@@ -61,12 +45,19 @@ lista_simulacion = list()
 # The surveys are fixed so the variance and bias can be calculated.
 list_surveys = list()
 for (h in 1:b) {
-  list_surveys[[h]] = sample(nrow(Population), n_survey, replace = FALSE)
+  list_surveys[[h]] = sample(nrow(Population_ref), n_survey, replace = FALSE)
 }
 
 list_surveys_hp = list()
 for (h in 1:b) {
-  list_surveys_hp[[h]] = sample(nrow(Population[Population$Hidden_Population == 1,]), n_survey_hp, replace = FALSE)
+  list_surveys_hp[[h]] = sample(nrow(Population_ref[Population_ref$Hidden_Population == 1,]), n_survey_hp, replace = FALSE)
+}
+
+#Vector with the number of people in each subpopulation
+v_pop_total = rep(NA, n_pop)
+for (k in 1:n_pop) {
+  v_pop_total[k] = sum(Population$Population == k) # N_k
+  
 }
 
 
@@ -154,8 +145,11 @@ for (i in 1:length(parameters)) {
     
     #We choose the same survey for each l in order to calculate the bias and variance
     #Surveys
+    l=2
     survey = Population[list_surveys[[l]],]
     survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],]
+    list_surveys_hp[[l]]
+    nrow(Population[Population$Hidden_Population == 1,])
     
     # Hidden population estimates
     Nh_real = sum(Population$Hidden_Population) 
@@ -233,7 +227,7 @@ write.csv(simulaciones,                        # Data frame
 ################################################################################
 
 
-
+simulaciones
 
 timer = Sys.time() - t
 timer

@@ -16,7 +16,7 @@ n_survey_hp = 50          # Number of individuals we draw in the hidden populati
 memory_factor = 0         # Reach memory factor (parameter to change variance of the perturbations' normal)
 sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
 visibility_factor = 1     # Visibility factor (Binomial's probability)
-seed = 207                # Seed
+seed = 2022                # Seed
 set.seed(seed)
 
 #Graph
@@ -24,17 +24,6 @@ dim = 1    # Graph dimension
 nei = 75   # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
 # before applying the randomization.
 p   = 0.1  # Probability of randomize a connection. It is applied to all connections
-
-
-
-#Population and Survey
-Graph_population_matrix = getData(N, v_pop, v_pop_prob, hp_prob, dim, nei, p, visibility_factor, memory_factor,sub_memory_factor)
-
-net_sw = Graph_population_matrix[[1]]      # Population´s graph
-Population = Graph_population_matrix[[2]]  # Population
-Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
-
-survey_hp = getSurvey(n_survey_hp,Population[Population$Hidden_Population==1,])
 
 
 #Vector with the number of people in each subpopulation
@@ -55,6 +44,7 @@ simulaciones = data.frame(data = parameters)
 # AUXILIARY DATA FOR THE SIMULATION
 
 Population_ref = genPopulation(N, v_pop, v_pop_prob,hp_prob)
+
 b = 50 #Number of iterations for the simulation
 lista_simulacion = list()
 
@@ -62,12 +52,12 @@ lista_simulacion = list()
 # The surveys are fixed so the variance and bias can be calculated.
 list_surveys = list()
 for (h in 1:b) {
-  list_surveys[[h]] = sample(nrow(Population), n_survey, replace = FALSE)
+  list_surveys[[h]] = sample(nrow(Population_ref), n_survey, replace = FALSE)
 }
 
 list_surveys_hp = list()
 for (h in 1:b) {
-  list_surveys_hp[[h]] = sample(nrow(Population[Population$Hidden_Population == 1,]), n_survey_hp, replace = FALSE)
+  list_surveys_hp[[h]] = sample(nrow(Population_ref[Population_ref$Hidden_Population == 1,]), n_survey_hp, replace = FALSE)
 }
 
 #Simulation
