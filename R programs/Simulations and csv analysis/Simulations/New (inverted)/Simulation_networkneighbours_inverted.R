@@ -53,13 +53,6 @@ for (h in 1:b) {
   list_surveys_hp[[h]] = sample(nrow(Population_ref[Population_ref$Hidden_Population == 1,]), n_survey_hp, replace = FALSE)
 }
 
-#Vector with the number of people in each subpopulation
-v_pop_total = rep(NA, n_pop)
-for (k in 1:n_pop) {
-  v_pop_total[k] = sum(Population$Population == k) # N_k
-  
-}
-
 
 #Simulations
 for (i in 1:length(parameters)) {
@@ -145,7 +138,6 @@ for (i in 1:length(parameters)) {
     
     #We choose the same survey for each l in order to calculate the bias and variance
     #Surveys
-    l=2
     survey = Population[list_surveys[[l]],]
     survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],]
     list_surveys_hp[[l]]
@@ -222,7 +214,7 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 ################################################################################
 write.csv(simulaciones,                        # Data frame 
-          file = "Simulation_networkneighbours", # Csv name
+          file = "Simulation_networkneighbours_2022", # Csv name
           row.names = TRUE )                   # Row names: TRUE or FALSE 
 ################################################################################
 

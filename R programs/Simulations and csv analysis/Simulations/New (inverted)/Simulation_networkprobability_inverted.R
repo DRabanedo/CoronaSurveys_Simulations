@@ -26,13 +26,6 @@ nei = 75   # Number of neighbors that each node is connected to. They are neighb
 p   = 0.1  # Probability of randomize a connection. It is applied to all connections
 
 
-#Vector with the number of people in each subpopulation
-v_pop_total = rep(NA, n_pop)
-for (k in 1:n_pop) {
-  v_pop_total[k] = sum(Population$Population == k) # N_k
-  
-}
-
 # Study parameters
 parameters = seq(from = 0.05, to = 1, length.out = 41)
 
@@ -44,6 +37,7 @@ simulaciones = data.frame(data = parameters)
 # AUXILIARY DATA FOR THE SIMULATION
 
 Population_ref = genPopulation(N, v_pop, v_pop_prob,hp_prob)
+
 
 b = 50 #Number of iterations for the simulation
 lista_simulacion = list()
