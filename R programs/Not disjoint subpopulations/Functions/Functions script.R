@@ -41,8 +41,6 @@ genPopulation <- function(n, dis_pop, pop_vect,prob_hidden) {
   return(enc)
 }
 
-a = genPopulation(N, v_pop, v_pop_prob, hp_prob)
-
 
 ######################
 # Matrix for the GNSUM
@@ -136,9 +134,9 @@ getData = function(N, dis_populations,prob_vector,PropHiddenPop, dim, nei, p, vi
       # Visibility of population j by i, applying a normal in order to represent the real visibility
       v_1[i] = max(0,round(rnorm(1, mean = vis_pob, sd = sub_memory_factor*vis_pob)))
     }
-    
+
     Population = cbind(Population,Subpoblacion_total = v_1)
-    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j)
+    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j-1)
   }
   
   
@@ -345,13 +343,15 @@ getNh_GNSUM  = function(Pob, enc, enc_hp, Mhp_vis, v_pob, N){
   
   #Denominator estimate
   ind1 = as.numeric(rownames(enc_hp))
-  ind2 = as.numeric(rownames(Pob[Pob$Population != 0,]))
-  suma = sum(Mhp_vis[ind2,ind1])
+  suma = 0
+  for (i in 1:length(v_pob)) {
+    ind2 = Pob[,i+2] != 0
+    suma = sum(Mhp_vis[ind2,ind1]) + suma
+  }
   
   denominador = N/sum(v_pob)*suma/nrow(enc_hp)      #Denominator estimate
   
   Nh = numerador/denominador
-  return(Nh)
 }
 
 ##################
