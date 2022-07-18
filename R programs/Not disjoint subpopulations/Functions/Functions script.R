@@ -35,7 +35,7 @@ genPopulation <- function(n, dis_pop, pop_vect,prob_hidden) {
   rownames(enc) <- c(1:n)
   for (i in 1:length(pop_vect)) {
     enc = cbind(enc, Subpopulation = sample(c(0,1), n, replace = TRUE, p = c(1-pop_vect[i],pop_vect[i])))
-    names(enc)[dim(enc)[2]] = str_c("Subpopulation_",i-1)
+    names(enc)[dim(enc)[2]] = str_c("Subpopulation_",i)
   }
 
   return(enc)
@@ -100,7 +100,7 @@ getData = function(N, dis_populations,prob_vector,PropHiddenPop, dim, nei, p, vi
   
   net_sw = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
   
-  n_populations = length(dis_populations)-1
+  n_populations = length(dis_populations)
   # initializes the vectors
   vect_hp = rep(NA,N)       # number of hidden population individuals known for each person
   vect_hp_vis = rep(NA,N)   # vect_hp applying visibility
@@ -136,7 +136,7 @@ getData = function(N, dis_populations,prob_vector,PropHiddenPop, dim, nei, p, vi
     }
 
     Population = cbind(Population,Subpoblacion_total = v_1)
-    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j-1)
+    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j)
   }
   
   
@@ -345,7 +345,7 @@ getNh_GNSUM  = function(Pob, enc, enc_hp, Mhp_vis, v_pob, N){
   ind1 = as.numeric(rownames(enc_hp))
   suma = 0
   for (i in 1:length(v_pob)) {
-    ind2 = Pob[,i+2] != 0
+    ind2 = Pob[,i+1] != 0
     suma = sum(Mhp_vis[ind2,ind1]) + suma
   }
   

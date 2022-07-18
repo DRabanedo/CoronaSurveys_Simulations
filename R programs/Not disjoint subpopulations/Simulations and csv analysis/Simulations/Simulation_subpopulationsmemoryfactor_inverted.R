@@ -10,8 +10,8 @@ sub_memory_factor = 0      #Subpopulation memory factor (parameter to change var
 ################################################################################
 
 N = 10000                  # Population size
-v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
-n_pop = length(v_pop)-1   # Number of subpopulations
+v_pop = c(1:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
+n_pop = length(v_pop)   # Number of subpopulations
 v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
 hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
 n_survey = 300            # Number of individuals we draw in the survey
@@ -43,7 +43,7 @@ Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
 v_pop_total = rep(NA, n_pop)
 for (k in 1:n_pop) {
-  v_pop_total[k] = sum(Population[,k+2]) # N_k
+  v_pop_total[k] = sum(Population[,k+1]) # N_k
 }
 
 # Study parameters
@@ -53,7 +53,7 @@ parameters = seq(from = 0, to = 2, length.out = 81)
 
 # AUXILIARY DATA FOR THE SIMULATION
 
-vis_pob_reset = Population[,(ncol(Population)-(n_pop)):ncol(Population)]
+vis_pob_reset = Population[,(ncol(Population)-(n_pop-1)):ncol(Population)]
 b = 50 #Number of iterations for the simulation
 lista_simulacion = list()
 
@@ -77,7 +77,7 @@ for (i in 1:length(parameters)) {
     
   sub_memory_factor = parameters[i]   
     
-  for(j in 0:n_pop){
+  for(j in 1:n_pop){
     v_1 = rep(NA,nrow(Population))
     vis_pob = Population[,ncol(Population)-(n_pop-j)]
     for(k in 1:nrow(Population)) {
@@ -173,7 +173,7 @@ for (i in 1:length(parameters)) {
   }
   simulacion = bind_cols(lista_sim)
   lista_simulacion[[i]] = simulacion
-  Population[,(ncol(Population)-(n_pop)):ncol(Population)] = vis_pob_reset
+  Population[,(ncol(Population)-(n_pop-1)):ncol(Population)] = vis_pob_reset
   print(i)
   
 }

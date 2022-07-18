@@ -5,9 +5,9 @@
 t = Sys.time()
 
 
-N = 10000                 # Population size
-v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
-n_pop = length(v_pop)-1   # Number of subpopulations
+N = 1000                 # Population size
+v_pop = c(1:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
+n_pop = length(v_pop)   # Number of subpopulations
 v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
 hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
 n_survey = 300            # Number of individuals we draw in the survey
@@ -28,7 +28,7 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = round(seq(from = 2, to = 100, length.out = 100))
+parameters = round(seq(from = 10, to = 100, length.out = 3))
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
@@ -38,7 +38,7 @@ simulaciones = data.frame(data = parameters)
 # AUXILIARY DATA FOR THE SIMULATION
 
 Population_ref = genPopulation(N, v_pop, v_pop_prob,hp_prob)
-b = 50 #Number of iterations for the simulation
+b = 5 #Number of iterations for the simulation
 lista_simulacion = list()
 
 # Surveys representing the different iterations. 
@@ -56,14 +56,14 @@ for (h in 1:b) {
 
 
 #Simulations
-for (i in 1:length(parameters)) {
-  nei = parameters[i]
+for (w in 1:length(parameters)) {
+  nei = parameters[w]
 
   #Population
   Population = Population_ref
   net_sw = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
   
-  n_pop = length(v_pop)-1
+  n_pop = length(v_pop)
   
   # Initializes the vectors
   vect_hp = rep(NA,N)       # number of hidden population individuals known for each person
@@ -100,14 +100,14 @@ for (i in 1:length(parameters)) {
     }
     
     Population = cbind(Population,Subpoblacion_total = v_1)
-    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j-1)
+    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j)
   }
   
   #Vector with the number of people in each subpopulation
   
   v_pop_total = rep(NA, n_pop)
   for (k in 1:n_pop) {
-    v_pop_total[k] = sum(Population[,k+2]) # N_k
+    v_pop_total[k] = sum(Population[,k+1]) # N_k
   }
   
   
@@ -202,8 +202,8 @@ for (i in 1:length(parameters)) {
     lista_sim[[l]] = sim
   }
   simulacion = bind_cols(lista_sim)
-  lista_simulacion[[i]] = simulacion
-  print(i)
+  lista_simulacion[[w]] = simulacion
+  print(w)
   
 }
 

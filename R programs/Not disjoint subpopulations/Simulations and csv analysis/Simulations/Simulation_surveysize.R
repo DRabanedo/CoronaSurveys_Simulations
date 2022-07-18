@@ -5,8 +5,8 @@
 t = Sys.time()
 
 N = 10000                 # Population size
-v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
-n_pop = length(v_pop)-1   # Number of subpopulations
+v_pop = c(1:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
+n_pop = length(v_pop)   # Number of subpopulations
 v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
 hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
 n_survey = 300            # Number of individuals we draw in the survey
@@ -42,7 +42,7 @@ Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
 v_pop_total = rep(NA, n_pop)
 for (k in 1:n_pop) {
-  v_pop_total[k] = sum(Population[,k+2]) # N_k
+  v_pop_total[k] = sum(Population[,k+1]) # N_k
 }
 
 ################################################################################

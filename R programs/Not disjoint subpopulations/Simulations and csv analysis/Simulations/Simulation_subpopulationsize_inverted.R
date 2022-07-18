@@ -4,9 +4,9 @@
 
 t = Sys.time()
 
-N = 1000                 # Population size
-v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
-n_pop = length(v_pop)-1   # Number of subpopulations
+N = 10000                 # Population size
+v_pop = c(1:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
+n_pop = length(v_pop)   # Number of subpopulations
 v_pop_prob =  rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
 hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
 n_survey = 300            # Number of individuals we draw in the survey
@@ -27,8 +27,8 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = list(rep(1/length(v_pop), length(v_pop)), c(0.5,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05),
-                  c(0.3, 0.1,0.05,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025), c(0.2, 0.5, 0.1, 0.01, 0.01, 0.01, 0.01, 0.01, 0.05, 0.05,0.05))
+parameters = list(rep(1/length(v_pop), length(v_pop)), c(0.05,0.5,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05),
+                  c(0.5,0.1,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025), c(0.5, 0.1, 0.1, 0.1, 0.01, 0.01, 0.01, 0.5, 0.05,0.05))
 
 
 
@@ -62,20 +62,21 @@ for (h in 1:b) {
 
 #Simulation
 
-for (i in 1:length(parameters)) {
+for (w in 1:length(parameters)) {
+  print(w)
   # Parameter selection
-  v_pop_prob = parameters[[i]]
-  m_pob = length(parameters[[i]])-1
+  v_pop_prob = parameters[[w]]
+  m_pob = length(parameters[[w]])
   
   ## Simulation modifications ##
   n_columnas = ncol(Population)
-  v_pop = c(0:m_pob)
-  n_pop = length(v_pop)-1 
+  v_pop = c(1:m_pob)
+  n_pop = length(v_pop)
     
   Population_buc = data.frame(Hidden_Population = Population$Hidden_Population)
   for (i in 1:length(v_pop_prob)) {
     Population_buc = cbind(Population_buc, Subpopulation = sample(c(0,1), N, replace = TRUE, p = c(1-v_pop_prob[i],v_pop_prob[i])))
-    names(Population_buc)[dim(Population_buc)[2]] = str_c("Subpopulation_",i-1)
+    names(Population_buc)[dim(Population_buc)[2]] = str_c("Subpopulation_",i)
   }
   
   Population_buc = cbind(Population_buc, Reach = Population$Reach)
@@ -93,14 +94,14 @@ for (i in 1:length(parameters)) {
     }
     
     Population = cbind(Population,Subpoblacion_total = v_1)
-    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j-1)
+    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j)
   }
     
   k = length(v_pop)
     
   v_pop_total = rep(NA, n_pop)
   for (k in 1:n_pop) {
-    v_pop_total[k] = sum(Population[,k+2]) # N_k
+    v_pop_total[k] = sum(Population[,k+1]) # N_k
   }
   
   
@@ -192,9 +193,7 @@ for (i in 1:length(parameters)) {
     lista_sim[[l]] = sim
   }
   simulacion = bind_cols(lista_sim)
-  lista_simulacion[[i]] = simulacion
-  print(i)
-  
+  lista_simulacion[[w]] = simulacion
 }
 
 simulaciones = bind_rows(lista_simulacion)

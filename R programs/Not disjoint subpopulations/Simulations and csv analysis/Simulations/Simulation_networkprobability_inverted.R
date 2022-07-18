@@ -6,8 +6,8 @@ t = Sys.time()
 
 
 N = 10000                 # Population size
-v_pop = c(0:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
-n_pop = length(v_pop)-1   # Number of subpopulations
+v_pop = c(1:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
+n_pop = length(v_pop)   # Number of subpopulations
 v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
 hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
 n_survey = 300            # Number of individuals we draw in the survey
@@ -26,15 +26,8 @@ nei = 75   # Number of neighbors that each node is connected to. They are neighb
 p   = 0.1  # Probability of randomize a connection. It is applied to all connections
 
 
-#Vector with the number of people in each subpopulation
-v_pop_total = rep(NA, n_pop)
-for (k in 1:n_pop) {
-  v_pop_total[k] = sum(Population$Population == k) # N_k
-  
-}
-
 # Study parameters
-parameters = seq(from = 0.05, to = 1, length.out = 41)
+parameters = seq(from = 0.05, to = 1, length.out = 81)
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
@@ -61,14 +54,14 @@ for (h in 1:b) {
 }
 
 #Simulation
-for (i in 1:length(parameters)) {
-  p = parameters[i]
+for (w in 1:length(parameters)) {
+  p = parameters[w]
   
   #Population
   Population = Population_ref
   net_sw = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
   
-  n_pop = length(v_pop)-1
+  n_pop = length(v_pop)
   
   # Initializes the vectors
   vect_hp = rep(NA,N)       # number of hidden population individuals known for each person
@@ -105,7 +98,7 @@ for (i in 1:length(parameters)) {
     }
     
     Population = cbind(Population,Subpoblacion_total = v_1)
-    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j-1)
+    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j)
   }
   
 
@@ -114,7 +107,7 @@ for (i in 1:length(parameters)) {
   
   v_pop_total = rep(NA, n_pop)
   for (k in 1:n_pop) {
-    v_pop_total[k] = sum(Population[,k+2]) # N_k
+    v_pop_total[k] = sum(Population[,k+1]) # N_k
   }
   
   #Variable reset
@@ -206,7 +199,7 @@ for (i in 1:length(parameters)) {
     lista_sim[[l]] = sim
   }
   simulacion = bind_cols(lista_sim)
-  lista_simulacion[[i]] = simulacion
+  lista_simulacion[[w]] = simulacion
   
 }
 
