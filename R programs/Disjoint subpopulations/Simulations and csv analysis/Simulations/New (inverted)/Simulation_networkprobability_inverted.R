@@ -1,6 +1,6 @@
-#################################################################################################
-# Simulation based on the number of neighbours of each node, leaving the rest of parameters fixed
-#################################################################################################
+#########################################################################################################################
+# Simulation based on the value of the probability of aleatorize a graph connection, leaving the rest of parameters fixed
+#########################################################################################################################
 
 t = Sys.time()
 
@@ -13,10 +13,10 @@ hp_prob = 0.1             # Probability for an individual to be in the hidden po
 n_survey = 300            # Number of individuals we draw in the survey
 n_survey_hp = 50          # Number of individuals we draw in the hidden population survey 
 
-sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
 memory_factor = 0         # Reach memory factor (parameter to change variance of the perturbations' normal)
+sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
 visibility_factor = 1     # Visibility factor (Binomial's probability)
-seed = 2022                 # Seed
+seed = 2022                # Seed
 set.seed(seed)
 
 #Graph
@@ -26,9 +26,15 @@ nei = 75   # Number of neighbors that each node is connected to. They are neighb
 p   = 0.1  # Probability of randomize a connection. It is applied to all connections
 
 
+#Vector with the number of people in each subpopulation
+v_pop_total = rep(NA, n_pop)
+for (k in 1:n_pop) {
+  v_pop_total[k] = sum(Population$Population == k) # N_k
+  
+}
 
 # Study parameters
-parameters = round(seq(from = 2, to = 100, length.out = 100))
+parameters = seq(from = 0.05, to = 1, length.out = 41)
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
@@ -38,6 +44,7 @@ simulaciones = data.frame(data = parameters)
 # AUXILIARY DATA FOR THE SIMULATION
 
 Population_ref = genPopulation(N, v_pop, v_pop_prob,hp_prob)
+
 b = 50 #Number of iterations for the simulation
 lista_simulacion = list()
 
@@ -53,11 +60,10 @@ for (h in 1:b) {
   list_surveys_hp[[h]] = sample(nrow(Population_ref[Population_ref$Hidden_Population == 1,]), n_survey_hp, replace = FALSE)
 }
 
-
-#Simulations
+#Simulation
 for (i in 1:length(parameters)) {
-  nei = parameters[i]
-
+  p = parameters[i]
+  
   #Population
   Population = Population_ref
   net_sw = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
@@ -101,7 +107,7 @@ for (i in 1:length(parameters)) {
     Population = cbind(Population,SubPopulation_total = v_1)
     names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j)
   }
-  
+
   
   #Vector with the number of people in each subpopulation
   
@@ -111,14 +117,13 @@ for (i in 1:length(parameters)) {
     
   }
   
-  
   #Variable reset
   Nh_real =  rep(NA,b) 
   
   Nh_basic_sum = rep(NA,b) 
   #Nh_basicvis_sum = rep(NA,b) 
   Nh_basic_mean = rep(NA,b) 
-  #Nh_basicvis_mean = rep(NA,b)                                     
+  #Nh_basicvis_mean = rep(NA,b)                                      
   
   Nh_PIMLE = rep(NA,b) 
   #Nh_PIMLEvis = rep(NA,b) 
@@ -140,10 +145,8 @@ for (i in 1:length(parameters)) {
     #Surveys
     survey = Population[list_surveys[[l]],]
     survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],]
-    list_surveys_hp[[l]]
-    nrow(Population[Population$Hidden_Population == 1,])
     
-    # Hidden population estimates
+    #Hidden population estimates
     Nh_real = sum(Population$Hidden_Population) 
     
     Nh_basic_sum    = getNh_basic_sum(survey,N) 
@@ -210,24 +213,26 @@ for (i in 1:length(parameters)) {
 simulaciones = bind_rows(lista_simulacion)
 simulaciones = cbind(simulaciones, data = parameters)
 
-
-
 ################################################################################
+
 write.csv(simulaciones,                        # Data frame 
-          file = "Simulation_networkneighbours_2022", # Csv name
+          file = "Simulation_networkprobability", # Csv name
           row.names = TRUE )                   # Row names: TRUE or FALSE 
+
 ################################################################################
 
 
-simulaciones
 
 timer = Sys.time() - t
 timer
-
 #################### COMPUTATION TIME ANALYSIS ###########################
 
+# Computation time (N=1000) (my PC)
+#timer -> 17.22806 mins
+
 # Computation time (N=10000) (virtual machine)
-#timer -> 6.755417 hours
+#timer ->  6.721422 hours
+
 ###########################################################################
 
 
