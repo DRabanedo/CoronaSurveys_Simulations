@@ -83,7 +83,7 @@ for (i in 1:length(parameters)) {
     v_1 = rep(NA,nrow(Population))
     vis_pob = Population[,ncol(Population)-(n_pop-j)]
     for(k in 1:nrow(Population)) {
-      v_1[k] = max(rbinom(vis_pob[k],1 ,sub_memory_factor),0)
+      v_1[k] = max(rbinom(1, vis_pob[k] ,sub_memory_factor),0)
     }
     Population[,ncol(Population)-(n_pop-j)] = v_1
   }
@@ -187,7 +187,7 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 ################################################################################
 write.csv(simulaciones,                                  # Data frame
-          file = "Simulation_subpopulationmemoryfactor_floor", # Csv's name
+          file = "Simulation_subpopulationmemoryfactor_binomial", # Csv's name
           row.names = TRUE )                             # Row names: TRUE o FALSE 
 ################################################################################
 
