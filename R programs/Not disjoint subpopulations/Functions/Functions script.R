@@ -130,7 +130,7 @@ getData = function(N, dis_populations,prob_vector,PropHiddenPop, dim, nei, p, vi
   for(j in 1:length(prob_vector)){
     v_1 = rep(NA,N)
     for(i in 1:N) {
-      vis_pob = sum(Population[net_sw[[i]][[1]],][,j+1])
+      vis_pob = sum(Population[net_sw[[i]][[1]],][,j+1]) # Subpopulation_j column is in (j+1)th dataframe column
       # Visibility of population j by i, applying a normal in order to represent the real visibility
       v_1[i] = max(0,round(rnorm(1, mean = vis_pob, sd = sub_memory_factor*vis_pob)))
     }
