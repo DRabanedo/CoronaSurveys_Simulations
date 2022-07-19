@@ -27,7 +27,7 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = round(seq(from = 1, to = 30, length.out = 30))
+parameters = round(seq(from = 1, to = 50, length.out = 50))
 
 
 #Population
@@ -204,7 +204,7 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 ################################################################################
 write.csv(simulaciones,                                # Data frame
-          file = "Simulation_subpopulationnumber",     # CSV name
+          file = "Simulation_subpopulationnumber_notdisjoint",     # CSV name
           row.names = TRUE )                           # row names: TRUE or FALSE 
 
 ################################################################################

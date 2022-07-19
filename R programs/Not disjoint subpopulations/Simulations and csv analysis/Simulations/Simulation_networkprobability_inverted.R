@@ -209,7 +209,7 @@ simulaciones = cbind(simulaciones, data = parameters)
 ################################################################################
 
 write.csv(simulaciones,                        # Data frame 
-          file = "Simulation_networkprobability", # Csv name
+          file = "Simulation_networkprobability_notdisjoint", # Csv name
           row.names = TRUE )                   # Row names: TRUE or FALSE 
 
 ################################################################################

@@ -47,7 +47,7 @@ for (k in 1:n_pop) {
 }
 
 # Study parameters
-parameters = seq(from = 0, to = 2, length.out = 81)
+parameters = seq(from = 0, to = 1, length.out = 81)
 
 ################################################################################
 
@@ -185,7 +185,7 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 ################################################################################
 write.csv(simulaciones,                                  # Data frame
-          file = "Simulation_subpopulationmemoryfactor", # Csv's name
+          file = "Simulation_subpopulationmemoryfactor_notdisjoint", # Csv's name
           row.names = TRUE )                             # Row names: TRUE o FALSE 
 ################################################################################
 

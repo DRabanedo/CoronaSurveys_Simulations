@@ -27,9 +27,7 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = list(rep(1/length(v_pop), length(v_pop)), c(0.05,0.5,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05),
-                  c(0.5,0.1,0.005,0.005,0.04, 0.2, 0.1, 0.15, 0.025, 0.025), c(0.5, 0.1, 0.1, 0.1, 0.01, 0.01, 0.01, 0.5, 0.05,0.05))
-
+parameters = 
 
 
 #Population and Survey
@@ -201,7 +199,7 @@ simulaciones = cbind(simulaciones, data = 1:length(parameters))
 
 ################################################################################
 write.csv(simulaciones,                                # Data frame
-          file = "Simulations_subpopulationsize",      # CSV name
+          file = "Simulations_subpopulationsize_notdisjoint",      # CSV name
           row.names = TRUE )                           # Row names: TRUE or FALSE
 ################################################################################
 

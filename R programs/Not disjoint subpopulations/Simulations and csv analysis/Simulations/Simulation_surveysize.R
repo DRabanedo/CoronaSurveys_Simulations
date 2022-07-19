@@ -27,7 +27,7 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = round(seq(from = 1, to = 1000, length.out = 400))
+parameters = round(seq(from = 1, to = 10000, length.out = 400))
 
 
 #Population and Survey generation
@@ -156,7 +156,7 @@ for (l in 1:b) {
 
 ################################################################################
 write.csv(simulaciones,                       # Data frame
-          file = "Simulation_surveysize",     # Csv name
+          file = "Simulation_surveysize_notdisjoint",     # Csv name
           row.names = TRUE )                  # Rownames TRUE o FALSE
 ################################################################################
 

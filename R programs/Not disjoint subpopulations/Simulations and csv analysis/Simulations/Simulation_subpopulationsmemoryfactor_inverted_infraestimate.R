@@ -185,7 +185,7 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 ################################################################################
 write.csv(simulaciones,                                  # Data frame
-          file = "Simulation_subpopulationmemoryfactor_floor", # Csv's name
+          file = "Simulation_subpopulationmemoryfactor_binomial_notdisjoint", # Csv's name
           row.names = TRUE )                             # Row names: TRUE o FALSE 
 ################################################################################
 

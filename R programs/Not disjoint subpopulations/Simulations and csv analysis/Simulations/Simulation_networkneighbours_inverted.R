@@ -5,7 +5,7 @@
 t = Sys.time()
 
 
-N = 1000                 # Population size
+N = 10000                 # Population size
 v_pop = c(1:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)   # Number of subpopulations
 v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
@@ -28,7 +28,7 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = round(seq(from = 10, to = 100, length.out = 3))
+parameters = round(seq(from = 5, to = 150, length.out = 60))
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
@@ -38,7 +38,7 @@ simulaciones = data.frame(data = parameters)
 # AUXILIARY DATA FOR THE SIMULATION
 
 Population_ref = genPopulation(N, v_pop, v_pop_prob,hp_prob)
-b = 5 #Number of iterations for the simulation
+b = 50 #Number of iterations for the simulation
 lista_simulacion = list()
 
 # Surveys representing the different iterations. 
@@ -214,7 +214,7 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 ################################################################################
 write.csv(simulaciones,                        # Data frame 
-          file = "Simulation_networkneighbours", # Csv name
+          file = "Simulation_networkneighbours_notdisjoint", # Csv name
           row.names = TRUE )                   # Row names: TRUE or FALSE 
 ################################################################################
 

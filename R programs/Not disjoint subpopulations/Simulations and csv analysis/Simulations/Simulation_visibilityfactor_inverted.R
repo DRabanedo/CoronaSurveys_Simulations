@@ -10,10 +10,10 @@ visibility_factor = 1
 ################################################################################
 
 
-N = 10000                  # Population size
+N = 10000                 # Population size
 v_pop = c(1:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
-n_pop = length(v_pop)   # Number of subpopulations
-v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
+n_pop = length(v_pop)     # Number of subpopulations
+v_pop_prob = rep(1/length(v_pop), length(v_pop)) # Probability of each subpopulation
 hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
 n_survey = 300            # Number of individuals we draw in the survey
 n_survey_hp = 50          # Number of individuals we draw in the hidden population survey 
@@ -136,6 +136,7 @@ for (i in 1:length(parameters)) {
     
       Nh_basic_sum    = getNh_basic_sum(survey,N) 
       Nh_basicvis_sum = getNh_basicvis_sum(survey,N,visibility_factor) 
+      
       Nh_basic_mean    = getNh_basic_mean(survey,N) 
       Nh_basicvis_mean = getNh_basicvis_mean(survey,N,visibility_factor) 
     
@@ -210,7 +211,7 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 ################################################################################
 write.csv(simulaciones,                          # Data frame 
-          file = "Simulations_visibilityfactor", # Csv name
+          file = "Simulations_visibilityfactor_notdisjoint", # Csv name
           row.names = TRUE )                     # Row names: TRUE o FALSE 
 ################################################################################
 
