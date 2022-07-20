@@ -16,7 +16,7 @@ n_survey_hp = 50          # Number of individuals we draw in the hidden populati
 sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
 memory_factor = 0         # Reach memory factor (parameter to change variance of the perturbations' normal)
 visibility_factor = 1     # Visibility factor (Binomial's probability)
-seed = 2022                 # Seed
+seed = 207                 # Seed
 set.seed(seed)
 
 #Graph
