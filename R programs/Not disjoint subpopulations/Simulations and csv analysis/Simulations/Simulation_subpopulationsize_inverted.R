@@ -27,7 +27,8 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = 
+parameters = list(rep(1/2, 10), rep(1/4,10), rep(1/8,10), rep(1/16,10), rep(1/32,10), rep(1/100,10), 
+                  rep(c(1/2,1/10),5), rep(c(1/5,1/25),5), rep(c(1/4, 1/8, 1/16, 1/32, 1/64),2))
 
 
 #Population and Survey
