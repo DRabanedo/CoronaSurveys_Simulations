@@ -11,9 +11,9 @@ hp_prob = 0.1             # Probability for an individual to be in the hidden po
 n_survey = 300            # Number of individuals we draw in the survey
 n_survey_hp = 50          # Number of individuals we draw in the hidden population survey 
 
-sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
-memory_factor = 0         # Reach memory factor (parameter to change variance of the perturbations' normal)
-visibility_factor = 1     # Visibility factor (Binomial's probability)
+sub_memory_factor = 0.5     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+memory_factor = 0.5         # Reach memory factor (parameter to change variance of the perturbations' normal)
+visibility_factor = 0.75     # Visibility factor (Binomial's probability)
 seed = 207                # Seed
 set.seed(seed)
 
@@ -45,29 +45,44 @@ for (j in 1:n_pop) {
 ##### Visibility factor estimate (using subpopulations) #####
 
 # People from the subpopulations who know that the people from the survey_hp belong to the hidden population
-ind_survey = as.numeric(rownames(survey_hp))
-ind_subpop = as.numeric(rownames(Population[Population$Population != 0,]))
-sum_pop_hp = sum(Mhp_vis[ind_subpop,ind_survey]) 
+vf_subpop_es = function(survey_hp,Population, Mhp_vis){
+  ind_survey = as.numeric(rownames(survey_hp))
+  ind_subpop = as.numeric(rownames(Population[Population$Population != 0,]))
+  sum_pop_hp = sum(Mhp_vis[ind_subpop,ind_survey]) 
+  
+  
+  #People from the subpopulations known by the hidden population in survey_hp  
+  sum_pop = sum(select(Population, starts_with("KP_"))[ind_survey,][,2:length(names(select(Population, starts_with("KP_"))[ind_survey,]))])
+  
+  # Final estimate
+  vf_subpop = sum_pop_hp/sum_pop
+  
+  return(vf_subpop)
+}
 
-
-#People from the subpopulations known by the hidden population in survey_hp  
-sum_pop = sum(select(Population, starts_with("KP_"))[ind_survey,][,2:length(names(select(Population, starts_with("KP_"))[ind_survey,]))])
-
-# Final estimate
-vf_subpop = sum_pop_hp/sum_pop
-
+vf_subpop = vf_subpop_es(survey_hp,Population, Mhp_vis)
 
 
 
 ##### Visibility factor estimate (using Reach) #####
 
-# People from the general population who know that the people from the survey_hp belong to the hidden population
-ind_survey = as.numeric(rownames(survey_hp))
-sum_reach_hp = sum(Mhp_vis[,ind_survey])
+vf_reach_es = function(survey_hp,Population, Mhp_vis) {
+  # People from the general population who know that the people from the survey_hp belong to the hidden population
+  ind_survey = as.numeric(rownames(survey_hp))
+  sum_reach_hp = sum(Mhp_vis[,ind_survey])
+  
+  #People from the subpopulations known by the hidden population in survey_hp  
+  sum_reach = sum(Population$Reach_memory[ind_survey])
+  
+  # Final estimate
+  vf_reach = sum_reach_hp/sum_reach
+  return(vf_reach)
+}
 
-#People from the subpopulations known by the hidden population in survey_hp  
-sum_reach = sum(Population$Reach_memory[ind_survey])
+vf_reach = vf_reach_es(survey_hp,Population, Mhp_vis)
 
-# Final estimate
-vf_reach = sum_reach_hp/sum_reach
+
+vf_reach
+vf_subpop
+visibility_factor
 
