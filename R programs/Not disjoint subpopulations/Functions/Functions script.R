@@ -160,6 +160,53 @@ getSurvey = function(n_enc, dataframe){
 
 ############################
 
+##############################
+# Visibility factor estimate #
+##############################
+
+##### Visibility factor estimate (using subpopulations) #####
+
+
+vf_subpop_es = function(survey_hp,Population, Mhp_vis){
+  
+  # People from the subpopulations who know that the people from the survey_hp belong to the hidden population
+  ind_survey = as.numeric(rownames(survey_hp))
+  sum_pop_hp = 0
+  for (i in 1:length(v_pop_total)) {
+    ind_subpop = Population[,i+1] != 0
+    sum_pop_hp = sum(Mhp_vis[ind_subpop,ind_survey]) + sum_pop_hp
+  }
+  
+  #People from the subpopulations known by the hidden population in survey_hp  
+  sum_pop = sum(select(Population, starts_with("KP_"))[ind_survey,])
+  
+  # Final estimate
+  vf_subpop = sum_pop_hp/sum_pop
+  
+  return(vf_subpop)
+}
+
+vf_subpop = vf_subpop_es(survey_hp,Population, Mhp_vis)
+
+
+
+
+##### Visibility factor estimate (using Reach) #####
+
+vf_reach_es = function(survey_hp,Population, Mhp_vis) {
+  
+  # People from the general population who know that the people from the survey_hp belong to the hidden population
+  ind_survey = as.numeric(rownames(survey_hp))
+  sum_reach_hp = sum(Mhp_vis[,ind_survey])
+  
+  #People from the subpopulations known by the hidden population in survey_hp  
+  sum_reach = sum(Population$Reach_memory[ind_survey])
+  
+  # Final estimate
+  vf_reach = sum_reach_hp/sum_reach
+  return(vf_reach)
+}
+
 
 #################
 # Basic estimator

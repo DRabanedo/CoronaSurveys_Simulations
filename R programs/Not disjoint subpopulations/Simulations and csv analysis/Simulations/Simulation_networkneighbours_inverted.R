@@ -139,25 +139,27 @@ for (w in 1:length(parameters)) {
     #Surveys
     survey = Population[list_surveys[[l]],]
     survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],]
-    list_surveys_hp[[l]]
-    nrow(Population[Population$Hidden_Population == 1,])
+    
+    #Visibility factor estimate
+    vf_subpop = vf_subpop_es(survey_hp,Population, Mhp_vis)
+    
     
     # Hidden population estimates
     Nh_real = sum(Population$Hidden_Population) 
     
     Nh_basic_sum    = getNh_basic_sum(survey,N) 
-    #Nh_basicvis_sum = getNh_basicvis_sum(survey,N,visibility_factor) 
+    #Nh_basicvis_sum = getNh_basicvis_sum(survey,N,vf_subpop) 
     Nh_basic_mean    = getNh_basic_mean(survey,N) 
-    #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,visibility_factor) 
+    #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,vf_subpop) 
     
     Nh_PIMLE    = getNh_PIMLE(survey, v_pop_total, N)
-    #Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, visibility_factor)
+    #Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, vf_subpop)
     
     Nh_MLE     = getNh_MLE(survey, v_pop_total)
-    #Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, visibility_factor)
+    #Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, vf_subpop)
     
     Nh_MoS     = getNh_MoS(survey, v_pop_total, N)
-    #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, visibility_factor)
+    #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_subpop)
     
     Nh_GNSUM   =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
     
