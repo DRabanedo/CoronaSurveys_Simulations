@@ -12,13 +12,13 @@ memory_factor = 0      #Reach memory factor (parameter to change variance of the
 ################################################################################
 
 
-N = 10000                 # Population size
+N = 500                 # Population size
 v_pop = c(1:10)           # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)   # Number of subpopulations
 v_pop_prob = rep(1/length(v_pop), length(v_pop)) #Probability of each subpopulation
 hp_prob = 0.1             # Probability for an individual to be in the hidden population (People who have COVID-19)
-n_survey = 300            # Number of individuals we draw in the survey
-n_survey_hp = 50          # Number of individuals we draw in the hidden population survey 
+n_survey = 100            # Number of individuals we draw in the survey
+n_survey_hp = 10          # Number of individuals we draw in the hidden population survey 
 
 sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
 visibility_factor = 1     # Visibility factor (Binomial's probability)
@@ -53,8 +53,8 @@ for (k in 1:n_pop) {
 parameters = seq(from = 0, to = 1, length.out = 161)
 
 #Dataframe to save the data
-simulaciones = data.frame(data = parameters)
-degrees = data.frame(data = parameters)
+#simulaciones = data.frame(data = parameters)
+#degrees = data.frame(data = parameters)
 
 
 
@@ -65,6 +65,7 @@ vect_reach = Population$Reach
 vect_reach_re =  rep(NA, nrow(Population))
 b = 50 #Number of iterations for the simulation
 lista_simulacion = list()
+lista_degrees = list()
 
 # Surveys representing the different iterations. 
 # The surveys are fixed so the variance and bias can be calculated.
@@ -214,7 +215,6 @@ for (i in 1:length(parameters)) {
       colnames(deg)[ind+3*length(d_real)]=str_c("d_basic_",ind,"_",l)
     }
     lista_deg[[l]]=deg
-  }
   }
   simulacion = bind_cols(lista_sim)
   lista_simulacion[[i]] = simulacion

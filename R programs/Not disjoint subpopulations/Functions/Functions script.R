@@ -186,7 +186,7 @@ vf_subpop_es = function(survey_hp,Population, Mhp_vis){
   return(vf_subpop)
 }
 
-vf_subpop = vf_subpop_es(survey_hp,Population, Mhp_vis)
+#vf_subpop = vf_subpop_es(survey_hp,Population, Mhp_vis)
 
 
 
