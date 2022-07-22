@@ -130,6 +130,6 @@ timer
 #timer ->  44.03315 secs mins   
 
 # Computation time (N=10000) (virtual machine) IN PROCESS
-#timer ->  
+#timer ->  9.609865 mins
 
 ###########################################################################

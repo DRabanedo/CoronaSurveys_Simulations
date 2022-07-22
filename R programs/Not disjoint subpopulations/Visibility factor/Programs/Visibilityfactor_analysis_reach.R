@@ -123,7 +123,7 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 ################################################################################
 write.csv(simulaciones,                           # Data frame 
-          file = "Simulation_visibilityfactorestimate_reach",   # Csv name
+          file = "Simulation_visibilityfactorestimate_reach_notdisjoint",   # Csv name
           row.names = TRUE )                      # Row names: TRUE or FALSE 
 ################################################################################
 
