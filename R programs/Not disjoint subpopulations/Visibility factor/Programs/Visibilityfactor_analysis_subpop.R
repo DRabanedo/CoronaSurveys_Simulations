@@ -129,7 +129,7 @@ timer
 # Computation time (N=1000) (virtual machine)
 #timer ->  44.03315 secs mins   
 
-# Computation time (N=10000) (office pc) 
-#timer ->  8.806745 mins
+# Computation time (N=10000) (virtual machine) IN PROCESS
+#timer ->  
 
 ###########################################################################
