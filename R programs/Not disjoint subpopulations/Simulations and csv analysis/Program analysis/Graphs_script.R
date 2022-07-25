@@ -2,8 +2,10 @@ library(dplyr)
 library(matrixStats)
 library(ggplot2)
 
-simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Simulations and csv analysis/Csv archives/Memory factor/Simulation_memoryfactor.txt")
+simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Not disjoint subpopulations/Simulations and csv analysis/Csv archives/Network neighbours/Simulation_networkneighbours_notdisjoint_2022")
 
+
+simulation_data$data = simulation_data$data*2
 
 Nh_real_dataframe = select(simulation_data, starts_with("Nh_real"))
 
@@ -191,20 +193,20 @@ ggplot(graph_data_abserror) +
   #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  #geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the memory factor",
-       x = "Memory factor",
+  labs(title = "Simulations based on the network estructure",
+       x = "Number of neighbours",
        y = "Mean Absolute Error")
 
 
@@ -282,6 +284,7 @@ if(ncol(Nh_Direct_dataframe) !=  0) {
 
 
 ggplot(graph_data_mse) + 
+  
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
@@ -289,20 +292,20 @@ ggplot(graph_data_mse) +
   #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-#geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
-
-#geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
-scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the memory factor",
-       x = "Memory factor",
+  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
+  scale_color_discrete("Legend") + 
+  labs(title = "Simulations based on the network estructure",
+       x = "Number of neighbours",
        y = "Mean Squared Error (MSE)")
 
 
@@ -387,20 +390,20 @@ ggplot(graph_data_bias) +
   #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-#geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
 
 #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
 scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the memory factor",
-       x = "Memory factor",
+  labs(title = "Simulations based on the network estructure",
+       x = "Number of neighbours",
        y = "Hidden population estimate")
 
 
@@ -484,18 +487,18 @@ ggplot(graph_data_sd) +
   #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
   #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  #geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-#geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
-
-#geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
-scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the memory factor",
-       x = "Memory factor",
+  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  
+  #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
+  scale_color_discrete("Legend") + 
+  labs(title = "Simulations based on the network estructure",
+       x = "Number of neighbours",
        y = "Standard deviation")
