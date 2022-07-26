@@ -4,6 +4,8 @@ library(ggplot2)
 
 simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint subpopulations/Visibility factor/Analysis/Csv archives/seed_207/Simulation_visibilityfactorestimate_subpop")
 
+
+
 ######### Data analysis ##########
 # This way of presenting the data allows us to carry out a more detailed analysis
 # of each estimator.
