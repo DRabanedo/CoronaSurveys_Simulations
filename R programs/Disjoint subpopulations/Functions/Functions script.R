@@ -8,6 +8,8 @@ library(stringr)
 library(ggplot2)
 library(sampler)
 library(dplyr)
+library("fitdistrplus")
+library("invgamma")
 
 
 #######################################
@@ -406,5 +408,19 @@ getNh_Direct = function(survey,N){
 }
 
 
+####################
+# Bayesian estimator
+####################
 
+getNh_bayesian = function(survey,v_pop_prob,N){
+  data = survey %>% dplyr::select(starts_with("KP") & -KP_total_apvis_0 | HP_total_apvis)
+  dat = matrix(data = NA,nrow = nrow(data),ncol = ncol(data))
+  for (i in 1:ncol(data)) {
+    dat[,i]=data[,i]
+  }
+  known = N*v_pop_prob[-1]
+  #mcmc <- nsum.mcmc(dat = dat,known = known,N = N,model = "degree",iterations = 20,burnin = 3,size = 20,indices.k = seq(1,10))
+  mcmc <- .mcmc.trans(dat = dat,known = known,N = N,iterations = 20,burnin = 3,size = 20,indices.k = seq(1,10))
+  
+}
 
