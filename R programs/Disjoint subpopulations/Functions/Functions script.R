@@ -167,42 +167,198 @@ getSurvey = function(n_enc, dataframe){
 
 ###########################
 
-##############################
-# Visibility factor estimate #
-##############################
 
-# Visibility factor estimate using the known subpopulations
-vf_subpop_es = function(survey_hp,Population, Mhp_vis){
+#####################################################
+# Visibility factor prediction using subpopulations #
+#####################################################
+
+vf_subpop_es = function(survey_hp,Population, Mhp_vis,sub_memory_factor){
+  # Total sums variables creation
+  sum_pop = 0
+  sum_pop_hp = 0
+  
+  # Number of subpopulations calculus 
+  n_pop = length(names(dplyr::select(Population, starts_with("KP_"))))-1
+  
+  # Index of the people who has been surveyed
   ind_survey = as.numeric(rownames(survey_hp))
-  ind_subpop = as.numeric(rownames(Population[Population$Population != 0,]))
-  sum_pop_hp = sum(Mhp_vis[ind_subpop,ind_survey]) 
+  
+  # Loop for studying each answered value for each subpopulation on the survey 
+  for (k in 1:n_pop) {
+    
+    #People who belong to the subpopulation k
+    ind_subpop = as.numeric(rownames(Population[Population$Population == k,]))
+    
+    # Vector representing how many people of subpopulation k knows that the surveyed
+    # person belongs to the hidden population
+    vect_pop_hp = colSums(Mhp_vis[ind_subpop,ind_survey])
+    
+    # Application of a memory factor to that answer
+    mem_vect_pop_hp = rep(NA,length(vect_pop_hp))
+    for (i in 1:length(vect_pop_hp)) {
+      mem_vect_pop_hp[i] = round(rnorm(1,mean = vect_pop_hp[i],sub_memory_factor*vect_pop_hp[i]))
+    }
+    
+    # Vector who represent how many people each surveyed person knows from subpopulation k 
+    # (with memory factor applied)
+    mem_vect_pop = dplyr::select(Population, starts_with("KP_") & ends_with(as.character(k)))[,1][ind_survey]
+    mem_vect_pop
+    for (j in 1:length(mem_vect_pop)) {
+      
+      # As the people a person knows is always bigger that the people that a person knows
+      # AND knows its belonging to the hidden population, we make a loop that stops
+      # when the assumption commented is verified.
+      while (mem_vect_pop_hp[j] > mem_vect_pop[j]) {
+        
+        mem_vect_pop_hp[j] = round(rnorm(1,mean = vect_pop_hp[j],sub_memory_factor*vect_pop_hp[j]))
+        
+        # It makes it converge easier (reduces computation time)
+        if (mem_vect_pop_hp[j]<vect_pop_hp[j])
+          vect_pop_hp[j] = mem_vect_pop_hp[j]
+      }
+      
+    }
+    
+    # Sum of the results on subpopulation k to the corresponding general variables
+    sum_pop_hp = sum_pop_hp + sum(mem_vect_pop_hp)
+    sum_pop = sum_pop + sum(mem_vect_pop)
+    
+  }
   
   
-  #People from the subpopulations known by the hidden population in survey_hp  
-  sum_pop = sum(select(Population, starts_with("KP_"))[ind_survey,][,2:length(names(select(Population, starts_with("KP_"))[ind_survey,]))])
-  
-  # Final estimate
+  # Visibility factor estimate
   vf_subpop = sum_pop_hp/sum_pop
   
   return(vf_subpop)
 }
 
+#Outliers detection
+#####################################################
+# Visibility factor prediction using subpopulations #
+#####################################################
 
-# Visibility factor estimate using the Reach
-vf_reach_es = function(survey_hp,Population, Mhp_vis) {
+vf_subpop_es_out = function(survey_hp,Population, Mhp_vis,sub_memory_factor){
+  # Total sums variables creation
+  sum_pop = 0
+  sum_pop_hp = 0
+  
+  # Number of subpopulations calculus 
+  n_pop = length(names(dplyr::select(Population, starts_with("KP_"))))-1
+  
+  # Index of the people who has been surveyed
+  ind_survey = as.numeric(rownames(survey_hp))
+  
+  # Loop for studying each answered value for each subpopulation on the survey 
+  for (k in 1:n_pop) {
+    
+    #People who belong to the subpopulation k
+    ind_subpop = as.numeric(rownames(Population[Population$Population == k,]))
+    
+    # Vector representing how many people of subpopulation k knows that the surveyed
+    # person belongs to the hidden population
+    vect_pop_hp = colSums(Mhp_vis[ind_subpop,ind_survey])
+    
+    # Application of a memory factor to that answer
+    mem_vect_pop_hp = rep(NA,length(vect_pop_hp))
+    for (i in 1:length(vect_pop_hp)) {
+      mem_vect_pop_hp[i] = round(rnorm(1,mean = vect_pop_hp[i],sub_memory_factor*vect_pop_hp[i]))
+    }
+    
+    # Vector who represent how many people each surveyed person knows from subpopulation k 
+    # (with memory factor applied)
+    mem_vect_pop = dplyr::select(Population, starts_with("KP_") & ends_with(as.character(k)))[,1][ind_survey]
+    mem_vect_pop
+    for (j in 1:length(mem_vect_pop)) {
+      
+      # As the people a person knows is always bigger that the people that a person knows
+      # AND knows its belonging to the hidden population, we make a loop that stops
+      # when the assumption commented is verified.
+      if (mem_vect_pop_hp[j] > mem_vect_pop[j]){
+        mem_vect_pop_hp[j] =  0
+        mem_vect_pop[j] = 0
+      }
+      
+    }
+    
+    # Sum of the results on subpopulation k to the corresponding general variables
+    sum_pop_hp = sum_pop_hp + sum(mem_vect_pop_hp)
+    sum_pop = sum_pop + sum(mem_vect_pop)
+    
+  }
+  
+  
+  # Visibility factor estimate
+  vf_subpop = sum_pop_hp/sum_pop
+  
+  return(vf_subpop)
+}
+
+#############################################
+# Visibility factor predictions using reach #
+#############################################
+
+vf_reach_es = function(survey_hp,Population, Mhp_vis, memory_factor) {
   # People from the general population who know that the people from the survey_hp belong to the hidden population
   ind_survey = as.numeric(rownames(survey_hp))
-  sum_reach_hp = sum(Mhp_vis[,ind_survey])
+  vect_reach_hp = colSums(Mhp_vis[,ind_survey])
+  mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
+  for (i in 1:length(vect_reach_hp)) {
+    mem_vect_reach_hp[i] = round(rnorm(1,mean = vect_reach_hp[i],memory_factor*vect_reach_hp[i]))
+  }
+  
+  
   
   #People from the subpopulations known by the hidden population in survey_hp  
-  sum_reach = sum(Population$Reach_memory[ind_survey])
+  mem_vect_reach = Population$Reach_memory[ind_survey]
+  
+  for (i in 1:length(mem_vect_reach)) {
+    while (mem_vect_reach[i] < mem_vect_reach_hp[i]){
+      mem_vect_reach_hp[i] = round(rnorm(1,mean = vect_reach_hp[i],memory_factor*vect_reach_hp[i]))
+      
+      if (mem_vect_reach_hp[i]<vect_reach_hp[i])
+        vect_reach_hp[i] = mem_vect_reach_hp[i]
+    }
+    
+  }
   
   # Final estimate
-  vf_reach = sum_reach_hp/sum_reach
+  vf_reach = sum(mem_vect_reach_hp)/sum(mem_vect_reach)
   return(vf_reach)
 }
 
+#Outliers detection
+#############################################
+# Visibility factor predictions using reach #
+#############################################
 
+vf_reach_es_out = function(survey_hp,Population, Mhp_vis, memory_factor) {
+  # People from the general population who know that the people from the survey_hp belong to the hidden population
+  ind_survey = as.numeric(rownames(survey_hp))
+  vect_reach_hp = colSums(Mhp_vis[,ind_survey])
+  mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
+  for (i in 1:length(vect_reach_hp)) {
+    mem_vect_reach_hp[i] = round(rnorm(1,mean = vect_reach_hp[i],memory_factor*vect_reach_hp[i]))
+  }
+  
+  
+  
+  #People from the subpopulations known by the hidden population in survey_hp  
+  mem_vect_reach = Population$Reach_memory[ind_survey]
+  
+  for (j in 1:length(mem_vect_reach)) {
+    if (mem_vect_reach_hp[j] > mem_vect_reach[j]){
+      mem_vect_reach_hp[j] =  0
+      mem_vect_reach[j] = 0
+    }
+    
+  }
+  
+  # Final estimate
+  vf_reach = sum(mem_vect_reach_hp)/sum(mem_vect_reach)
+  return(vf_reach)
+}
+
+################################################################################
 #################
 # Basic estimator
 #################

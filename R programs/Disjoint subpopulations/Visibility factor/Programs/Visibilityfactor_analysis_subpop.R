@@ -101,11 +101,15 @@ for (i in 1:length(parameters)) {
     survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],] #Hidden population survey
     
     #Visibility factor estimate
-    vf_subpop = vf_subpop_es(survey_hp, Population, Mhp_vis)
+    vf_subpop = vf_subpop_es(survey_hp, Population, Mhp_vis, sub_memory_factor)
+    vf_subpop_out =vf_subpop_es_out(survey_hp, Population, Mhp_vis, sub_memory_factor)
     
     #Dataframe for saving the estimates
     sim = data.frame(vf_subpop = vf_subpop)
-    names(sim)[dim(sim)[2]] = str_c("vf_subpop_",l)
+    names(sim)[dim(sim)[2]] = str_c("vf_subpop",l)
+    
+    sim = cbind(vf_subpop_out = vf_subpop_out)
+    names(sim)[dim(sim)[2]] = str_c("vf_subpop_out",l)
     
     lista_sim[[l]] = sim
   }

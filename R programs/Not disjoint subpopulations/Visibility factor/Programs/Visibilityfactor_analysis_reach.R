@@ -101,11 +101,16 @@ for (i in 1:length(parameters)) {
     survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],]
     
     #Visibility factor estimate
-    vf_reach = vf_reach_es(survey_hp,Population, Mhp_vis)
+    vf_reach = vf_reach_es(survey_hp, Population, Mhp_vis, memory_factor)
+    vf_reach_out = vf_reach_es_out(survey_hp, Population, Mhp_vis, memory_factor)
     
-    #Dataframe for saving the estimates
+    
+    #Dataframe for saving the estimate
     sim = data.frame(vf_reach = vf_reach)
     names(sim)[dim(sim)[2]] = str_c("vf_reach_",l)
+    
+    sim = cbind(vf_reach_out = vf_reach_out)
+    names(sim)[dim(sim)[2]] = str_c("vf_reach_out_",l)
     
     lista_sim[[l]] = sim
   }
