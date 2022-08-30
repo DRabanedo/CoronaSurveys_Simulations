@@ -125,7 +125,7 @@ getData = function(N, dis_populations,prob_vector,PropHiddenPop, dim, nei, p, vi
     
     vect_hp[i] = sum(Mhp[i,])
     vect_reach[i] = length(net_sw[[i]][[1]])
-    vect_hp_vis[i] = sum(Mhp_vis[i,])
+    vect_hp_vis[i] = max(0,round(rnorm(1, mean = sum(Mhp_vis[i,]), sd = memory_factor*sum(Mhp_vis[i,]))))
     
     vect_reach_re[i] = max(1,round(rnorm(1, mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
   }
