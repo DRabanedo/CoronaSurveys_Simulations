@@ -188,7 +188,7 @@ vf_subpop_es = function(survey_hp,Population, Mhp_vis,sub_memory_factor){
     # Application of a memory factor to that answer
     mem_vect_pop_hp = rep(NA,length(vect_pop_hp))
     for (i in 1:length(vect_pop_hp)) {
-      mem_vect_pop_hp[i] = round(rnorm(1,mean = vect_pop_hp[i],sub_memory_factor*vect_pop_hp[i]))
+      mem_vect_pop_hp[i] = max(0,round(rnorm(1,mean = vect_pop_hp[i],sub_memory_factor*vect_pop_hp[i])))
     }
     
     # Vector who represent how many people each surveyed person knows from subpopulation k 
@@ -202,7 +202,7 @@ vf_subpop_es = function(survey_hp,Population, Mhp_vis,sub_memory_factor){
       # when the assumption commented is verified.
       while (mem_vect_pop_hp[j] > mem_vect_pop[j]) {
         
-        mem_vect_pop_hp[j] = round(rnorm(1,mean = vect_pop_hp[j],sub_memory_factor*vect_pop_hp[j]))
+        mem_vect_pop_hp[j] = max(0,round(rnorm(1,mean = vect_pop_hp[j],sub_memory_factor*vect_pop_hp[j])))
         
         # It makes it converge easier (reduces computation time)
         if (mem_vect_pop_hp[j]<vect_pop_hp[j])
@@ -254,7 +254,7 @@ vf_subpop_es_out = function(survey_hp,Population, Mhp_vis,sub_memory_factor){
     # Application of a memory factor to that answer
     mem_vect_pop_hp = rep(NA,length(vect_pop_hp))
     for (i in 1:length(vect_pop_hp)) {
-      mem_vect_pop_hp[i] = round(rnorm(1,mean = vect_pop_hp[i],sub_memory_factor*vect_pop_hp[i]))
+      mem_vect_pop_hp[i] = max(0,round(rnorm(1,mean = vect_pop_hp[i],sub_memory_factor*vect_pop_hp[i])))
     }
     
     # Vector who represent how many people each surveyed person knows from subpopulation k 
@@ -296,7 +296,7 @@ vf_reach_es_out = function(survey_hp,Population, Mhp_vis, memory_factor) {
   vect_reach_hp = colSums(Mhp_vis[,ind_survey])
   mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
   for (i in 1:length(vect_reach_hp)) {
-    mem_vect_reach_hp[i] = round(rnorm(1,mean = vect_reach_hp[i],memory_factor*vect_reach_hp[i]))
+    mem_vect_reach_hp[i] = max(0,round(rnorm(1,mean = vect_reach_hp[i],memory_factor*vect_reach_hp[i])))
   }
   
   #People from the subpopulations known by the hidden population in survey_hp  
@@ -326,14 +326,14 @@ vf_reach_es = function(survey_hp,Population, Mhp_vis, memory_factor) {
   vect_reach_hp = colSums(Mhp_vis[,ind_survey])
   mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
   for (i in 1:length(vect_reach_hp)) {
-    mem_vect_reach_hp[i] = round(rnorm(1,mean = vect_reach_hp[i],memory_factor*vect_reach_hp[i]))
+    mem_vect_reach_hp[i] = max(0,round(rnorm(1,mean = vect_reach_hp[i],memory_factor*vect_reach_hp[i])))
   }
   
   #People from the subpopulations known by the hidden population in survey_hp  
   mem_vect_reach = Population$Reach_memory[ind_survey]
   for (i in 1:length(mem_vect_reach)) {
     while (mem_vect_reach[i] < mem_vect_reach_hp[i]){
-      mem_vect_reach_hp[i] = round(rnorm(1,mean = vect_reach_hp[i],memory_factor*vect_reach_hp[i]))
+      mem_vect_reach_hp[i] = max(0,round(rnorm(1,mean = vect_reach_hp[i],memory_factor*vect_reach_hp[i])))
       
       if (mem_vect_reach_hp[i]<vect_reach_hp[i])
         vect_reach_hp[i] = mem_vect_reach_hp[i]

@@ -109,7 +109,7 @@ for (i in 1:length(parameters)) {
     sim = data.frame(vf_reach = vf_reach)
     names(sim)[dim(sim)[2]] = str_c("vf_reach_",l)
     
-    sim = cbind(vf_reach_out = vf_reach_out)
+    sim = cbind(sim,vf_reach_out = vf_reach_out)
     names(sim)[dim(sim)[2]] = str_c("vf_reach_out_",l)
     
     lista_sim[[l]] = sim

@@ -124,13 +124,13 @@ for (i in 1:length(parameters)) {
     sim = data.frame(vf_subpop = vf_subpop)
     names(sim)[dim(sim)[2]] = str_c("vf_subpop",l)
     
-    sim = cbind(vf_subpop_out = vf_subpop_out)
+    sim = cbind(sim,vf_subpop_out = vf_subpop_out)
     names(sim)[dim(sim)[2]] = str_c("vf_subpop_out",l)
     
-    sim = cbind(vf_reach = vf_reach)
+    sim = cbind(sim,vf_reach = vf_reach)
     names(sim)[dim(sim)[2]] = str_c("vf_reach_",l)
     
-    sim = cbind(vf_reach_out = vf_reach_out)
+    sim = cbind(sim,vf_reach_out = vf_reach_out)
     names(sim)[dim(sim)[2]] = str_c("vf_reach_out_",l)
   
     
@@ -170,4 +170,5 @@ write.csv(simulaciones,                          # Data frame
 #timer -> 6.721095 hours
 ###########################################################################
 
-
+view(simulaciones)
+view(sim)
