@@ -58,7 +58,7 @@ for (l in 1:b) {
   survey_hp = getSurvey(n_survey_hp, Population[Population$Hidden_Population==1,])
   
   #Visibility factor estimate
-  vf_subpop = vf_subpop_es(survey_hp, Population, Mhp_vis)
+  vf_subpop = vf_subpop_es(survey_hp, Population, Mhp_vis, sub_memory_factor)
   
   Nh_real =  rep(NA,length(parameters)) 
   

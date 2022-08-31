@@ -114,7 +114,7 @@ for (i in 1:length(parameters)) {
     survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],] #Hidden population survey
     
     #Visibility factor estimate
-    vf_subpop = vf_subpop_es(survey_hp,Population, Mhp_vis)
+    vf_subpop = vf_subpop_es(survey_hp, Population, Mhp_vis, sub_memory_factor)
     
     #Hidden population estimates
     Nh_real = sum(Population$Hidden_Population) 
