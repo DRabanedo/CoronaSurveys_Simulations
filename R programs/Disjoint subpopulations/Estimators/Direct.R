@@ -61,6 +61,14 @@ Nh_direct = getNh_Direct(survey,N)
 Nh_direct
 Sys.time() - t
 
+# As we use summarise, we obtain a data.frame
+t = Sys.time()
+Nh_direct = getNh_Direct_dplyr(survey,N)
+Nh_direct
+class(Nh_direct)
+Sys.time() - t
+
+
 # Real value
 sum(Population$Hidden_Population) 
 

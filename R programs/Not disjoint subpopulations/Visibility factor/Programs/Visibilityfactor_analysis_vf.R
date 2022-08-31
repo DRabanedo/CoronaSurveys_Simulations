@@ -121,7 +121,7 @@ for (i in 1:length(parameters)) {
     #Dataframe for saving the estimates
     
     sim = data.frame(vf_subpop = vf_subpop)
-    names(sim)[dim(sim)[2]] = str_c("vf_subpop",l)
+    names(sim)[dim(sim)[2]] = str_c("vf_subpop_",l)
     
     sim = cbind(sim,vf_subpop_out = vf_subpop_out)
     names(sim)[dim(sim)[2]] = str_c("vf_subpop_out",l)

@@ -11,7 +11,7 @@ n_survey = 300            # Number of individuals we draw in the survey
 
 memory_factor = 0         # Reach memory factor (parameter to change variance of the perturbations' normal)
 sub_memory_factor = 0        # Subpopulation's memory factor (parameter to change variance of the perturbations' normal)
-visibility_factor = 1     # Visibility factor (Binomial's probability)
+visibility_factor = 0     # Visibility factor (Binomial's probability)
 seed = 207                # Seed
 set.seed(seed)
 

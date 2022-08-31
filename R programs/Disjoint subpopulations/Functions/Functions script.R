@@ -401,7 +401,7 @@ getNh_basicvis_mean = function(survey,N,vis) {
   #N: Population size
   #vis: estimation of the visibility factor
   
-  Nh_f =  N*sum(survey$HP_total_apvis)/sum(survey$Reach_memory) * (1/vis)
+  Nh_f =  N*mean(survey$HP_total_apvis/survey$Reach_memory) * (1/vis)
   
   return(Nh_f)
 }
