@@ -51,7 +51,7 @@ for (k in 1:n_pop) {
 }
 
 # Study parameters
-parameters = seq(from = 0, to = 1, length.out = 81)
+parameters = seq(from = 0, to = 0.5, length.out = 89)
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
@@ -128,7 +128,7 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 ################################################################################
 write.csv(simulaciones,                           # Data frame 
-          file = "Simulations_visibilityfactor_estimate_reach_mem",   # Csv name
+          file = "Simulations_visibilityfactor_estimate_reach",   # Csv name
           row.names = TRUE )                      # Row names: TRUE or FALSE 
 ################################################################################
 

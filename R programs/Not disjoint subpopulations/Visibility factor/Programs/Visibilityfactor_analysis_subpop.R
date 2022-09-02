@@ -47,7 +47,7 @@ for (k in 1:n_pop) {
 }
 
 # Study parameters
-parameters = seq(from = 0, to = 1, length.out = 81)
+parameters = seq(from = 0, to = 0.5, length.out = 89)
 
 ################################################################################
 

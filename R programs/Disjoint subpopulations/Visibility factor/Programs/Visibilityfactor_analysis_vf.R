@@ -31,7 +31,7 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = seq(from = 0.1, to = 1, length.out = 89)
+parameters = seq(from = 0, to = 1, length.out = 89)
 
 
 #Dataframe to save the data

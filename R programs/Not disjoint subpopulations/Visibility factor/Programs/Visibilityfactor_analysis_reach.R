@@ -50,7 +50,7 @@ for (k in 1:n_pop) {
 }
 
 # Study parameters
-parameters = seq(from = 0, to = 1, length.out = 161)
+parameters = seq(from = 0, to = 0.5, length.out = 89)
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
