@@ -222,7 +222,8 @@ for (i in 1:length(parameters)) {
     #Estimated Nh for MLE
     Nh_MLE_analysis = survey$HP_total_apvis/d_iest
     
-    Nh_real_analysis = sum(Population$Hidden_Population)/N
+    # Nh real value 
+    Nh_real_analysis = survey$HP_total/d_real
     
     v_summary_MoS = v_summary_MoS + c(min(abs(d_real - d_MoS)),max(abs(d_real - d_MoS)),mean(abs(d_real - d_MoS)),median(abs(d_real - d_MoS)), sd(abs(d_real - d_MoS)))
     v_summary_MLE = v_summary_MLE + c(min(abs(d_real - d_MLE)),max(abs(d_real - d_MLE)),mean(abs(d_real - d_MLE)),median(abs(d_real - d_MLE)), sd(abs(d_real - d_MLE)))
@@ -245,10 +246,10 @@ for (i in 1:length(parameters)) {
   lista_simulacion_summary_MLE[[i]] = sim_summary_MLE
   
   sim_summary_MoS_Nh = data.frame("Min" = v_summary_MoS_Nh[1], "Max" = v_summary_MoS_Nh[2], "Mean" = v_summary_MoS_Nh[3], "Median" = v_summary_MoS_Nh[4], "sd" = v_summary_MoS_Nh[5])
-  lista_simulacion_summary_MoS_Nh[[w]] = sim_summary_MoS_Nh
+  lista_simulacion_summary_MoS_Nh[[i]] = sim_summary_MoS_Nh
   
   sim_summary_MLE_Nh = data.frame("Min" = v_summary_MLE_Nh[1], "Max" = v_summary_MLE_Nh[2], "Mean" = v_summary_MLE_Nh[3], "Median" = v_summary_MLE_Nh[4], "sd" = v_summary_MLE_Nh[5])
-  lista_simulacion_summary_MLE_Nh[[w]] = sim_summary_MLE_Nh
+  lista_simulacion_summary_MLE_Nh[[i]] = sim_summary_MLE_Nh
   
   simulacion = bind_cols(lista_sim)
   lista_simulacion[[i]] = simulacion

@@ -8,12 +8,12 @@ library(grid)
 
 # Reading the data
 
-simulation_data = read.csv("C:/Users/David Rabanedo/Desktop/Cs_subpop size/Simulations_subpopulationsize")
+simulation_data = read.csv("C:/Users/David Rabanedo/Desktop/Cs_subpop size/Simulations_subpopulationsize_2022")
 
-table_PIMLE = read.csv("C:/Users/David Rabanedo/Desktop/Cs_subpop size/Simulations_subpopulationsize_summary_PIMLE")
-table_PIMLE_Nh = read.csv("C:/Users/David Rabanedo/Desktop/Cs_subpop size/Simulations_subpopulationsize_summary_PIMLE_Nh")
-table_MoS = read.csv("C:/Users/David Rabanedo/Desktop/Cs_subpop size/Simulations_subpopulationsize_summary_MoS")
-table_MoS_Nh = read.csv("C:/Users/David Rabanedo/Desktop/Cs_subpop size/Simulations_subpopulationsize_summary_MoS_Nh")
+table_PIMLE = read.csv("C:/Users/David Rabanedo/Desktop/Cs_subpop size/Simulations_subpopulationsize_summary_MLE_2022")
+table_PIMLE_Nh = read.csv("C:/Users/David Rabanedo/Desktop/Cs_subpop size/Simulations_subpopulationsize_summary_MLE_Nh_2022")
+table_MoS = read.csv("C:/Users/David Rabanedo/Desktop/Cs_subpop size/Simulations_subpopulationsize_summary_MoS_2022")
+table_MoS_Nh = read.csv("C:/Users/David Rabanedo/Desktop/Cs_subpop size/Simulations_subpopulationsize_summary_MoS_Nh_2022")
 
 ################################################################################
 
