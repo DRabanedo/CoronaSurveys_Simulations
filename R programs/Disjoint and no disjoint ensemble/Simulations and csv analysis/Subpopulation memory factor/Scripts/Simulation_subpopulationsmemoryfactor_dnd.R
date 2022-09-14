@@ -209,8 +209,8 @@ for (i in 1:length(parameters)) {
     
     
     #Dataframe for saving the estimates
-    #sim = data.frame(Nh_real = Nh_real)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_real_",l)
+    sim = data.frame(Nh_real = Nh_real)
+    names(sim)[dim(sim)[2]] = str_c("Nh_real_",l)
     
     #sim = cbind(sim,Nh_basic_sum = Nh_basic_sum)
     #names(sim)[dim(sim)[2]] = str_c("Nh_basic_sum_",l)
@@ -308,8 +308,8 @@ for (i in 1:length(parameters)) {
     
     
     #Dataframe for saving the estimates
-    #sim_disjoint = data.frame(Nh_real = Nh_real_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_real_",l)
+    sim_disjoint = data.frame(Nh_real = Nh_real_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_real_",l)
     
     #sim_disjoint = cbind(sim_disjoint,Nh_basic_sum = Nh_basic_sum_disjoint)
     #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basic_sum_",l)
@@ -341,7 +341,7 @@ for (i in 1:length(parameters)) {
     #sim_disjoint = cbind(sim_disjoint,Nh_MoSvis = Nh_MoSvis_disjoint)
     #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MoSvis_",l)
     
-    sim_disjoint = cbind(sim_disjoint_disjoint,Nh_GNSUM = Nh_GNSUM_disjoint)
+    sim_disjoint = cbind(sim_disjoint, Nh_GNSUM = Nh_GNSUM_disjoint)
     names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_GNSUM_",l)
     
     lista_sim_disjoint[[l]] = sim_disjoint

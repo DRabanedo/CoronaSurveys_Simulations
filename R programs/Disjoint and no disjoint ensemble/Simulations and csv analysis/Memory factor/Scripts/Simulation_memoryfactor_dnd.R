@@ -337,7 +337,7 @@ for (i in 1:length(parameters)) {
     #sim_disjoint = cbind(sim_disjoint,Nh_MoSvis = Nh_MoSvis_disjoint)
     #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MoSvis_",l)
     
-    #sim_disjoint = cbind(sim_disjoint_disjoint,Nh_GNSUM = Nh_GNSUM_disjoint)
+    #sim_disjoint = cbind(sim_disjoint,Nh_GNSUM = Nh_GNSUM_disjoint)
     #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_GNSUM_",l)
     
     lista_sim_disjoint[[l]] = sim_disjoint
@@ -352,7 +352,8 @@ for (i in 1:length(parameters)) {
 simulaciones = bind_rows(lista_simulacion)
 simulaciones_disjoint = bind_rows(lista_simulacion_disjoint)
 
-
+simulaciones["data"] = parameters
+simulacion_disjoint["data"] = parameters
 
 
 ################################################################################

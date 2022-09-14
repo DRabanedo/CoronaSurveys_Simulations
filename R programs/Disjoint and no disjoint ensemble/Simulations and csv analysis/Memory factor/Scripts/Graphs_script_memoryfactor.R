@@ -2,16 +2,15 @@ library(dplyr)
 library(matrixStats)
 library(ggplot2)
 
-simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Not disjoint subpopulations/Simulations and csv analysis/Csv archives/Subpopulation memory factor/Binomial/Simulation_subpopulationmemoryfactor_binomial_notdisjoint_2022")
-
+simulation_data = read.csv("~/Simulations_memoryfactor_disjoint")
 
 Nh_real_dataframe = select(simulation_data, starts_with("Nh_real"))
 
 Nh_basic_sum_dataframe = select(simulation_data, starts_with("Nh_basic_sum"))
-Nh_basicvis_sum_dataframe = select(simulation_data, starts_with("Nh_basicvis_sum"))
+#Nh_basicvis_sum_dataframe = select(simulation_data, starts_with("Nh_basicvis_sum"))
 
 Nh_basic_mean_dataframe = select(simulation_data, starts_with("Nh_basic_mean"))
-Nh_basicvis_mean_dataframe = select(simulation_data, starts_with("Nh_basicvis_mean"))
+#Nh_basicvis_mean_dataframe = select(simulation_data, starts_with("Nh_basicvis_mean"))
 
 
 ######### Data analysis ##########
@@ -23,10 +22,10 @@ Nh_basic_sum_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basic_s
                                    bias = rowMeans(as.matrix(Nh_basic_sum_dataframe)),
                                    sd = rowSds(as.matrix(Nh_basic_sum_dataframe))) 
 
-Nh_basicvis_sum_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basicvis_sum_dataframe-Nh_real_dataframe))),
-                                      mse = rowMeans(as.matrix((Nh_basicvis_sum_dataframe-Nh_real_dataframe)^2)),
-                                      bias = rowMeans(as.matrix(Nh_basicvis_sum_dataframe)),
-                                      sd = rowSds(as.matrix(Nh_basicvis_sum_dataframe)))
+#Nh_basicvis_sum_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basicvis_sum_dataframe-Nh_real_dataframe))),
+                                      #mse = rowMeans(as.matrix((Nh_basicvis_sum_dataframe-Nh_real_dataframe)^2)),
+                                      #bias = rowMeans(as.matrix(Nh_basicvis_sum_dataframe)),
+                                      #sd = rowSds(as.matrix(Nh_basicvis_sum_dataframe)))
 
 
 
@@ -35,10 +34,10 @@ Nh_basic_mean_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basic_
                                     bias = rowMeans(as.matrix(Nh_basic_mean_dataframe)),
                                     sd = rowSds(as.matrix(Nh_basic_mean_dataframe)))
 
-Nh_basicvis_mean_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basicvis_mean_dataframe-Nh_real_dataframe))),
-                                       mse = rowMeans(as.matrix((Nh_basicvis_mean_dataframe-Nh_real_dataframe)^2)),
-                                       bias = rowMeans(as.matrix(Nh_basicvis_mean_dataframe)),
-                                       sd = rowSds(as.matrix(Nh_basicvis_mean_dataframe)))
+#Nh_basicvis_mean_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_basicvis_mean_dataframe-Nh_real_dataframe))),
+                                       #mse = rowMeans(as.matrix((Nh_basicvis_mean_dataframe-Nh_real_dataframe)^2)),
+                                       #bias = rowMeans(as.matrix(Nh_basicvis_mean_dataframe)),
+                                       #sd = rowSds(as.matrix(Nh_basicvis_mean_dataframe)))
 
 
 ################################################################################
@@ -51,15 +50,15 @@ Nh_basicvis_mean_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_bas
 
 #Dataframe creation
 
-graph_data_abserror = data.frame( data = simulation_data$data)
+graph_data_abserror = data.frame(data = simulation_data$data)
 
 if(ncol(Nh_basic_sum_dataframe) !=  0) {
   graph_data_abserror = cbind(graph_data_abserror, Nh_basic_sum =  Nh_basic_sum_analysis$abs_error)
 }
 
-if(ncol(Nh_basicvis_sum_dataframe) !=  0) {
-  graph_data_abserror = cbind(graph_data_abserror, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$abs_error)
-}
+#if(ncol(Nh_basicvis_sum_dataframe) !=  0) {
+#  graph_data_abserror = cbind(graph_data_abserror, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$abs_error)
+#}
 
 
 
@@ -67,9 +66,9 @@ if(ncol(Nh_basic_mean_dataframe) !=  0) {
   graph_data_abserror = cbind(graph_data_abserror, Nh_basic_mean =  Nh_basic_mean_analysis$abs_error)
 }
 
-if(ncol(Nh_basicvis_mean_dataframe) !=  0) {
-  graph_data_abserror = cbind(graph_data_abserror, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$abs_error)
-}
+#if(ncol(Nh_basicvis_mean_dataframe) !=  0) {
+# # graph_data_abserror = cbind(graph_data_abserror, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$abs_error)
+#}
 
 
 
@@ -83,7 +82,7 @@ ggplot(graph_data_abserror) +
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the memory factor",
-       x = "Survey size",
+       x = "Memory factor",
        y = "Mean Absolute Error")
 
 
@@ -101,9 +100,9 @@ if(ncol(Nh_basic_sum_dataframe) !=  0) {
   graph_data_mse = cbind(graph_data_mse, Nh_basic_sum =  Nh_basic_sum_analysis$mse)
 }
 
-if(ncol(Nh_basicvis_sum_dataframe) !=  0) {
-  graph_data_mse = cbind(graph_data_mse, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$mse)
-}
+#if(ncol(Nh_basicvis_sum_dataframe) !=  0) {
+#  graph_data_mse = cbind(graph_data_mse, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$mse)
+#}
 
 
 
@@ -111,9 +110,9 @@ if(ncol(Nh_basic_mean_dataframe) !=  0) {
   graph_data_mse = cbind(graph_data_mse, Nh_basic_mean =  Nh_basic_mean_analysis$mse)
 }
 
-if(ncol(Nh_basicvis_mean_dataframe) !=  0) {
-  graph_data_mse = cbind(graph_data_mse, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$mse)
-}
+#if(ncol(Nh_basicvis_mean_dataframe) !=  0) {
+#  graph_data_mse = cbind(graph_data_mse, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$mse)
+#}
 
 
 
@@ -128,7 +127,7 @@ ggplot(graph_data_mse) +
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation memory factor",
-       x = "Subpopulation memory factor",
+       x = "Memory factor",
        y = "Mean Squared Error (MSE)")
 
 
@@ -145,9 +144,9 @@ if(ncol(Nh_basic_sum_dataframe) !=  0) {
   graph_data_bias = cbind(graph_data_bias, Nh_basic_sum =  Nh_basic_sum_analysis$bias)
 }
 
-if(ncol(Nh_basicvis_sum_dataframe) !=  0) {
-  graph_data_bias = cbind(graph_data_bias, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$bias)
-}
+#if(ncol(Nh_basicvis_sum_dataframe) !=  0) {
+#  graph_data_bias = cbind(graph_data_bias, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$bias)
+#}
 
 
 
@@ -155,9 +154,9 @@ if(ncol(Nh_basic_mean_dataframe) !=  0) {
   graph_data_bias = cbind(graph_data_bias, Nh_basic_mean =  Nh_basic_mean_analysis$bias)
 }
 
-if(ncol(Nh_basicvis_mean_dataframe) !=  0) {
-  graph_data_bias = cbind(graph_data_bias, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$bias)
-}
+#if(ncol(Nh_basicvis_mean_dataframe) !=  0) {
+#  graph_data_bias = cbind(graph_data_bias, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$bias)
+#}
 
 
 ggplot(graph_data_bias) + 
@@ -170,8 +169,8 @@ ggplot(graph_data_bias) +
   #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the survey size",
-       x = "Survey size",
+  labs(title = "Simulations based on the memory factor",
+       x = "Memory factor",
        y = "Hidden population estimate")
 
 
@@ -189,9 +188,9 @@ if(ncol(Nh_basic_sum_dataframe) !=  0) {
   graph_data_sd = cbind(graph_data_sd, Nh_basic_sum =  Nh_basic_sum_analysis$sd)
 }
 
-if(ncol(Nh_basicvis_sum_dataframe) !=  0) {
-  graph_data_sd = cbind(graph_data_sd, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$sd)
-}
+#if(ncol(Nh_basicvis_sum_dataframe) !=  0) {
+#  graph_data_sd = cbind(graph_data_sd, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$sd)
+#}
 
 
 
@@ -199,9 +198,9 @@ if(ncol(Nh_basic_mean_dataframe) !=  0) {
   graph_data_sd = cbind(graph_data_sd, Nh_basic_mean =  Nh_basic_mean_analysis$sd)
 }
 
-if(ncol(Nh_basicvis_mean_dataframe) !=  0) {
-  graph_data_sd = cbind(graph_data_sd, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$sd)
-}
+#if(ncol(Nh_basicvis_mean_dataframe) !=  0) {
+#  graph_data_sd = cbind(graph_data_sd, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$sd)
+#}
 
 ggplot(graph_data_sd) + 
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
@@ -210,6 +209,6 @@ ggplot(graph_data_sd) +
   geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the survey size",
-       x = "Survey size",
+  labs(title = "Simulations based on the memory factor",
+       x = "Memory factor",
        y = "Standard deviation")
