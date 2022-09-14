@@ -31,9 +31,9 @@ Nh_PIMLE_analysis    = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_PIMLE_da
                                   sd = rowSds(as.matrix(Nh_PIMLE_dataframe)))
 
 #Nh_PIMLEvis_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_PIMLEvis_dataframe-Nh_real_dataframe))),
-                                  #mse = rowMeans(as.matrix((Nh_PIMLEvis_dataframe-Nh_real_dataframe)^2)),
-                                 # bias = rowMeans(as.matrix(Nh_PIMLEvis_dataframe)),
-                                  #sd = rowSds(as.matrix(Nh_PIMLEvis_dataframe)))
+#mse = rowMeans(as.matrix((Nh_PIMLEvis_dataframe-Nh_real_dataframe)^2)),
+# bias = rowMeans(as.matrix(Nh_PIMLEvis_dataframe)),
+#sd = rowSds(as.matrix(Nh_PIMLEvis_dataframe)))
 
 
 
@@ -43,9 +43,9 @@ Nh_MLE_analysis     = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MLE_dataf
                                  sd = rowSds(as.matrix(Nh_MLE_dataframe)))
 
 #Nh_MLEvis_analysis  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MLEvis_dataframe-Nh_real_dataframe))),
-                                 #mse = rowMeans(as.matrix((Nh_MLEvis_dataframe-Nh_real_dataframe)^2)),
-                                 #bias = rowMeans(as.matrix(Nh_MLEvis_dataframe)),
-                                 #sd = rowSds(as.matrix(Nh_MLEvis_dataframe)))
+#mse = rowMeans(as.matrix((Nh_MLEvis_dataframe-Nh_real_dataframe)^2)),
+#bias = rowMeans(as.matrix(Nh_MLEvis_dataframe)),
+#sd = rowSds(as.matrix(Nh_MLEvis_dataframe)))
 
 
 
@@ -55,9 +55,9 @@ Nh_MoS_analysis     = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MoS_dataf
                                  sd = rowSds(as.matrix(Nh_MoS_dataframe)))
 
 #Nh_MoSvis_analysis  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MoSvis_dataframe-Nh_real_dataframe))),
-                                 #mse = rowMeans(as.matrix((Nh_MoSvis_dataframe-Nh_real_dataframe)^2)),
-                                 #bias = rowMeans(as.matrix(Nh_MoSvis_dataframe)),
-                                 #sd = rowSds(as.matrix(Nh_MoSvis_dataframe)))
+#mse = rowMeans(as.matrix((Nh_MoSvis_dataframe-Nh_real_dataframe)^2)),
+#bias = rowMeans(as.matrix(Nh_MoSvis_dataframe)),
+#sd = rowSds(as.matrix(Nh_MoSvis_dataframe)))
 
 
 
@@ -137,8 +137,8 @@ ggplot(graph_data_abserror) +
   
   #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation memory factor",
-       x = "Subpopulation memory factor",
+  labs(title = "Simulations based on the subpopulations number",
+       x = "Subpopulations number",
        y = "Mean Absolute Error")
 
 
@@ -209,8 +209,8 @@ ggplot(graph_data_mse) +
   
   #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation memory factor",
-       x = "Subpopulation memory factor",
+  labs(title = "Simulations based on the subpopulations number",
+       x = "Subpopulations number",
        y = "Mean Squared Error (MSE)")
 
 
@@ -277,10 +277,10 @@ ggplot(graph_data_bias) +
   #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
-
+  
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation memory factor",
-       x = "Subpopulation memory factor",
+  labs(title = "Simulations based on the subpopulations number",
+       x = "Subpopulations number",
        y = "Hidden population estimate")
 
 
@@ -349,6 +349,6 @@ ggplot(graph_data_sd) +
   
   #geom_line(aes(x = data, y =  Nh_Direct, col = "Nh_Direct")) +
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation memory factor",
-       x = "Subpopulation memory factor",
+  labs(title = "Simulations based on the subpopulations number",
+       x = "Subpopulations number",
        y = "Standard deviation")

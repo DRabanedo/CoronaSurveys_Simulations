@@ -10,12 +10,12 @@ t = Sys.time()
 #####################
 
 N = 10000                     # Population size
-v_pop = c(1:10)               # Subpopulations vector 
+v_pop = c(1:5)               # Subpopulations vector 
 n_pop = length(v_pop)         # Number of subpopulations
-v_pop_prob = rep(1/10, 10)    # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
+v_pop_prob = rep(1/10, 5)    # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
                               # sum(v_pop_prob) < 1. 
 hp_prob = 0.1                 # Probability for an individual to be in the hidden population (People who have COVID-19)
-n_survey = 300                # Number of individuals we draw in the survey
+n_survey = 500                # Number of individuals we draw in the survey
 n_survey_hp = 50              # Number of individuals we draw in the hidden population survey 
 
 sub_memory_factor = 0         # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
@@ -62,12 +62,6 @@ n_columnas = ncol(Population)
 
 Population_disjoint =  genPopulation_disjoint(N,v_pop_prob, Population$Hidden_Population)
 
-
-for (i in 1:length(v_pop_prob)) {
-  Population_disjoint = cbind(Population_disjoint, Subpopulation = sample(c(0,1), N, replace = TRUE, p = c(1-v_pop_prob[i],v_pop_prob[i])))
-  names(Population_disjoint)[dim(Population_disjoint)[2]] = str_c("Subpopulation_",i)
-}
-
 Population_disjoint = cbind(Population_disjoint, Reach = Population$Reach)
 Population_disjoint = cbind(Population_disjoint, Reach_memory = Population$Reach_memory)
 Population_disjoint = cbind(Population_disjoint, HP_total = Population$HP_total)
@@ -87,9 +81,9 @@ for(j in 1:length(v_pop_prob)){
 
 k = length(v_pop)
 
-v_pop_total = rep(NA, n_pop)
+v_pop_total_disjoint = rep(NA, n_pop)
 for (k in 1:n_pop) {
-  v_pop_total[k] = sum(Population_disjoint[,k+1]) # N_k
+  v_pop_total_disjoint[k] = sum(Population_disjoint[,k+1]) # N_k
 }
 
 
@@ -182,7 +176,7 @@ for (i in 1:length(parameters)) {
     survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],]
     
     #Visibility factor estimate
-    vf_subpop = vf_subpop_es(survey_hp, Population, Mhp_vis, sub_memory_factor)
+    vf_subpop = visibility_factor
     
     #Hidden population estimates
     Nh_real = sum(Population$Hidden_Population) 
@@ -246,6 +240,7 @@ for (i in 1:length(parameters)) {
   simulacion = bind_cols(lista_sim)
   lista_simulacion[[i]] = simulacion
 
+  
   ######################################
   ## Disjoint subpopulations analysis ##
   
@@ -281,7 +276,7 @@ for (i in 1:length(parameters)) {
     survey_hp = Population_disjoint[Population_disjoint$Hidden_Population == 1,][list_surveys_hp[[l]],]
     
     #Visibility factor estimate
-    vf_subpop = vf_subpop_es(survey_hp, Population, Mhp_vis, sub_memory_factor)
+    vf_subpop = visibility_factor
     
     #Hidden population estimates
     Nh_real_disjoint = sum(Population_disjoint$Hidden_Population) 
@@ -291,16 +286,16 @@ for (i in 1:length(parameters)) {
     Nh_basic_mean_disjoint    = getNh_basic_mean(survey,N) 
     #Nh_basicvis_mean_disjoint = getNh_basicvis_mean(survey,N,vf_subpop) 
     
-    #Nh_PIMLE_disjoint    = getNh_PIMLE(survey, v_pop_total, N)
-    #Nh_PIMLEvis_disjoint = getNh_PIMLEvis(survey, v_pop_total, N, vf_subpop)
+    #Nh_PIMLE_disjoint    = getNh_PIMLE(survey, v_pop_total_disjoint, N)
+    #Nh_PIMLEvis_disjoint = getNh_PIMLEvis(survey, v_pop_total_disjoint, N, vf_subpop)
     
-    #Nh_MLE_disjoint     = getNh_MLE(survey, v_pop_total)
-    #Nh_MLEvis_disjoint  = getNh_MLEvis(survey, v_pop_total, vf_subpop)
+    #Nh_MLE_disjoint     = getNh_MLE(survey, v_pop_total_disjoint)
+    #Nh_MLEvis_disjoint  = getNh_MLEvis(survey, v_pop_total_disjoint, vf_subpop)
     
-    #Nh_MoS_disjoint     = getNh_MoS(survey, v_pop_total, N)
-    #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total, N, vf_subpop)
+    #Nh_MoS_disjoint     = getNh_MoS(survey, v_pop_total_disjoint, N)
+    #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_subpop)
     
-    #Nh_GNSUM_disjoint   =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
+    #Nh_GNSUM_disjoint   =  getNh_GNSUM(Population_disjoint, survey, survey_hp, Mhp_vis, v_pop_total_disjoint, N)
     
     
     #Dataframe for saving the estimates
