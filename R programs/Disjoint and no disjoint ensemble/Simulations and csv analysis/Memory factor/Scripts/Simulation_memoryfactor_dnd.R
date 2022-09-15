@@ -10,9 +10,9 @@ t = Sys.time()
 #####################
 
 N = 10000                     # Population size
-v_pop = c(1:5)               # Subpopulations vector 
+v_pop = c(1:5)                # Subpopulations vector 
 n_pop = length(v_pop)         # Number of subpopulations
-v_pop_prob = rep(1/10, 5)    # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
+v_pop_prob = rep(1/10, 5)     # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
                               # sum(v_pop_prob) < 1. 
 hp_prob = 0.1                 # Probability for an individual to be in the hidden population (People who have COVID-19)
 n_survey = 500                # Number of individuals we draw in the survey
@@ -46,10 +46,11 @@ p   = 0.1    # Probability of randomize a connection. It is applied to all conne
 
 Graph_population_matrix = getData(N, v_pop, v_pop_prob, hp_prob, dim, nei, p, visibility_factor, memory_factor,sub_memory_factor)
 
-net_sw = Graph_population_matrix[[1]]      # Population´s graph
-Population = Graph_population_matrix[[2]]  # Population
-Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
+net_sw = Graph_population_matrix[[1]]       # Population´s graph
+Population = Graph_population_matrix[[2]]   # Population
+Mhp_vis = Graph_population_matrix[[3]]      # Population's visibility matrix
 
+# Population number
 v_pop_total = rep(NA, n_pop)
 for (k in 1:n_pop) {
   v_pop_total[k] = sum(Population[,k+1]) # N_k
@@ -348,7 +349,7 @@ simulaciones = bind_rows(lista_simulacion)
 simulaciones_disjoint = bind_rows(lista_simulacion_disjoint)
 
 simulaciones["data"] = parameters
-simulacion_disjoint["data"] = parameters
+simulaciones_disjoint["data"] = parameters
 
 
 ################################################################################
