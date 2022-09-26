@@ -93,7 +93,7 @@ for (k in 1:n_pop) {
 ## Auxiliary data for the simulation ##
 
 # Study parameters
-parameters = seq(from = 0, to = 1, length.out = 50)
+parameters = seq(from = 0, to = 0.5, length.out = 50)
 
 #Dataframe to save the data
 simulaciones = data.frame(data = parameters)
@@ -354,14 +354,14 @@ simulaciones_disjoint["data"] = parameters
 
 ################################################################################
 write.csv(simulaciones,                           # Data frame 
-          file = "Simulations_memoryfactor_notdisjoint",   # Csv name
+          file = "Simulations_memoryfactor_notdisjoint.csv",   # Csv name
           row.names = TRUE )                      # Row names: TRUE or FALSE 
 ################################################################################
 
 
 ################################################################################
 write.csv(simulaciones_disjoint,                           # Data frame 
-          file = "Simulations_memoryfactor_disjoint",   # Csv name
+          file = "Simulations_memoryfactor_disjoint.csv",   # Csv name
           row.names = TRUE )                      # Row names: TRUE or FALSE 
 ################################################################################
 

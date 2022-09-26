@@ -4,7 +4,7 @@
 
 t = Sys.time()
 
-N = 1000                  # Population size
+N = 10000                  # Population size
 v_pop = c(1:5)             # Subpopulations vector. They are disjoint and 0 corresponds to not classifying the individual in any of them
 n_pop = length(v_pop)      # Number of subpopulations
 v_pop_prob =  rep(1/10, 5) # Probability of each subpopulation
@@ -47,8 +47,6 @@ Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
 # Disjoint population #
 
-n_columnas = ncol(Population)
-
 Population_disjoint =  genPopulation_disjoint(N,v_pop_prob, Population$Hidden_Population)
 
 Population_disjoint = cbind(Population_disjoint, Reach = Population$Reach)
@@ -74,7 +72,7 @@ for(j in 1:length(v_pop_prob)){
 ## Auxiliar simulation data ##
 
 # Number of simulations
-b = 5 
+b = 100 
 
 # Variable creation
 lista_simulacion = list()
@@ -213,7 +211,7 @@ for (w in 1:length(parameters)) {
     survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],]
     
     #Visibility factor estimate
-    vf_subpop = vf_subpop_es(survey_hp, Population, Mhp_vis, sub_memory_factor)
+    vf_subpop = visibility_factor
     
     # Hidden population estimates
     Nh_real = sum(Population$Hidden_Population) 
@@ -390,13 +388,13 @@ simulaciones_disjoint = cbind(simulaciones_disjoint, data = 1:length(parameters)
 
 ################################################################################
 write.csv(simulaciones,                                # Data frame
-          file = "Simulations_subpopulationsize_notdisjoint",      # CSV name
+          file = "Simulations_subpopulationsize_notdisjoint.csv",      # CSV name
           row.names = TRUE )                           # Row names: TRUE or FALSE
 ################################################################################
 
 ################################################################################
 write.csv(simulaciones,                                # Data frame
-          file = "Simulations_subpopulationsize_disjoint",      # CSV name
+          file = "Simulations_subpopulationsize_disjoint.csv",      # CSV name
           row.names = TRUE )                           # Row names: TRUE or FALSE
 ################################################################################
 

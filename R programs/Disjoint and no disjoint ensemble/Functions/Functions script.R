@@ -62,6 +62,34 @@ genPopulation_disjoint <- function(n, pop_vect,HP) {
 }
 
 
+genPopulation_poisson <- function(n, pop_vect,prob_hidden) {
+  # Generates a data frame with the population and the belonging to the Hidden Population
+  # n: the number of individuals
+  # dis_pop: integer vector representing the different subpopulations
+  # pop_vect: vector with the subpopulations probabilities
+  # HP:  Hidden Population vector
+  enc = data.frame(Hidden_Population = getHiddenPop(n,prob_hidden))
+  
+  #Population 0 introduction
+  pop_vect_num = rep(NA, length(pop_vect))
+  for (j in 1:length(pop_vect)) {
+    pop_vect_num[j] = rpois(1,pop_vect[j]*n)
+  }
+  
+  for (i in 1:(length(pop_vect))) {
+    sam_pop = sample(1:n, size = pop_vect_num[i])
+    subpop_vector = rep(0,n)
+    for (k in sam_pop){
+      subpop_vector[k] = 1
+    }
+    enc = cbind(enc, Subpopulation = subpop_vector)
+    names(enc)[dim(enc)[2]] = str_c("Subpopulation_",i)
+  }
+  
+  return(enc)
+}
+
+
 ######################
 # Matrix for the GNSUM
 ######################
@@ -164,7 +192,68 @@ getData = function(N, dis_populations,prob_vector,PropHiddenPop, dim, nei, p, vi
 }
 
 
-
+getData_poisson = function(N, dis_populations,prob_vector,PropHiddenPop, dim, nei, p, visibility_factor, memory_factor, sub_memory_factor){
+  # list, contains the network, the population data and the matrix for the GNSUM
+  
+  #N: population size
+  #dis_populations: vector with the populations
+  #prob_vector: vector with the population's probabilities
+  #PropHiddenPop: Hidden Population proportion
+  #dim: Integer constant, the dimension of the starting lattice.
+  #nei: Integer constant, the neighborhood within which the vertices of the lattice will be connected.
+  #p: Real constant between zero and one, the rewiring probability.
+  #visibility_factor: the visibility factor
+  #memory factor: numeric value, Reach divided by the standard deviation of the normal we use to correct the Reach
+  # sub_memory_factor: the subpopulations visibility divided by the standard deviation of the normal distributions we use to correct the subpopulations visibility
+  #                    it is applied to each subpopulation
+  # sub_memory_factor: the subpopulations' visibility divided by the standard deviation of the normals we use to correct the subpopulations' visibility
+  
+  Population = genPopulation_poisson(N, dis_populations, prob_vector,PropHiddenPop)
+  
+  net_sw = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
+  
+  n_populations = length(dis_populations)
+  # initializes the vectors
+  vect_hp = rep(NA,N)       # number of hidden population individuals known for each person
+  vect_hp_vis = rep(NA,N)   # vect_hp applying visibility
+  vect_reach = rep(NA,N)    # the degrees of each individual
+  vect_reach_re = rep(NA,N) # Reach vector applying memory error
+  
+  # Matrix representing the directed graph that connects individuals with the people of the Hidden Population they know 
+  Mhp = matrixHP(net_sw,Population)
+  Mhp_vis =  apply(Mhp,c(1,2), berHP,p = visibility_factor)
+  
+  
+  for (i in 1:N) {
+    # net_sw[[i]], list with one element, the list of the adjacent vertices to i
+    
+    vect_hp[i] = sum(Mhp[i,])
+    vect_reach[i] = length(net_sw[[i]][[1]])
+    vect_hp_vis[i] = max(0,round(rnorm(1, mean = sum(Mhp_vis[i,]), sd = memory_factor*sum(Mhp_vis[i,]))))
+    
+    vect_reach_re[i] = max(1,round(rnorm(1, mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
+  }
+  
+  Population = cbind(Population, Reach = vect_reach)
+  Population = cbind(Population, Reach_memory = vect_reach_re)
+  Population = cbind(Population, HP_total = vect_hp) 
+  Population = cbind(Population, HP_total_apvis = vect_hp_vis)
+  
+  for(j in 1:length(prob_vector)){
+    v_1 = rep(NA,N)
+    for(i in 1:N) {
+      vis_pob = sum(dplyr::select(Population[net_sw[[i]][[1]],],starts_with("Subpop") & ends_with(as.character(j)))) 
+      # Visibility of population j by i, applying a normal in order to represent the real visibility
+      v_1[i] = max(0,round(rnorm(1, mean = vis_pob, sd = sub_memory_factor*vis_pob)))
+    }
+    
+    Population = cbind(Population,Subpoblacion_total = v_1)
+    names(Population)[dim(Population)[2]] = str_c("KP_total_apvis_",j)
+  }
+  
+  
+  return(list(net_sw, Population, Mhp_vis))
+}
 
 
 getSurvey = function(n_enc, dataframe){
@@ -531,7 +620,7 @@ getNh_MoSvis = function(enc, v_pob, N, vis){
 #######
 
 
-getNh_GNSUM  = function(Pob, enc, enc_hp, Mhp_vis, v_pob, N){
+getNh_GNSUM  = function(Pob, enc, enc_hp, Mhp_vis, v_pob, N, sub_memory_factor){
   #General NSUM (GNSUM) (Formula from "GENERALIZING THE NETWORK SCALE-UP METHOD")
   #Pob:     Population
   #enc:     survey
@@ -549,11 +638,12 @@ getNh_GNSUM  = function(Pob, enc, enc_hp, Mhp_vis, v_pob, N){
   #Denominator estimate
   ind1 = as.numeric(rownames(enc_hp))
   suma = 0
-  for (i in 1:length(v_pob)) {
-    ind2 = Pob[,i+1] != 0
-    suma = sum(Mhp_vis[ind2,ind1]) + suma
+  for (j in ind1){
+    for (i in 1:length(v_pob)) {
+      ind2 = Pob[,i+1] != 0
+      suma = rnorm(1,sum(Mhp_vis[ind2,j]), sum(Mhp_vis[ind2,j])*sub_memory_factor) + suma
+    }
   }
-  
   denominador = N/sum(v_pob)*suma/nrow(enc_hp)      #Denominator estimate
   
   Nh = numerador/denominador
@@ -571,7 +661,3 @@ getNh_Direct = function(survey,N){
   Nh = sum(survey$Hidden_Population)/nrow(survey) * N
   return(Nh)
 }
-
-
-
-

@@ -9,7 +9,7 @@ t = Sys.time()
 sub_memory_factor = 0      #Subpopulation memory factor (parameter to change variance of the perturbations' normal)
 ################################################################################
 
-N = 1000                     # Population size
+N = 10000                     # Population size
 v_pop = c(1:5)                # Subpopulations vector 
 n_pop = length(v_pop)         # Number of subpopulations
 v_pop_prob = rep(1/10, 5)     # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
@@ -18,8 +18,6 @@ hp_prob = 0.1                 # Probability for an individual to be in the hidde
 n_survey = 500                # Number of individuals we draw in the survey
 n_survey_hp = 50              # Number of individuals we draw in the hidden population survey 
 
-
-visibility_factor = 1         # Visibility factor (Binomial's probability)
 memory_factor = 0             # Reach memory factor (parameter to change variance of the perturbations' normal)
 visibility_factor = 1         # Visibility factor (Binomial's probability)
 
@@ -52,18 +50,9 @@ for (k in 1:n_pop) {
   v_pop_total[k] = sum(Population[,k+1]) # N_k
 }
 
-
 # Disjoint population #
 
-n_columnas = ncol(Population)
-
 Population_disjoint =  genPopulation_disjoint(N,v_pop_prob, Population$Hidden_Population)
-
-
-for (i in 1:length(v_pop_prob)) {
-  Population_disjoint = cbind(Population_disjoint, Subpopulation = sample(c(0,1), N, replace = TRUE, p = c(1-v_pop_prob[i],v_pop_prob[i])))
-  names(Population_disjoint)[dim(Population_disjoint)[2]] = str_c("Subpopulation_",i)
-}
 
 Population_disjoint = cbind(Population_disjoint, Reach = Population$Reach)
 Population_disjoint = cbind(Population_disjoint, Reach_memory = Population$Reach_memory)
@@ -95,16 +84,16 @@ for (k in 1:n_pop) {
 # Auxiliary simulation data #
 
 # Study parameters
-parameters = seq(from = 0, to = 1, length.out = 50)
-
-
-vis_pob_reset = Population[,(ncol(Population)-(n_pop-1)):ncol(Population)]
-vis_pob_reset = Population_disjoint[,(ncol(Population_disjoint)-(n_pop-1):ncol(Population_disjoint))]
+parameters = seq(from = 0, to = 0.5, length.out = 50)
 
 b = 100 #Number of iterations for the simulation
 
 lista_simulacion = list()
 lista_simulacion_disjoint = list()
+
+# Reference populations
+Population_fixed = Population
+Population_fixed_disjoint = Population_disjoint
 
 ################################################################################
 
@@ -127,14 +116,13 @@ for (h in 1:b) {
 # Simulation
   
 for (i in 1:length(parameters)) {
-  
   ## Parameter implementation ##
   sub_memory_factor = parameters[i] 
 
   # Not disjoint #
   for(j in 1:n_pop){
     v_1 = rep(NA,nrow(Population))
-    vis_pob = Population[,ncol(Population)-(n_pop-j)]
+    vis_pob = Population_fixed[,ncol(Population)-(n_pop-j)]
     for(k in 1:nrow(Population)) {
       v_1[k] = max(round(rnorm(1, mean = vis_pob[k], sd = sub_memory_factor*vis_pob[k])),0)
     }
@@ -144,7 +132,7 @@ for (i in 1:length(parameters)) {
   # Disjoint #
   for(j in 1:n_pop){
     v_1 = rep(NA,nrow(Population_disjoint))
-    vis_pob = Population_disjoint[,ncol(Population_disjoint)-(n_pop-j)]
+    vis_pob = Population_fixed_disjoint[,ncol(Population_disjoint)-(n_pop-j)]
     for(k in 1:nrow(Population_disjoint)) {
       v_1[k] = max(round(rnorm(1, mean = vis_pob[k], sd = sub_memory_factor*vis_pob[k])),0)
     }
@@ -172,7 +160,7 @@ for (i in 1:length(parameters)) {
   Nh_MoS = rep(NA,b) 
   #Nh_MoSvis = rep(NA,b) 
   
-  Nh_GNSUM = rep(NA,b) 
+  #Nh_GNSUM = rep(NA,b) 
   
   lista_sim = list()
   
@@ -186,7 +174,7 @@ for (i in 1:length(parameters)) {
     survey_hp = Population[Population$Hidden_Population == 1,][list_surveys_hp[[l]],]
     
     #Visibility factor estimate
-    vf_subpop = vf_subpop_es(survey_hp, Population, Mhp_vis, sub_memory_factor)
+    vf_subpop = visibility_factor
     
     #Hidden population estimates
     Nh_real = sum(Population$Hidden_Population) 
@@ -205,7 +193,7 @@ for (i in 1:length(parameters)) {
     Nh_MoS     = getNh_MoS(survey, v_pop_total, N)
     #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_subpop)
     
-    Nh_GNSUM   =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
+    #Nh_GNSUM   =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
     
     
     #Dataframe for saving the estimates
@@ -242,8 +230,8 @@ for (i in 1:length(parameters)) {
     #sim = cbind(sim,Nh_MoSvis = Nh_MoSvis)
     #names(sim)[dim(sim)[2]] = str_c("Nh_MoSvis_",l)
     
-    sim = cbind(sim,Nh_GNSUM = Nh_GNSUM)
-    names(sim)[dim(sim)[2]] = str_c("Nh_GNSUM_",l)
+    #sim = cbind(sim,Nh_GNSUM = Nh_GNSUM)
+    #names(sim)[dim(sim)[2]] = str_c("Nh_GNSUM_",l)
     
     lista_sim[[l]] = sim
   }
@@ -271,7 +259,7 @@ for (i in 1:length(parameters)) {
   Nh_MoS_disjoint = rep(NA,b) 
   #Nh_MoSvis_disjoint = rep(NA,b) 
   
-  Nh_GNSUM_disjoint = rep(NA,b) 
+  #Nh_GNSUM_disjoint = rep(NA,b) 
   
   lista_sim_disjoint = list()
   
@@ -285,7 +273,7 @@ for (i in 1:length(parameters)) {
     survey_hp = Population_disjoint[Population_disjoint$Hidden_Population == 1,][list_surveys_hp[[l]],]
     
     #Visibility factor estimate
-    vf_subpop = vf_subpop_es(survey_hp, Population, Mhp_vis, sub_memory_factor)
+    vf_subpop = visibility_factor
     
     #Hidden population estimates
     Nh_real_disjoint = sum(Population_disjoint$Hidden_Population) 
@@ -304,7 +292,7 @@ for (i in 1:length(parameters)) {
     Nh_MoS_disjoint     = getNh_MoS(survey, v_pop_total_disjoint, N)
     #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_subpop)
     
-    Nh_GNSUM_disjoint   =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total_disjoint, N)
+    #Nh_GNSUM_disjoint   =  getNh_GNSUM(Population_disjoint, survey, survey_hp, Mhp_vis, v_pop_total_disjoint, N)
     
     
     #Dataframe for saving the estimates
@@ -341,8 +329,8 @@ for (i in 1:length(parameters)) {
     #sim_disjoint = cbind(sim_disjoint,Nh_MoSvis = Nh_MoSvis_disjoint)
     #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MoSvis_",l)
     
-    sim_disjoint = cbind(sim_disjoint, Nh_GNSUM = Nh_GNSUM_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_GNSUM_",l)
+    #sim_disjoint = cbind(sim_disjoint, Nh_GNSUM = Nh_GNSUM_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_GNSUM_",l)
     
     lista_sim_disjoint[[l]] = sim_disjoint
   }
@@ -361,20 +349,17 @@ simulaciones_disjoint = cbind(simulaciones_disjoint, data = parameters)
 
 
 
-
 ################################################################################
 write.csv(simulaciones,                                  # Data frame
-          file = "Simulation_subpopulationmemoryfactor_notdisjoint", # Csv's name
+          file = "Simulation_subpopulationmemoryfactor_notdisjoint.csv", # Csv's name
           row.names = TRUE )                             # Row names: TRUE o FALSE 
 ################################################################################
 
 ################################################################################
 write.csv(simulaciones_disjoint,                                  # Data frame
-          file = "Simulation_subpopulationmemoryfactor_disjoint", # Csv's name
+          file = "Simulation_subpopulationmemoryfactor_disjoint.csv", # Csv's name
           row.names = TRUE )                             # Row names: TRUE o FALSE 
 ################################################################################
-
-
 
 timer = Sys.time() - t
 timer

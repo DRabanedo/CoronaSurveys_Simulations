@@ -2,10 +2,10 @@ library(dplyr)
 library(matrixStats)
 library(ggplot2)
 
-simulation_data = 
+simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Not disjoint subpopulations/Simulations and csv analysis/Csv archives/Subpopulation memory factor/Binomial/Simulation_subpopulationmemoryfactor_binomial_notdisjoint_2022")
 simulation_data_disjoint = 
   
-  ##################
+##################
 ## Not disjoint ##
 
 Nh_real_dataframe = select(simulation_data, starts_with("Nh_real"))
@@ -34,9 +34,9 @@ Nh_PIMLE_analysis    = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_PIMLE_da
                                   sd = rowSds(as.matrix(Nh_PIMLE_dataframe)))
 
 #Nh_PIMLEvis_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_PIMLEvis_dataframe-Nh_real_dataframe))),
-#mse = rowMeans(as.matrix((Nh_PIMLEvis_dataframe-Nh_real_dataframe)^2)),
-# bias = rowMeans(as.matrix(Nh_PIMLEvis_dataframe)),
-#sd = rowSds(as.matrix(Nh_PIMLEvis_dataframe)))
+                                  #mse = rowMeans(as.matrix((Nh_PIMLEvis_dataframe-Nh_real_dataframe)^2)),
+                                 # bias = rowMeans(as.matrix(Nh_PIMLEvis_dataframe)),
+                                  #sd = rowSds(as.matrix(Nh_PIMLEvis_dataframe)))
 
 
 
@@ -46,9 +46,9 @@ Nh_MLE_analysis     = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MLE_dataf
                                  sd = rowSds(as.matrix(Nh_MLE_dataframe)))
 
 #Nh_MLEvis_analysis  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MLEvis_dataframe-Nh_real_dataframe))),
-#mse = rowMeans(as.matrix((Nh_MLEvis_dataframe-Nh_real_dataframe)^2)),
-#bias = rowMeans(as.matrix(Nh_MLEvis_dataframe)),
-#sd = rowSds(as.matrix(Nh_MLEvis_dataframe)))
+                                 #mse = rowMeans(as.matrix((Nh_MLEvis_dataframe-Nh_real_dataframe)^2)),
+                                 #bias = rowMeans(as.matrix(Nh_MLEvis_dataframe)),
+                                 #sd = rowSds(as.matrix(Nh_MLEvis_dataframe)))
 
 
 
@@ -58,9 +58,9 @@ Nh_MoS_analysis     = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MoS_dataf
                                  sd = rowSds(as.matrix(Nh_MoS_dataframe)))
 
 #Nh_MoSvis_analysis  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MoSvis_dataframe-Nh_real_dataframe))),
-#mse = rowMeans(as.matrix((Nh_MoSvis_dataframe-Nh_real_dataframe)^2)),
-#bias = rowMeans(as.matrix(Nh_MoSvis_dataframe)),
-#sd = rowSds(as.matrix(Nh_MoSvis_dataframe)))
+                                 #mse = rowMeans(as.matrix((Nh_MoSvis_dataframe-Nh_real_dataframe)^2)),
+                                 #bias = rowMeans(as.matrix(Nh_MoSvis_dataframe)),
+                                 #sd = rowSds(as.matrix(Nh_MoSvis_dataframe)))
 
 
 
@@ -93,9 +93,9 @@ Nh_GNSUM_dataframe_disjoint  = select(simulation_data_disjoint, starts_with("Nh_
 
 
 Nh_PIMLE_analysis_disjoint    = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_PIMLE_dataframe_disjoint-Nh_real_dataframe_disjoint))),
-                                           mse = rowMeans(as.matrix((Nh_PIMLE_dataframe_disjoint-Nh_real_dataframe_disjoint)^2)),
-                                           bias = rowMeans(as.matrix(Nh_PIMLE_dataframe_disjoint)),
-                                           sd = rowSds(as.matrix(Nh_PIMLE_dataframe_disjoint)))
+                                  mse = rowMeans(as.matrix((Nh_PIMLE_dataframe_disjoint-Nh_real_dataframe_disjoint)^2)),
+                                  bias = rowMeans(as.matrix(Nh_PIMLE_dataframe_disjoint)),
+                                  sd = rowSds(as.matrix(Nh_PIMLE_dataframe_disjoint)))
 
 #Nh_PIMLEvis_analysis_disjoint = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_PIMLEvis_dataframe_disjoint-Nh_real_dataframe_disjoint))),
 #mse = rowMeans(as.matrix((Nh_PIMLEvis_dataframe_disjoint-Nh_real_dataframe_disjoint)^2)),
@@ -105,9 +105,9 @@ Nh_PIMLE_analysis_disjoint    = data.frame(abs_error = rowMeans(as.matrix(abs(Nh
 
 
 Nh_MLE_analysis_disjoint     = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MLE_dataframe_disjoint-Nh_real_dataframe_disjoint))),
-                                          mse = rowMeans(as.matrix((Nh_MLE_dataframe_disjoint-Nh_real_dataframe_disjoint)^2)),
-                                          bias = rowMeans(as.matrix(Nh_MLE_dataframe_disjoint)),
-                                          sd = rowSds(as.matrix(Nh_MLE_dataframe_disjoint)))
+                                 mse = rowMeans(as.matrix((Nh_MLE_dataframe_disjoint-Nh_real_dataframe_disjoint)^2)),
+                                 bias = rowMeans(as.matrix(Nh_MLE_dataframe_disjoint)),
+                                 sd = rowSds(as.matrix(Nh_MLE_dataframe_disjoint)))
 
 #Nh_MLEvis_analysis_disjoint  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MLEvis_dataframe_disjoint-Nh_real_dataframe_disjoint))),
 #mse = rowMeans(as.matrix((Nh_MLEvis_dataframe_disjoint-Nh_real_dataframe_disjoint)^2)),
@@ -117,9 +117,9 @@ Nh_MLE_analysis_disjoint     = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_
 
 
 Nh_MoS_analysis_disjoint     = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MoS_dataframe_disjoint-Nh_real_dataframe_disjoint))),
-                                          mse = rowMeans(as.matrix((Nh_MoS_dataframe_disjoint-Nh_real_dataframe_disjoint)^2)),
-                                          bias = rowMeans(as.matrix(Nh_MoS_dataframe_disjoint)),
-                                          sd = rowSds(as.matrix(Nh_MoS_dataframe_disjoint)))
+                                 mse = rowMeans(as.matrix((Nh_MoS_dataframe_disjoint-Nh_real_dataframe_disjoint)^2)),
+                                 bias = rowMeans(as.matrix(Nh_MoS_dataframe_disjoint)),
+                                 sd = rowSds(as.matrix(Nh_MoS_dataframe_disjoint)))
 
 #Nh_MoSvis_analysis_disjoint  = data.frame(abs_error = rowMeans(as.matrix(abs(Nh_MoSvis_dataframe_disjoint-Nh_real_dataframe_disjoint))),
 #mse = rowMeans(as.matrix((Nh_MoSvis_dataframe_disjoint-Nh_real_dataframe_disjoint)^2)),
@@ -189,7 +189,7 @@ if(ncol(Nh_GNSUM_dataframe) !=  0) {
 
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_notdisjoint_abserror.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_notdisjoint_abserror.png")
 
 
 png(filename = plot_name,
@@ -208,8 +208,8 @@ ggplot(graph_data_abserror) +
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Mean Absolute Error")
 
 dev.off()
@@ -262,7 +262,7 @@ if(ncol(Nh_GNSUM_dataframe_disjoint) !=  0) {
 
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_disjoint_abserror.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_disjoint_abserror.png")
 
 
 png(filename = plot_name,
@@ -281,8 +281,8 @@ ggplot(graph_data_abserror_disjoint) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Mean Absolute Error")
 
 dev.off()
@@ -295,7 +295,7 @@ dev.off()
 graph_data_abserror_total = cbind(graph_data_abserror, graph_data_abserror_disjoint[2:ncol(graph_data_abserror_disjoint)])
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_total_abserror.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_total_abserror.png")
 
 
 png(filename = plot_name,
@@ -324,8 +324,8 @@ ggplot(graph_data_abserror) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Mean Absolute Error")
 
 dev.off()
@@ -383,7 +383,7 @@ if(ncol(Nh_GNSUM_dataframe) !=  0) {
 
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_notdisjoint_mse.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_notdisjoint_mse.png")
 
 
 png(filename = plot_name,
@@ -403,8 +403,8 @@ ggplot(graph_data_mse) +
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Mean Squared Error (MSE)")
 
 dev.off()
@@ -453,7 +453,7 @@ if(ncol(Nh_GNSUM_dataframe_disjoint) !=  0) {
 }
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_disjoint_mse.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_disjoint_mse.png")
 
 
 png(filename = plot_name,
@@ -472,8 +472,8 @@ ggplot(graph_data_mse) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Mean Squared Error (MSE)")
 
 dev.off()
@@ -484,7 +484,7 @@ dev.off()
 graph_data_mse_total = cbind(graph_data_mse, graph_data_mse_disjoint[2:ncol(graph_data_mse_disjoint)])
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_total_mse.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_total_mse.png")
 
 
 png(filename = plot_name,
@@ -513,8 +513,8 @@ ggplot(graph_data_abserror) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Mean Squared Error (MSE)")
 
 dev.off()
@@ -569,7 +569,7 @@ if(ncol(Nh_GNSUM_dataframe) !=  0) {
 }
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_total_bias.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_total_bias.png")
 
 
 png(filename = plot_name,
@@ -590,8 +590,8 @@ ggplot(graph_data_bias) +
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Hidden population estimate")
 
 dev.off()
@@ -640,7 +640,7 @@ if(ncol(Nh_GNSUM_dataframe_disjoint) !=  0) {
 }
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_disjoint_sd.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_disjoint_sd.png")
 
 
 png(filename = plot_name,
@@ -659,8 +659,8 @@ ggplot(graph_data_sd) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Hidden population estimate")
 
 dev.off()
@@ -671,7 +671,7 @@ dev.off()
 graph_data_sd_total = cbind(graph_data_sd, graph_data_sd_disjoint[2:ncol(graph_data_sd_disjoint)])
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_total_sd.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_total_sd.png")
 
 
 png(filename = plot_name,
@@ -700,8 +700,8 @@ ggplot(graph_data_abserror) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Hidden population estimate")
 
 dev.off()
@@ -754,7 +754,7 @@ if(ncol(Nh_GNSUM_dataframe) !=  0) {
 }
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_total_sd.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_total_sd.png")
 
 
 png(filename = plot_name,
@@ -775,8 +775,8 @@ ggplot(graph_data_sd) +
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Standard deviation")
 
 dev.off()
@@ -826,7 +826,7 @@ if(ncol(Nh_GNSUM_dataframe_disjoint) !=  0) {
 }
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_disjoint_sd.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_disjoint_sd.png")
 
 
 png(filename = plot_name,
@@ -843,10 +843,10 @@ ggplot(graph_data_sd) +
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
-  
+
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Hidden population estimate")
 
 dev.off()
@@ -857,7 +857,7 @@ dev.off()
 graph_data_sd_total = cbind(graph_data_sd, graph_data_sd_disjoint[2:ncol(graph_data_sd_disjoint)])
 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_total_sd.png")
+plot_name = str_c("Simulation_subpopmemoryfactor_", seed_number, "_total_sd.png")
 
 
 png(filename = plot_name,
@@ -886,8 +886,9 @@ ggplot(graph_data_abserror) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
-       x = "Subpopulation number",
+  labs(title = "Simulations based on the subpopulation memory factor",
+       x = "Subpopulation memory factor",
        y = "Hidden population estimate")
 
 dev.off()
+
