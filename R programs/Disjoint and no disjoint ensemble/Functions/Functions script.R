@@ -8,6 +8,7 @@ library(stringr)
 library(ggplot2)
 library(sampler)
 library(dplyr)
+library(truncnorm)
 
 
 #######################################
@@ -269,6 +270,235 @@ getSurvey = function(n_enc, dataframe){
 
 ################################################################################
 
+# Visibility factor estimate #
+
+####################
+# Binomial aproach #
+####################
+
+vf_bin = function(survey_hp,Population, Mhp_vis,memory_factor){
+  # Variables #
+  ind_survey = as.numeric(rownames(survey_hp))
+  vect_reach_hp = colSums(Mhp_vis[,ind_survey])
+  vect_reach = Population$Reach[ind_survey]
+  mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
+  mem_vect_reach = rep(NA,length(vect_reach_hp))
+  
+  # Double trunc + binomial calculate
+  for (i in 1:length(vect_reach_hp)) {
+    mem_vect_reach[i] = max(0,round(rnorm(1 , mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
+    mem_vect_reach_hp[i] = rbinom(1, size = mem_vect_reach[i], p = vect_reach_hp[i]/vect_reach[i])
+  }
+  
+  vf_reach_dt = sum(mem_vect_reach_hp)/sum(mem_vect_reach)
+  return(vf_reach_dt)
+}
+
+
+
+
+###########################
+# Double truncation first #
+###########################
+
+################################################################################
+
+# Double truncation + binomial #
+
+vf_dt_bin = function(survey_hp,Population, Mhp_vis,memory_factor){
+  # Variables #
+  ind_survey = as.numeric(rownames(survey_hp))
+  vect_reach_hp = colSums(Mhp_vis[,ind_survey])
+  vect_reach = Population$Reach[ind_survey]
+  mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
+  mem_vect_reach = rep(NA,length(vect_reach_hp))
+  
+  # Double trunc + binomial calculate
+  for (i in 1:length(vect_reach_hp)) {
+    mem_vect_reach[i] = max(0,round(rtruncnorm(1, a = vect_reach_hp[i] , b = 2 * vect_reach[i] - vect_reach_hp[i], mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
+    mem_vect_reach_hp[i] = rbinom(1, size = mem_vect_reach[i], p = vect_reach_hp[i]/vect_reach[i])
+  }
+  
+  vf_reach_dt = sum(mem_vect_reach_hp)/sum(mem_vect_reach)
+  return(vf_reach_dt)
+}
+
+
+
+################################################################################
+
+# Double truncation + fake binomial #
+
+vf_dt_fbin = function(survey_hp,Population, Mhp_vis,memory_factor){
+  # Variables #
+  ind_survey = as.numeric(rownames(survey_hp))
+  vect_reach_hp = colSums(Mhp_vis[,ind_survey])
+  vect_reach = Population$Reach[ind_survey]
+  mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
+  mem_vect_reach = rep(NA,length(vect_reach_hp))
+  
+  # Double trunc + binomial calculate
+  for (i in 1:length(vect_reach_hp)) {
+    mem_vect_reach[i] = max(0,round(rtruncnorm(1, a = vect_reach_hp[i] , b = 2 * vect_reach[i] - vect_reach_hp[i], mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
+    mem_vect_reach_hp[i] = rbinom(1, size = mem_vect_reach[i], p = vect_reach_hp[i]/mem_vect_reach[i])
+  }
+  
+  vf_reach_dt = sum(mem_vect_reach_hp)/sum(mem_vect_reach)
+  return(vf_reach_dt)
+}
+
+
+################################################################################
+
+# Double truncation + double truncation #
+
+vf_dt_dt = function(survey_hp, Population, Mhp_vis,memory_factor){
+  
+  # Variables #
+  ind_survey = as.numeric(rownames(survey_hp))
+  vect_reach_hp = colSums(Mhp_vis[,ind_survey])
+  vect_reach = Population$Reach[ind_survey]
+  mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
+  mem_vect_reach = rep(NA,length(vect_reach_hp))
+  
+  # Double truncation + double truncation calculate
+  for (i in 1:length(vect_reach_hp)) {
+    mem_vect_reach[i]    = max(0,round(rtruncnorm(1, a = vect_reach_hp[i] , b = 2 * vect_reach[i] - vect_reach_hp[i], mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
+    mem_vect_reach_hp[i] = max(0,round(rtruncnorm(1, a = vect_reach_hp[i] - (mem_vect_reach[i]-vect_reach_hp[i]), b = mem_vect_reach[i], mean = vect_reach_hp[i] , sd = vect_reach_hp[i]*memory_factor)))
+  }
+  
+  vf_reach_dt = sum(mem_vect_reach_hp)/sum(mem_vect_reach)
+  return(vf_reach_dt)
+}
+
+
+################################################################################
+
+# Double truncation + unilateral truncation # 
+
+vf_dt_ut = function(survey_hp,Population, Mhp_vis,memory_factor){
+  
+  # Variables #
+  ind_survey = as.numeric(rownames(survey_hp))
+  vect_reach_hp = colSums(Mhp_vis[,ind_survey])
+  vect_reach = Population$Reach[ind_survey]
+  mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
+  mem_vect_reach = rep(NA,length(vect_reach_hp))
+  
+  # Double truncation + double truncation calculate
+  for (i in 1:length(vect_reach_hp)) {
+    mem_vect_reach[i]    = max(0,round(rtruncnorm(1, a = vect_reach_hp[i] , b = 2 * vect_reach[i] - vect_reach_hp[i], mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
+    mem_vect_reach_hp[i] = max(0,round(rtruncnorm(1, a = 0 , b = mem_vect_reach[i], mean = vect_reach_hp[i] , sd = vect_reach_hp[i]*memory_factor)))
+  }
+  
+  vf_reach_dt = sum(mem_vect_reach_hp)/sum(mem_vect_reach)
+  return(vf_reach_dt)
+}
+
+################################################################################
+
+
+
+###############################
+# Unilateral truncation first #
+###############################
+
+################################################################################
+
+# Unilateral truncation + binomial #
+
+vf_ut_bin = function(survey_hp,Population, Mhp_vis,memory_factor){
+  # Variables #
+  ind_survey = as.numeric(rownames(survey_hp))
+  vect_reach_hp = colSums(Mhp_vis[,ind_survey])
+  vect_reach = Population$Reach[ind_survey]
+  mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
+  mem_vect_reach = rep(NA,length(vect_reach_hp))
+  
+  # Double trunc + binomial calculate
+  for (i in 1:length(vect_reach_hp)) {
+    mem_vect_reach[i] = max(0,round(rtruncnorm(1, a = vect_reach_hp[i] , b = Inf, mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
+    mem_vect_reach_hp[i] = rbinom(1, size = mem_vect_reach[i], p = vect_reach_hp[i]/vect_reach[i])
+  }
+  
+  vf_reach_dt = sum(mem_vect_reach_hp)/sum(mem_vect_reach)
+  return(vf_reach_dt)
+}
+
+
+
+################################################################################
+
+# Unilateral truncation + binomial #
+
+vf_ut_fbin = function(survey_hp,Population, Mhp_vis,memory_factor){
+  # Variables #
+  ind_survey = as.numeric(rownames(survey_hp))
+  vect_reach_hp = colSums(Mhp_vis[,ind_survey])
+  vect_reach = Population$Reach[ind_survey]
+  mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
+  mem_vect_reach = rep(NA,length(vect_reach_hp))
+  
+  # Double trunc + binomial calculate
+  for (i in 1:length(vect_reach_hp)) {
+    mem_vect_reach[i] = max(0,round(rtruncnorm(1, a = vect_reach_hp[i] , b = Inf, mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
+    mem_vect_reach_hp[i] = rbinom(1, size = mem_vect_reach[i], p = vect_reach_hp[i]/mem_vect_reach[i])
+  }
+  
+  vf_reach_dt = sum(mem_vect_reach_hp)/sum(mem_vect_reach)
+  return(vf_reach_dt)
+}
+################################################################################
+
+
+# Unilateral truncation + double truncation #
+
+vf_ut_dt = function(survey_hp,Population, Mhp_vis,memory_factor){
+  
+  # Variables #
+  ind_survey = as.numeric(rownames(survey_hp))
+  vect_reach_hp = colSums(Mhp_vis[,ind_survey])
+  vect_reach = Population$Reach[ind_survey]
+  mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
+  mem_vect_reach = rep(NA,length(vect_reach_hp))
+  
+  # Double truncation + double truncation calculate
+  for (i in 1:length(vect_reach_hp)) {
+    mem_vect_reach[i] = max(0,round(rtruncnorm(1, a = vect_reach_hp[i] , b = Inf, mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
+    mem_vect_reach_hp[i] = max(0,round(rtruncnorm(1, a = vect_reach_hp[i] - (mem_vect_reach[i]-vect_reach_hp[i]), b = mem_vect_reach[i], mean = vect_reach_hp[i] , sd = vect_reach_hp[i]*memory_factor)))
+  }
+  
+  vf_reach_dt = sum(mem_vect_reach_hp)/sum(mem_vect_reach)
+  return(vf_reach_dt)
+}
+
+
+################################################################################
+
+
+# Unilateral truncation + unilateral truncation # 
+
+vf_ut_ut = function(survey_hp,Population, Mhp_vis,memory_factor){
+  
+  # Variables #
+  ind_survey = as.numeric(rownames(survey_hp))
+  vect_reach_hp = colSums(Mhp_vis[,ind_survey])
+  vect_reach = Population$Reach[ind_survey]
+  mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
+  mem_vect_reach = rep(NA,length(vect_reach_hp))
+  
+  # Double truncation + unilateral truncation calculate
+  for (i in 1:length(vect_reach_hp)) {
+    mem_vect_reach[i] = max(0,round(rtruncnorm(1, a = vect_reach_hp[i] , b =Inf, mean = vect_reach[i], sd = memory_factor*vect_reach[i])))
+    mem_vect_reach_hp[i] = max(0,round(rtruncnorm(1, a = 0 , b = mem_vect_reach[i], mean = vect_reach_hp[i] , sd = vect_reach_hp[i]*memory_factor)))
+  }
+  
+  vf_reach_dt = sum(mem_vect_reach_hp)/sum(mem_vect_reach)
+  return(vf_reach_dt)
+}
+
+
+################################################################################
 #####################################################
 # Visibility factor prediction using subpopulations #
 #####################################################
