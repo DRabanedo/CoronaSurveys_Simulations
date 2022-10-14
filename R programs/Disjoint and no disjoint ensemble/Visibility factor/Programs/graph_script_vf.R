@@ -3,9 +3,11 @@ library(matrixStats)
 library(ggplot2)
 library(stringr)
 
-simulation_data = read.csv("C:/Users/David Rabanedo/Downloads/Simulation_visibilityfactorestimate_reach_notdisjoint_2022.csv")
+simulation_data =read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Visibility factor/CSV/seed_207/Simulations_visibilityfactorestimate_mf_0.2_reach_notdisjoint_207.csv")
 
-seed_number = 2022
+
+seed_number = 207
+memory_factor = 0.2
 
 ######### Data analysis ##########
 # This way of presenting the data allows us to carry out a more detailed analysis
@@ -27,9 +29,11 @@ vf_ut_fbin_data = select(simulation_data, starts_with("vf_ut_fbin"))
 vf_ut_dt_data = select(simulation_data, starts_with("vf_ut_dt"))
 vf_ut_ut_data = select(simulation_data, starts_with("vf_ut_ut"))
 
+
+sum(is.na(vf_dt_fbin_data))
 ##################################
 
-visibility_factor = 0.8
+visibility_factor = simulation_data$data
 vf = visibility_factor
 
 
@@ -83,6 +87,7 @@ vf_ut_ut_analysis = data.frame(abs_error = rowMeans(as.matrix(abs(vf_ut_ut_data-
                                bias = rowMeans(as.matrix(vf_ut_ut_data)),
                                sd = rowSds(as.matrix(vf_ut_ut_data)))
 
+simulation_data[is.na(simulation_data)]
 
 ################################################################################
 
@@ -133,7 +138,7 @@ ggplot(graph_data_mse) +
   scale_color_discrete("Legend") + 
   labs(title = "Visibility factor estimates based on the memory factor",
        subtitle = str_c("Seed ", seed_number, ", Memory factor ", memory_factor), 
-       x = "Memory factor",
+       x = "Visibility factor",
        y = "Mean Squared Error (MSE)")
 
 dev.off()
@@ -177,12 +182,12 @@ ggplot(graph_data_bias) +
   geom_line(aes(x = data, y =  vf_ut_dt, col = "Vf_ut_dt")) + 
   geom_line(aes(x = data, y =  vf_ut_ut, col = "Vf_ut_ut")) +
   
-  geom_line(aes(x = data, y =  rep(vf,length(simulation_data$data)), col = "Visibility factor")) + 
+  geom_line(aes(x = data, y =  vf, col = "Visibility factor")) + 
   scale_color_discrete("Legend") + 
   labs(title = "Visibility factor estimates based on the memory factor",
        subtitle = str_c("Seed ", seed_number, ", Memory factor ", memory_factor),
-       x = "Memory factor",
-       y = "Visibility factor value")
+       x = "Visibility factor",
+       y = "Visibility factor estimate value")
 
 dev.off()
 
@@ -231,7 +236,7 @@ ggplot(graph_data_sd) +
   scale_color_discrete("Legend") + 
   labs(title = "Visibility factor estimates based on the memory factor",
        subtitle = str_c("Seed ", seed_number, ", Memory factor ", memory_factor),
-       x = "Memory factor",
+       x = "Visibility factor",
        y = "Standard deviation")
 
 dev.off()
@@ -279,7 +284,7 @@ ggplot(graph_data_abs_error) +
   scale_color_discrete("Legend") + 
   labs(title = "Visibility factor estimates based on the memory factor",
        subtitle = str_c("Seed ", seed_number, ", Memory factor ", memory_factor),
-       x = "Memory factor",
+       x = "Visibility factor",
        y = "Absolute error")
 dev.off()
 

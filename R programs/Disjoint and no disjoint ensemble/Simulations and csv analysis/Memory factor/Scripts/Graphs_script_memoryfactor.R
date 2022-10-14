@@ -3,10 +3,10 @@ library(matrixStats)
 library(ggplot2)
 library(stringr)
 
-simulation_data = read.csv("~/Simulations_memoryfactor_notdisjoint.csv")
-simulation_data_disjoint = read.csv("~/Simulations_memoryfactor_disjoint.csv")
+simulation_data = read.csv("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Memory factor/CSV/Simulations_memoryfactor_dt_notdisjoint_2022.csv")
+simulation_data_disjoint = read.csv("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Memory factor/CSV/Simulations_memoryfactor_dt_disjoint_2022.csv")
 
-seed_number = "207"
+seed_number = "2022"
 getwd()
 
 ##################

@@ -3,10 +3,10 @@ library(matrixStats)
 library(ggplot2)
 library(stringr)
 
-simulation_data = read.csv("~/Simulation_networkneighbours_notdisjoint.csv")
-simulation_data_disjoint = read.csv("~/Simulation_networkneighbours_disjoint.csv")
+simulation_data  =  read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Network number of neighbours/CSV/Simulation_networkneighbours_notdisjoint_2023.csv")
+simulation_data_disjoint  =  read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Network number of neighbours/CSV/Simulation_networkneighbours_disjoint_2023.csv")
 
-seed_number = "207"
+seed_number = "2023"
 getwd()
 
 simulation_data$data = simulation_data$data*2
@@ -711,6 +711,9 @@ dev.off()
 
 graph_data_bias = data.frame(data = simulation_data$data)
 
+graph_data_bias = cbind(graph_data_bias, Nh_Real =  simulation_data$Nh_real_1)
+
+
 if(ncol(Nh_basic_sum_dataframe) !=  0) {
   graph_data_bias = cbind(graph_data_bias, Nh_basic_sum =  Nh_basic_sum_analysis$bias)
 }
@@ -789,6 +792,7 @@ ggplot(graph_data_bias) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
+  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_Real")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the number of neighbours",
@@ -805,6 +809,9 @@ dev.off()
 #Dataframe creation
 
 graph_data_bias_disjoint = data.frame(data = simulation_data_disjoint$data)
+
+graph_data_bias_disjoint = cbind(graph_data_bias_disjoint, Nh_Real =  simulation_data_disjoint$Nh_real_1)
+
 
 if(ncol(Nh_basic_sum_dataframe_disjoint) !=  0) {
   graph_data_bias_disjoint = cbind(graph_data_bias_disjoint, Nh_basic_sum_disjoint =  Nh_basic_sum_analysis_disjoint$bias)
@@ -879,6 +886,8 @@ ggplot(graph_data_bias_disjoint) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
   
+  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_Real")) + 
+  
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
@@ -893,7 +902,7 @@ dev.off()
 
 ## Not disjoint & disjoint ##
 
-graph_data_bias_total = cbind(graph_data_bias, graph_data_bias_disjoint[2:ncol(graph_data_bias_disjoint)])
+graph_data_bias_total = cbind(graph_data_bias, graph_data_bias_disjoint[3:ncol(graph_data_bias_disjoint)])
 
 
 plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_total_bias.png")
@@ -926,6 +935,8 @@ ggplot(graph_data_bias_total) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
+  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_Real")) + 
+  
   #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
@@ -935,7 +946,9 @@ ggplot(graph_data_bias_total) +
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
+  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +  
+  
+  
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the number of neighbours",
