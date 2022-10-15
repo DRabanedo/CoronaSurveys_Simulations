@@ -4,7 +4,7 @@
 
 t = Sys.time()
 
-N = 1000                  # Population size
+N = 10000                  # Population size
 v_pop_prob = rep(1/10, 5)   # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
 # sum(v_pop_prob) < 1.
 n_pop = length(v_pop_prob)       # Number of subpopulations
@@ -421,6 +421,3 @@ timer
 #timer ->  6.721422 hours
 
 ###########################################################################
-
-
-

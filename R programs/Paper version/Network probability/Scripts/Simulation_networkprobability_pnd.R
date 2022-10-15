@@ -1,22 +1,21 @@
-#################################################################################################
-# Simulation based on the number of neighbours of each node, leaving the rest of parameters fixed
-#################################################################################################
+#########################################################################################################################
+# Simulation based on the value of the probability of aleatorize a graph connection, leaving the rest of parameters fixed
+#########################################################################################################################
 
 t = Sys.time()
 
-
-N = 10000                   # Population size
+N = 10000                  # Population size
 v_pop_prob = rep(1/10, 5)   # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
 # sum(v_pop_prob) < 1.
-n_pop = length(v_pop_prob)  # Number of subpopulations
+n_pop = length(v_pop_prob)       # Number of subpopulations
 
 hp_prob = 0.1               # Probability for an individual to be in the hidden population (People who have COVID-19)
 n_survey = 500              # Number of individuals we draw in the survey
 n_survey_hp = 50            # Number of individuals we draw in the hidden population survey 
 
-sub_memory_factor = 0       # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
-memory_factor = 0           # reach memory factor (parameter to change variance of the perturbations' normal)
-visibility_factor = 1       # Visibility factor (Binomial's probability)
+sub_memory_factor = 0     # Subpopulation memory factor (parameter to change variance of the perturbations' normal)
+memory_factor = 0         # reach memory factor (parameter to change variance of the perturbations' normal)
+visibility_factor = 1     # Visibility factor (Binomial's probability)
 
 seed = 207                # Seed
 set.seed(seed)
@@ -28,9 +27,9 @@ nei = 75    # Number of neighbors that each node is connected to. They are neigh
 p   = 0.1   # Probability of randomize a connection. It is applied to all connections
 
 
-# Study parameters
-parameters = round(seq(from = 10, to = 150, length.out = 50))
 
+# Study parameters
+parameters = seq(from = 0.05, to = 1, length.out = 50)
 
 ################################################################################
 # AUXILIARY DATA FOR THE SIMULATION
@@ -61,9 +60,9 @@ for (h in 1:b) {
 
 ################################################################################
 
-#Simulations
+#Simulation
 for (w in 1:length(parameters)) {
-  nei = parameters[w]
+  p = parameters[w]
   
   # Not disjoint population #
   Population = Population_ref
@@ -87,8 +86,8 @@ for (w in 1:length(parameters)) {
     
     vect_hp[h] = sum(Mhp[h,])
     vect_reach[h] = length(net_sw[[h]][[1]])
+    vect_hp_vis[h] = max(0,round(rtruncnorm(1, a = -0.5, b = 2 * sum(Mhp_vis[h,]) + 0.5, mean = sum(Mhp_vis[h,]), sd = memory_factor*sum(Mhp_vis[h,]))))
     
-    vect_hp_vis[h] = max(0,round(rtruncnorm(1, a = -0.5, b = min(2 * sum(Mhp_vis[h,]) + 0.5, vect_reach[h]-0.5), mean = sum(Mhp_vis[h,]), sd = memory_factor*sum(Mhp_vis[h,]))))
     vect_reach_re[h] = max(1,round(rtruncnorm(1, a = vect_hp_vis[h] - 0.5, b = 2*vect_reach[h] - vect_hp_vis[h] + 0.5, mean = vect_reach[h], sd = memory_factor*vect_reach[h])))
   }
   
@@ -103,7 +102,6 @@ for (w in 1:length(parameters)) {
       vis_pob = sum(dplyr::select(Population[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
       vis_yij = sum(Population[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(Population[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
       # Visibility of population j by i, applying a normal in order to represent the real visibility
-      
       v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_memory_factor*vis_pob)))
     }
     
@@ -122,11 +120,12 @@ for (w in 1:length(parameters)) {
     names(Population)[dim(Population)[2]] = str_c("kp_alters_",i)
   }
   
+  
   #Vector with the number of people in each subpopulation
   
   v_pop_total = rep(NA, n_pop)
   for (k in 1:n_pop) {
-    v_pop_total[k] =  sum(dplyr::select(Population, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
+    v_pop_total[k] = sum(Population[,k+1]) # N_k
   }
   
   
@@ -145,7 +144,6 @@ for (w in 1:length(parameters)) {
       vis_pob = sum(dplyr::select(Population_Poisson[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
       vis_yij = sum(Population_Poisson[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(Population_Poisson[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
       # Visibility of population j by i, applying a normal in order to represent the real visibility
-      
       v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_memory_factor*vis_pob)))
     }
     
@@ -164,19 +162,23 @@ for (w in 1:length(parameters)) {
     names(Population_Poisson)[dim(Population_Poisson)[2]] = str_c("kp_alters_",i)
   }
   
+  
   #Vector with the number of people in each subpopulation
   
   v_pop_total_Poisson = rep(NA, n_pop)
   for (k in 1:n_pop) {
-    v_pop_total_Poisson[k] = sum(dplyr::select(Population_Poisson, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
+    v_pop_total_Poisson[k] = sum(Population_Poisson[,k+1]) # N_k
   }
   
-  
-  # Visibility factor estimate
-  survey_hp_vf = getSurvey_VF(n_survey_hp, Population, Mhp_vis, memory_factor)
-  vf_estimate = VF_Estimate(survey_hp_vf)
-  
   # Not disjoint population analysis #
+  
+  
+  #Vector with the number of people in each subpopulation
+  
+  v_pop_total = rep(NA, n_pop)
+  for (k in 1:n_pop) {
+    v_pop_total[k] = sum(Population[,k+1]) # N_k
+  }
   
   #Variable reset
   Nh_real =  rep(NA,b) 
@@ -184,7 +186,7 @@ for (w in 1:length(parameters)) {
   Nh_basic_sum = rep(NA,b) 
   #Nh_basicvis_sum = rep(NA,b) 
   Nh_basic_mean = rep(NA,b) 
-  #Nh_basicvis_mean = rep(NA,b)                                     
+  #Nh_basicvis_mean = rep(NA,b)                                      
   
   Nh_PIMLE = rep(NA,b) 
   #Nh_PIMLEvis = rep(NA,b) 
@@ -211,25 +213,25 @@ for (w in 1:length(parameters)) {
     survey_hp = Population[Population$hidden_population == 1,][list_surveys_hp[[l]],]
     survey_hp_vf = Population_vf[list_surveys_hp[[l]],]
     
-    # Visibility factor estimate
+    #Visibility factor estimate
     vf_estimate = VF_Estimate(survey_hp_vf)
     
-    # Hidden population estimates
+    #Hidden population estimates
     Nh_real = sum(Population$hidden_population) 
     
     Nh_basic_sum    = getNh_basic_sum(survey,N) 
-    #Nh_basicvis_sum = getNh_basicvis_sum(survey,N,vf_subpop) 
+    #Nh_basicvis_sum = getNh_basicvis_sum(survey,N,vf_estimate) 
     Nh_basic_mean    = getNh_basic_mean(survey,N) 
-    #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,vf_subpop) 
+    #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,vf_estimate) 
     
     Nh_PIMLE    = getNh_PIMLE(survey, v_pop_total, N)
-    #Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, vf_subpop)
+    #Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, vf_estimate)
     
     Nh_MLE     = getNh_MLE(survey, v_pop_total)
-    #Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, vf_subpop)
+    #Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, vf_estimate)
     
     Nh_MoS     = getNh_MoS(survey, v_pop_total, N)
-    #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_subpop)
+    #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
     
     Nh_GNSUM   =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
     
@@ -302,8 +304,7 @@ for (w in 1:length(parameters)) {
   lista_sim_Poisson = list()
   
   # Population for the VF estimate
-  Population_Poisson_vf = getSurvey_VF(sum(Population_Poisson$hidden_population), Population_Poisson, Mhp_vis, memory_factor)
-  
+  Population_vf = getSurvey_VF(sum(Population_Poisson$hidden_population), Population_Poisson, Mhp_vis, memory_factor)
   
   #Iterations
   for (l in 1:b) {
@@ -312,7 +313,7 @@ for (w in 1:length(parameters)) {
     #Surveys
     survey = Population_Poisson[list_surveys[[l]],]
     survey_hp = Population_Poisson[Population_Poisson$hidden_population == 1,][list_surveys_hp[[l]],]
-    survey_hp_vf = Population_Poisson_vf[list_surveys_hp[[l]],]
+    survey_hp_vf = Population_vf[list_surveys_hp[[l]],]
     
     #Visibility factor estimate
     vf_estimate = VF_Estimate(survey_hp_vf)
@@ -321,20 +322,20 @@ for (w in 1:length(parameters)) {
     Nh_real_Poisson = sum(Population_Poisson$hidden_population) 
     
     Nh_basic_sum_Poisson    = getNh_basic_sum(survey,N) 
-    #Nh_basicvis_sum_Poisson = getNh_basicvis_sum(survey,N,vf_subpop) 
+    #Nh_basicvis_sum_Poisson = getNh_basicvis_sum(survey,N,vf_estimate) 
     Nh_basic_mean_Poisson    = getNh_basic_mean(survey,N) 
-    #Nh_basicvis_mean_Poisson = getNh_basicvis_mean(survey,N,vf_subpop) 
+    #Nh_basicvis_mean_Poisson = getNh_basicvis_mean(survey,N,vf_estimate) 
     
     Nh_PIMLE_Poisson    = getNh_PIMLE(survey, v_pop_total_Poisson, N)
-    #Nh_PIMLEvis_Poisson = getNh_PIMLEvis(survey, v_pop_total_Poisson, N, vf_subpop)
+    #Nh_PIMLEvis_Poisson = getNh_PIMLEvis(survey, v_pop_total_Poisson, N, vf_estimate)
     
     Nh_MLE_Poisson     = getNh_MLE(survey, v_pop_total_Poisson)
-    #Nh_MLEvis_Poisson  = getNh_MLEvis(survey, v_pop_total_Poisson, vf_subpop)
+    #Nh_MLEvis_Poisson  = getNh_MLEvis(survey, v_pop_total_Poisson, vf_estimate)
     
     Nh_MoS_Poisson     = getNh_MoS(survey, v_pop_total_Poisson, N)
-    #Nh_MoSvis_Poisson  = getNh_MoSvis(survey, v_pop_total_Poisson, N, vf_subpop)
+    #Nh_MoSvis_Poisson  = getNh_MoSvis(survey, v_pop_total_Poisson, N, vf_estimate)
     
-    Nh_GNSUM_Poisson   =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
+    Nh_GNSUM_Poisson   =  getNh_GNSUM(survey, survey_hp, v_pop_total_Poisson, N)
     
     
     #Dataframe for saving the estimates
@@ -391,22 +392,32 @@ simulaciones_Poisson = cbind(simulaciones_Poisson, data = parameters)
 
 
 ################################################################################
-write.csv(simulaciones,                        # Data frame 
-          file = "Simulation_networkneighbours_notdisjoint.csv", # Csv name
-          row.names = TRUE )                   # Row names: TRUE or FALSE 
-################################################################################
+
+write.csv(simulaciones,                                           # Data frame 
+          file = "Simulation_networkprobability_notdisjoint.csv", # Csv name
+          row.names = TRUE )                          # Row names: TRUE or FALSE 
 
 ################################################################################
-write.csv(simulaciones_Poisson,                        # Data frame 
-          file = "Simulation_networkneighbours_Poisson.csv", # Csv name
-          row.names = TRUE )                   # Row names: TRUE or FALSE 
+
+
 ################################################################################
+
+write.csv(simulaciones_Poisson,                                # Data frame 
+          file = "Simulation_networkprobability_Poisson.csv",  # Csv name
+          row.names = TRUE )                       # Row names: TRUE or FALSE 
+
+################################################################################
+
+
 
 timer = Sys.time() - t
 timer
-
 #################### COMPUTATION TIME ANALYSIS ###########################
 
+# Computation time (N=1000) (my PC)
+#timer -> 17.22806 mins
+
 # Computation time (N=10000) (virtual machine)
-#timer -> 6.755417 hours
+#timer ->  6.721422 hours
+
 ###########################################################################
