@@ -13,7 +13,7 @@ library(ggplot2)      #
 library(sampler)      #
 library(dplyr)        #
 library(truncnorm)    #
-                      #
+#
 #######################
 
 ################################################################################
@@ -29,7 +29,7 @@ getHP <- function(n, prob_hp) {
   
   # prob_hp: probability of the occurrence of the hidden population
   # n:    people in the general population
-
+  
   vect = sample(1:n, prob_hp*n, replace = FALSE, p = NULL)
   vect_hp = rep(NA, n)
   for (i in 1:n){
@@ -54,17 +54,34 @@ genPopulation <- function(n, prob_vect, prob_hp) {
   # prob_vect: vector with the Subpopulations probabilities
   # prob_hp:   probability of the occurrence of the Hidden Population
   
-  pop_vect = 1:length(prob_vect)
+  subpop_vect = n * prob_vect
   population_buc = data.frame(hidden_population = getHP(n,prob_hp))
   rownames(population_buc) <- c(1:n)
   
-  for (i in 1:length(pop_vect)) {
-    population_buc = cbind(population_buc, Subpopulation = sample(c(0,1), n, replace = TRUE, p = c(1-prob_vect[i],prob_vect[i])))
-    names(population_buc)[dim(population_buc)[2]] = str_c("subpopulation_",i)
+  for (k in 1:length(subpop_vect)) {
+    # Index belonging to the subpopulation 
+    subpop_ind = sample(1:n, subpop_vect[k], replace = FALSE)
+    
+    # Index transformed into a 0 & 1 vector
+    subpop = rep(NA, n)
+    for (i in 1:n){
+      if (as.logical(sum(i %in% subpop_ind))){
+        subpop[i] = 1
+      }
+      else{
+        subpop[i] = 0
+      }
+      
+    }
+    
+    #Dataframe append
+    population_buc = cbind(population_buc, Subpopulation = subpop)
+    names(population_buc)[dim(population_buc)[2]] = str_c("subpopulation_",k)
   }
-
+  
   return(population_buc)
 }
+
 
 # This function generates a basic population with disjoint populations (Network script)
 
@@ -77,13 +94,39 @@ genPopulation_Disjoint_basic <- function(n, prob_vect,HP) {
   
   population_buc = data.frame("hidden_population" = HP)
   
-  #Population 0 introduction
-  prob_vect = c(1-sum(prob_vect), prob_vect)
-  subpop_vector = sample(0:(length(prob_vect)-1), n, replace = TRUE, p = prob_vect)
+  # Subpopulation size vector
+  subpop_vect = round(n*prob_vect)
   
-  for (i in 1:(length(prob_vect)-1)) {
-    population_buc = cbind(population_buc, subpopulation_buc = as.integer(subpop_vector == i))
-    names(population_buc)[dim(population_buc)[2]] = str_c("subpopulation_",i)
+  # Variables for the loop
+  sampling_vect = 1:n
+  gen_subpop = rep(0, n)
+  n_vect = 1:n
+  
+  for (k in 1:length(subpop_vect)) {
+    # Index belonging to the subpopulation k
+    subpop_ind = sample(sampling_vect, subpop_vect[k], replace = FALSE)
+    
+    # Index transformed into a 0 & 1 vector to represent the populations
+    subpop = rep(NA, n)
+    
+    for (i in 1:n){
+      if (as.logical(sum(i %in% subpop_ind))){
+        subpop[i] = 1
+        # for k in 1:n appends 1 if a population is assigned
+        gen_subpop[i] = 1
+      }
+      else{
+        subpop[i] = 0
+      }
+      
+    }
+    
+    # Creates a vector with the people who does not have a population 
+    sampling_vect = n_vect[gen_subpop == 0]
+    
+    #Dataframe append population k
+    population_buc = cbind(population_buc, Subpopulation = subpop)
+    names(population_buc)[dim(population_buc)[2]] = str_c("subpopulation_",k)
   }
   
   return(population_buc)
@@ -101,13 +144,39 @@ genPopulation_Disjoint <- function(n, prob_vect,HP, M_vis, sub_mem_factor, r, r_
   
   population_buc = data.frame("hidden_population" = HP)
   
-  #Population 0 introduction
-  prob_vect = c(1-sum(prob_vect), prob_vect)
-  subpop_vector = sample(0:(length(prob_vect)-1), n, replace = TRUE, p = prob_vect)
+  # Subpopulation size vector
+  subpop_vect = round(n*prob_vect)
   
-  for (i in 1:(length(prob_vect)-1)) {
-    population_buc = cbind(population_buc, subpopulation_buc = as.integer(subpop_vector == i))
-    names(population_buc)[dim(population_buc)[2]] = str_c("subpopulation_",i)
+  # Variables for the loop
+  sampling_vect = 1:n
+  gen_subpop = rep(0, n)
+  n_vect = 1:n
+  
+  for (k in 1:length(subpop_vect)) {
+    # Index belonging to the subpopulation k
+    subpop_ind = sample(sampling_vect, subpop_vect[k], replace = FALSE)
+    
+    # Index transformed into a 0 & 1 vector to represent the populations
+    subpop = rep(NA, n)
+    
+    for (i in 1:n){
+      if (as.logical(sum(i %in% subpop_ind))){
+        subpop[i] = 1
+        # for k in 1:n appends 1 if a population is assigned
+        gen_subpop[i] = 1
+      }
+      else{
+        subpop[i] = 0
+      }
+      
+    }
+    
+    # Creates a vector with the people who does not have a population 
+    sampling_vect = n_vect[gen_subpop == 0]
+    
+    #Dataframe append population k
+    population_buc = cbind(population_buc, Subpopulation = subpop)
+    names(population_buc)[dim(population_buc)[2]] = str_c("subpopulation_",k)
   }
   
   population_buc = cbind(population_buc, reach = r)
@@ -139,106 +208,12 @@ genPopulation_Disjoint <- function(n, prob_vect,HP, M_vis, sub_mem_factor, r, r_
     population_buc = cbind(population_buc, Subpoblacion_total = i_hp_vis)
     names(population_buc)[dim(population_buc)[2]] = str_c("kp_alters_",i)
   }
-
+  
   
   return(population_buc)
 }
 
 # This function generates a basic population using a poisson distribution (network scripts)
-
-genPopulation_Poisson_basic <- function(n, prob_vect, HP, M_vis,sub_mem_factor, r, r_mem, hp_t, hp_s) {
-  # Generates a data frame with the population and the belonging to the hidden population
-  
-  # n: the number of individuals
-  # r: Reach vector
-  # r_mem: Reach memory vector
-  # hp_t: Hidden population vector
-  # ht_s: Hidden population memory & visibility vector
-  
-  population_buc = data.frame("hidden_population" = HP)
-  
-  pop_vect_num = rep(NA, length(prob_vect))
-  for (j in 1:length(prob_vect)) {
-    pop_vect_num[j] = rpois(1,prob_vect[j]*n)
-  }
-  
-  for (i in 1:(length(prob_vect))) {
-    sam_pop = sample(1:n, size = pop_vect_num[i])
-    subpop_vector = rep(0,n)
-    for (k in sam_pop){
-      subpop_vector[k] = 1
-    }
-    population_buc = cbind(population_buc, subpopulation_buc = subpop_vector)
-    names(population_buc)[dim(population_buc)[2]] = str_c("subpopulation_",i)
-  }
-  return(population_buc)
-}
-
-
-
-
-# This function generates the population using a poisson distribution
-
-genPopulation_Poisson <- function(n, prob_vect, HP, M_vis,sub_mem_factor, r, r_mem, hp_t, hp_s) {
-  # Generates a data frame with the population and the belonging to the hidden population
-  
-  # n: the number of individuals
-  # prob_vect: vector with the Subpopulations probabilities
-  # HP:  Hidden Population vector
-  # r: Reach vector
-  # r_mem: Reach memory vector
-  # hp_t: Hidden population vector
-  # ht_s: Hidden population memory & visibility vector
-  
-  population_buc = data.frame("hidden_population" = HP)
-  
-  pop_vect_num = rep(NA, length(prob_vect))
-  for (j in 1:length(prob_vect)) {
-    pop_vect_num[j] = rpois(1,prob_vect[j]*n)
-  }
-  
-  for (i in 1:(length(prob_vect))) {
-    sam_pop = sample(1:n, size = pop_vect_num[i])
-    subpop_vector = rep(0,n)
-    for (k in sam_pop){
-      subpop_vector[k] = 1
-    }
-    population_buc = cbind(population_buc, subpopulation_buc = subpop_vector)
-    names(population_buc)[dim(population_buc)[2]] = str_c("subpopulation_",i)
-  }
-  
-  population_buc = cbind(population_buc, reach = r)
-  population_buc = cbind(population_buc, reach_memory = r_mem)
-  population_buc = cbind(population_buc, hp_total = hp_t)
-  population_buc = cbind(population_buc, hp_survey = hp_s)
-  
-  for(j in 1:length(prob_vect)){
-    v_1 = rep(NA,N)
-    for(i in 1:N) {
-      vis_pob = sum(dplyr::select(population_buc[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
-      vis_yij = sum(population_buc[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(population_buc[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
-      # Visibility of population j by i, applying a normal in order to represent the real visibility
-      
-      v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_mem_factor*vis_pob)))
-    }
-    
-    population_buc = cbind(population_buc,Subpoblacion_total = v_1)
-    names(population_buc)[dim(population_buc)[2]] = str_c("kp_reach_",j)
-  }
-  
-  ind1 = 1:N
-  i_hp_vis = rep(NA,N)
-  for (i in 1:length(prob_vect)) {
-    for (j in ind1){
-      ind2 = dplyr::select(population_buc, starts_with("subpop") & ends_with(as.character(i)))[,1] != 0
-      i_hp_vis[j] = round(rtruncnorm(1, a = -0.5, b =  2*sum(M_vis[ind2,j]) + 0.5, mean = sum(M_vis[ind2,j]), sd = sum(M_vis[ind2,j])*sub_mem_factor)) 
-    }
-    population_buc = cbind(population_buc, Subpoblacion_total = i_hp_vis)
-    names(population_buc)[dim(population_buc)[2]] = str_c("kp_alters_",i)
-  }
-  
-  return(population_buc)
-}
 
 
 getSurvey = function(n_enc, dataframe){
@@ -282,7 +257,7 @@ getSurvey_VF = function(n_enc, pop, vis_matrix, memory_fact){
     if (vect_reach_hp[i] == mem_vect_reach[i]){
       mem_vect_reach_hp[i] = mem_vect_reach[i]
     } else {
-      mem_vect_reach_hp[i] = max(0,round(rtruncnorm(1, a = vect_reach_hp[i] - (mem_vect_reach[i]-vect_reach_hp[i]) - 0.5, b = mem_vect_reach[i] + 0.5, mean = vect_reach_hp[i] , sd = vect_reach_hp[i]*memory_factor)))   
+      mem_vect_reach_hp[i] = max(0,round(rtruncnorm(1, a = max( vect_reach_hp[i] - (mem_vect_reach[i]-vect_reach_hp[i]) - 0.5, -0.5), b = min(mem_vect_reach[i] + 0.5, 2 * vect_reach_hp[i] + 0.5),  mean = vect_reach_hp[i] , sd = vect_reach_hp[i]*memory_factor)))   
     }
     
   }
@@ -388,7 +363,7 @@ getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, s
     
     vect_hp[i] = sum(Mhp[i,])
     vect_reach[i] = length(net_sw[[i]][[1]])
-    vect_hp_vis[i] = max(0,round(rtruncnorm(1, a = -0.5, b = min(2 * sum(Mhp_vis[i,]) + 0.5, vect_reach[i]-0.5), mean = sum(Mhp_vis[i,]), sd = mem_factor*sum(Mhp_vis[i,]))))
+    vect_hp_vis[i] = round(rtruncnorm(1, a = max(-0.5,  2 * sum(Mhp_vis[i,]) - vect_reach[i] + 0.5 ) , b = min(2 * sum(Mhp_vis[i,]) + 0.5, vect_reach[i]-0.5), mean = sum(Mhp_vis[i,]), sd = mem_factor*sum(Mhp_vis[i,])))
     
     vect_reach_re[i] = max(1,round(rtruncnorm(1, a = vect_hp_vis[i] - 0.5, b = 2*vect_reach[i] - vect_hp_vis[i] + 0.5, mean = vect_reach[i], sd = mem_factor*vect_reach[i])))
   }
@@ -407,84 +382,6 @@ getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, s
       
       v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_mem_factor*vis_pob)))
     }
-
-    Population = cbind(Population,Subpoblacion_total = v_1)
-    names(Population)[dim(Population)[2]] = str_c("kp_reach_",j)
-  }
-  
-  ind1 = 1:N
-  i_hp_vis = rep(NA,N)
-  for (i in 1:length(prob_vect)) {
-    for (j in ind1){
-      ind2 = dplyr::select(Population, starts_with("subpop") & ends_with(as.character(i)))[,1] != 0
-      i_hp_vis[j] = round(rtruncnorm(1, a = -0.5, b =  2*sum(Mhp_vis[ind2,j]) + 0.5, mean = sum(Mhp_vis[ind2,j]), sd = sum(Mhp_vis[ind2,j])*sub_mem_factor)) 
-    }
-    Population = cbind(Population, Subpoblacion_total = i_hp_vis)
-    names(Population)[dim(Population)[2]] = str_c("kp_alters_",i)
-  }
-  
-  
-  return(list(net_sw, Population, Mhp_vis))
-}
-
-
-
-
-getData_Poisson = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, sub_mem_factor){
-  # list, contains the network, the population data and the matrix for the GNSUM
-  
-  #N: population size
-  #dis_populations: vector with the populations
-  #prob_vect: vector with the population's probabilities
-  #prob_hp: Hidden Population proportion
-  #dim: Integer constant, the dimension of the starting lattice.
-  #nei: Integer constant, the neighborhood within which the vertices of the lattice will be connected.
-  #p: Real constant between zero and one, the rewiring probability.
-  #vis_factor: the visibility factor
-  #memory factor: numeric value, reach divided by the standard deviation of the normal we use to correct the reach
-  # sub_mem_factor: the Subpopulations visibility divided by the standard deviation of the normal distributions we use to correct the Subpopulations visibility
-  #                    it is applied to each Subpopulation
-  # sub_mem_factor: the Subpopulations' visibility divided by the standard deviation of the normals we use to correct the Subpopulations' visibility
-  
-  Population = genPopulation_Poisson(N, prob_vect, prob_hp)
-  
-  net_sw = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
-  
-  n_populations = length(dis_populations)
-  # initializes the vectors
-  vect_hp = rep(NA,N)        # number of hidden population individuals known for each person
-  vect_hp_vis = rep(NA,N)    # vect_hp applying visibility
-  vect_reach = rep(NA,N)     # the degrees of each individual
-  vect_reach_re = rep(NA,N)  # reach vector applying memory error
-  
-  # Matrix representing the directed graph that connects individuals with the people of the Hidden Population they know 
-  Mhp = matrixHP(net_sw,Population)
-  Mhp_vis =  apply(Mhp,c(1,2), berHP,p = vis_factor)
-  
-  
-  for (i in 1:N) {
-    # net_sw[[i]], list with one element, the list of the adjacent vertices to i
-    
-    vect_hp[i] = sum(Mhp[i,])
-    vect_reach[i] = length(net_sw[[i]][[1]])
-    vect_hp_vis[i] = max(0,round(rtruncnorm(1, a = -0.5, b = min(2 * sum(Mhp_vis[i,]) + 0.5, vect_reach[i]-0.5), mean = sum(Mhp_vis[i,]), sd = mem_factor*sum(Mhp_vis[i,]))))
-    vect_reach_re[i] = max(1,round(rtruncnorm(1, a = vect_hp_vis[i] - 0.5 , b = 2*vect_reach[i] - vect_hp_vis[i] + 0.5, mean = vect_reach[i], sd = mem_factor*vect_reach[i])))
-  }
-  
-  Population = cbind(Population, reach = vect_reach)
-  Population = cbind(Population, reach_memory = vect_reach_re)
-  Population = cbind(Population, hp_total = vect_hp) 
-  Population = cbind(Population, hp_survey = vect_hp_vis)
-  
-  for(j in 1:length(prob_vect)){
-    v_1 = rep(NA,N)
-    for(i in 1:N) {
-      vis_pob = sum(dplyr::select(Population[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
-      vis_yij = sum(Population[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(Population[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
-      # Visibility of population j by i, applying a normal in order to represent the real visibility
-      
-      v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_mem_factor*vis_pob)))
-    }
     
     Population = cbind(Population,Subpoblacion_total = v_1)
     names(Population)[dim(Population)[2]] = str_c("kp_reach_",j)
@@ -500,6 +397,7 @@ getData_Poisson = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_f
     Population = cbind(Population, Subpoblacion_total = i_hp_vis)
     names(Population)[dim(Population)[2]] = str_c("kp_alters_",i)
   }
+  
   
   return(list(net_sw, Population, Mhp_vis))
 }
