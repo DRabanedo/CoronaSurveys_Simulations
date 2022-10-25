@@ -392,18 +392,18 @@ simulaciones_disjoint = cbind(simulaciones_disjoint, data = parameters)
 
 
 ################################################################################
-
+file_name = str_c("Simulation_networkprobability_notdisjoint_", seed,".csv")
 write.csv(simulaciones,                                           # Data frame 
-          file = "Simulation_networkprobability_notdisjoint.csv", # Csv name
+          file = file_name, # Csv name
           row.names = TRUE )                          # Row names: TRUE or FALSE 
 
 ################################################################################
 
 
 ################################################################################
-
+file_name_disjoint = str_c("Simulation_networkprobability_disjoint_", seed,".csv")
 write.csv(simulaciones_disjoint,                                # Data frame 
-          file = "Simulation_networkprobability_disjoint.csv",  # Csv name
+          file = file_name_disjoint,  # Csv name
           row.names = TRUE )                       # Row names: TRUE or FALSE 
 
 ################################################################################

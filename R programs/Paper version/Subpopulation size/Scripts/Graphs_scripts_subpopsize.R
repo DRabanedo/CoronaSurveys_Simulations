@@ -1,4 +1,4 @@
-################### Subpopulation number graphs scripts ########################
+#################### Network probability graphs scripts ########################
 
 # This script generates the graphs automatically as a png archive #
 
@@ -12,8 +12,8 @@ library(stringr)
 ######################
 # Data import
 
-simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Subpopulation number/CSV/Simulation_subpopulationnumber_notdisjoint_207.csv")
-simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Subpopulation number/CSV/Simulation_subpopulationnumber_disjoint_207.csv")
+simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Subpopulation size/CSV/Simulation_subpopulationsize_notdisjoint_207.csv")
+simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Subpopulation size/CSV/Simulation_subpopulationsize_disjoint_207.csv")
 
 seed_number = 207
 
@@ -53,6 +53,7 @@ Nh_MoS_analysis     = data_analysis(Nh_MoS_dataframe, Nh_real_dataframe)
 #Nh_MoSvis_analysis = data_analysis(Nh_MoSvis_dataframe, Nh_real_dataframe)
 
 Nh_GNSUM_analysis  = data_analysis(Nh_GNSUM_dataframe, Nh_real_dataframe)
+
 
 ################################################################################
 ################################################################################
@@ -120,7 +121,7 @@ graph_data_abserror = cbind(graph_data_abserror, Nh_GNSUM  =  Nh_GNSUM_analysis$
 
 # Graph creation
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_notdisjoint_abserror.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_notdisjoint_abserror.png")
 sub_title = str_c("Not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -139,9 +140,9 @@ ggplot(graph_data_abserror) +
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Mean Absolute Error")
 
 dev.off()
@@ -168,7 +169,7 @@ graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_GNSUM_disj
 
 # Graph creation
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_disjoint_abserror.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_disjoint_abserror.png")
 sub_title = str_c("Disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -187,9 +188,9 @@ ggplot(graph_data_abserror_disjoint) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Mean Absolute Error")
 
 dev.off()
@@ -202,10 +203,9 @@ dev.off()
 
 graph_data_abserror_total = cbind(graph_data_abserror, graph_data_abserror_disjoint[2:ncol(graph_data_abserror_disjoint)])
 
-
 # Graph creation
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_total_abserror.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_total_abserror.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -234,9 +234,9 @@ ggplot(graph_data_abserror_total) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Mean Absolute Error")
 
 dev.off()
@@ -265,7 +265,7 @@ graph_data_mse = cbind(graph_data_mse, Nh_GNSUM  =  Nh_GNSUM_analysis$mse)
 
 # Graph creation
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_notdisjoint_mse.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_notdisjoint_mse.png")
 sub_title = str_c("Not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -285,15 +285,17 @@ ggplot(graph_data_mse) +
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Mean Squared Error (MSE)")
 
 dev.off()
 
 
 ## Disjoint population ##
+
+# Dataframe creation
 
 graph_data_mse_disjoint = data.frame(data = simulation_data_disjoint$data)
 
@@ -310,8 +312,7 @@ graph_data_mse_disjoint = cbind(graph_data_mse_disjoint, Nh_GNSUM_disjoint  =  N
 
 
 # Graph creation 
-
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_disjoint_mse.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_disjoint_mse.png")
 sub_title = str_c("Disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -330,23 +331,23 @@ ggplot(graph_data_mse_disjoint) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Mean Squared Error (MSE)")
 
 dev.off()
 
-
 ## Not disjoint & disjoint ##
 
-# Dataframe creation
+#Dataframe creation
 
 graph_data_mse_total = cbind(graph_data_mse, graph_data_mse_disjoint[2:ncol(graph_data_mse_disjoint)])
 
-# Graph creation 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_total_mse.png")
+# Graph creation
+
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_total_mse.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -375,9 +376,9 @@ ggplot(graph_data_mse_total) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Mean Squared Error (MSE)")
 
 dev.off()
@@ -410,7 +411,7 @@ graph_data_bias = cbind(graph_data_bias, Nh_GNSUM  =  Nh_GNSUM_analysis$bias)
 
 # Graph creation
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_notdisjoint_bias.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_notdisjoint_bias.png")
 sub_title = str_c("Not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -431,9 +432,9 @@ ggplot(graph_data_bias) +
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Hidden population estimate")
 
 dev.off()
@@ -461,7 +462,7 @@ graph_data_bias_disjoint = cbind(graph_data_bias_disjoint, Nh_GNSUM_disjoint  = 
 
 # Graph creation
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_disjoint_bias.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_disjoint_bias.png")
 sub_title = str_c("Disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -482,9 +483,9 @@ ggplot(graph_data_bias_disjoint) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Hidden population estimate")
 
 dev.off()
@@ -495,9 +496,10 @@ dev.off()
 
 graph_data_bias_total = cbind(graph_data_bias, graph_data_bias_disjoint[3:ncol(graph_data_bias_disjoint)])
 
-# Graph creation 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_total_bias.png")
+# Graph creation
+
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_total_bias.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -528,9 +530,9 @@ ggplot(graph_data_bias_total) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Hidden population estimate")
 
 dev.off()
@@ -559,11 +561,12 @@ graph_data_sd = cbind(graph_data_sd, Nh_GNSUM  =  Nh_GNSUM_analysis$sd)
 
 # Data creation
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_notdisjoint_sd.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_notdisjoint_sd.png")
 sub_title = str_c("Not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
     width = 1000, height = 600)
+
 
 ggplot(graph_data_sd) + 
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
@@ -578,9 +581,9 @@ ggplot(graph_data_sd) +
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Standard deviation")
 
 dev.off()
@@ -589,7 +592,6 @@ dev.off()
 
 ## Disjoint population ##
 
-# Dataframe creation
 
 graph_data_sd_disjoint = data.frame(data = simulation_data_disjoint$data)
 
@@ -607,7 +609,7 @@ graph_data_sd_disjoint = cbind(graph_data_sd_disjoint, Nh_GNSUM_disjoint  =  Nh_
 
 # Graph creation
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_disjoint_sd.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_disjoint_sd.png")
 sub_title = str_c("Disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -626,9 +628,9 @@ ggplot(graph_data_sd_disjoint) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Standard deviation")
 
 dev.off()
@@ -639,9 +641,10 @@ dev.off()
 
 graph_data_sd_total = cbind(graph_data_sd, graph_data_sd_disjoint[2:ncol(graph_data_sd_disjoint)])
 
-# Graph creation 
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_total_sd.png")
+# Graph creation
+
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_total_sd.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -670,9 +673,9 @@ ggplot(graph_data_sd_total) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Standard error")
 
 dev.off()
@@ -699,7 +702,7 @@ graph_data_median = cbind(graph_data_median, Nh_GNSUM  =  Nh_GNSUM_analysis$medi
 
 # Data creation
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_notdisjoint_median.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_notdisjoint_median.png")
 sub_title = str_c("Not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -719,9 +722,9 @@ ggplot(graph_data_median) +
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Standard deviation")
 
 dev.off()
@@ -730,6 +733,7 @@ dev.off()
 
 ## Disjoint population ##
 
+# Dtaframe creation
 
 graph_data_median_disjoint = data.frame(data = simulation_data_disjoint$data)
 
@@ -747,7 +751,7 @@ graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_GNSUM_disjoint
 
 # Graph creation
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_disjoint_median.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_disjoint_median.png")
 sub_title = str_c("Disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -766,9 +770,9 @@ ggplot(graph_data_median_disjoint) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Standard deviation")
 
 dev.off()
@@ -780,9 +784,9 @@ dev.off()
 graph_data_median_total = cbind(graph_data_median, graph_data_median_disjoint[2:ncol(graph_data_median_disjoint)])
 
 
-# Graph creation 
+# Graph creation
 
-plot_name = str_c("Simulation_subpopnumber_", seed_number, "_total_median.png")
+plot_name = str_c("Simulation_subpopsize_", seed_number, "_total_median.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -811,9 +815,9 @@ ggplot(graph_data_median_total) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the subpopulation number",
+  labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
-       x = "Subpopulation number",
+       x = "Subpopulation size",
        y = "Standard error")
 
 dev.off()

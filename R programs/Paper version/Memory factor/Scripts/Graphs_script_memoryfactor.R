@@ -1,14 +1,25 @@
+#################### Memory factor graphs scripts ##############################
+
+# This script generates the graphs automatically as a png archive #
+
+
+###### Packages ######
+
 library(dplyr)
 library(matrixStats)
 library(ggplot2)
 library(stringr)
 
-simulation_data = read.csv("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Memory factor/CSV/Simulations_memoryfactor_207.csv")
+######################
+# Data import
+simulation_data = read.csv("C:/Users/David Rabanedo/Documents/Simulations_memoryfactor_207.csv")
 
 seed_number = "207"
 getwd()
 
-##################
+################################################################################
+################################################################################
+
 ## Not disjoint ##
 
 Nh_real_dataframe = select(simulation_data, starts_with("Nh_real"))
@@ -20,39 +31,16 @@ Nh_basic_mean_dataframe = select(simulation_data, starts_with("Nh_basic_mean"))
 #Nh_basicvis_mean_dataframe = select(simulation_data, starts_with("Nh_basicvis_mean"))
 
 
+########################### Data analysis ######################################
 
-
-######### Data analysis ##########
 # This way of presenting the data allows us to carry out a more detailed analysis
 # of each estimator.
 
+Nh_basic_sum_analysis      = data_analysis(Nh_basic_sum_dataframe, Nh_real_dataframe)
+#Nh_basicvis_sum_analysis  = data_analysis(Nh_basicvis_sum_dataframe, Nh_real_dataframe)
 
-Nh_basic_sum_analysis = data.frame(abserror = rowMeans(as.matrix(abs(Nh_basic_sum_dataframe-Nh_real_dataframe))),
-                                   mse = rowMeans(as.matrix((Nh_basic_sum_dataframe-Nh_real_dataframe)^2)),
-                                   bias = rowMeans(as.matrix(Nh_basic_sum_dataframe)),
-                                   sd = rowSds(as.matrix(Nh_basic_sum_dataframe)),
-                                   mediana = rowMedians(as.matrix(Nh_basic_sum_dataframe))) 
-
-
-#Nh_basicvis_sum_analysis = data.frame(abserror = rowMeans(as.matrix(abs(Nh_basicvis_sum_dataframe-Nh_real_dataframe))),
-                                      #mse = rowMeans(as.matrix((Nh_basicvis_sum_dataframe-Nh_real_dataframe)^2)),
-                                      #bias = rowMeans(as.matrix(Nh_basicvis_sum_dataframe)),
-                                      #sd = rowSds(as.matrix(Nh_basicvis_sum_dataframe))
-                                      #mediana = rowMedians(as.matrix(Nh_basicvis_sum_dataframe)))   )
-
-
-Nh_basic_mean_analysis = data.frame(abserror = rowMeans(as.matrix(abs(Nh_basic_mean_dataframe-Nh_real_dataframe))),
-                                    mse = rowMeans(as.matrix((Nh_basic_mean_dataframe-Nh_real_dataframe)^2)),
-                                    bias = rowMeans(as.matrix(Nh_basic_mean_dataframe)),
-                                    sd = rowSds(as.matrix(Nh_basic_mean_dataframe)),
-                                    mediana = rowMedians(as.matrix(Nh_basic_mean_dataframe)) )
-
-
-#Nh_basicvis_mean_analysis = data.frame(abserror = rowMeans(as.matrix(abs(Nh_basicvis_mean_dataframe-Nh_real_dataframe))),
-                                       #mse = rowMeans(as.matrix((Nh_basicvis_mean_dataframe-Nh_real_dataframe)^2)),
-                                       #bias = rowMeans(as.matrix(Nh_basicvis_mean_dataframe)),
-                                       #sd = rowSds(as.matrix(Nh_basicvis_mean_dataframe))
-                                       #mediana = rowMedians(as.matrix(Nh_basicvis_mean_dataframe))) )
+Nh_basic_mean_analysis     = data_analysis(Nh_basic_mean_dataframe, Nh_real_dataframe)
+#Nh_basicvis_mean_analysis = data_analysis(Nh_basicvis_mean_dataframe, Nh_real_dataframe)
 
 
 ################################################################################
@@ -96,8 +84,6 @@ ggplot(graph_data_abserror) +
 dev.off()
 
 
-
-
 ################################################################################
 
 
@@ -113,6 +99,7 @@ graph_data_mse = cbind(graph_data_mse, Nh_basic_mean =  Nh_basic_mean_analysis$m
 #graph_data_mse = cbind(graph_data_mse, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$mse)
 
 
+# Graph creation
 
 plot_name = str_c("Simulation_memoryfactor_", seed_number, "_notdisjoint_mse.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
@@ -152,6 +139,7 @@ graph_data_bias = cbind(graph_data_bias, Nh_basic_mean =  Nh_basic_mean_analysis
 #graph_data_bias = cbind(graph_data_bias, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$bias)
 
 
+# Graph creation
 
 plot_name = str_c("Simulation_memoryfactor_", seed_number, "_notdisjoint_bias.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
@@ -193,7 +181,7 @@ graph_data_sd = cbind(graph_data_sd, Nh_basic_mean =  Nh_basic_mean_analysis$sd)
 #graph_data_sd = cbind(graph_data_sd, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$sd)
 
 
-
+# Graph creation
 
 plot_name = str_c("Simulation_memoryfactor_", seed_number, "_notdisjoint_sd.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
@@ -224,15 +212,15 @@ dev.off()
 
 # Dataframe creation #
 
-graph_data_mediana = data.frame( data = simulation_data$data)
+graph_data_median = data.frame( data = simulation_data$data)
 
-graph_data_mediana = cbind(graph_data_mediana, Nh_basic_sum =  Nh_basic_sum_analysis$mediana)
-#graph_data_mediana = cbind(graph_data_mediana, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$mediana)
-graph_data_mediana = cbind(graph_data_mediana, Nh_basic_mean =  Nh_basic_mean_analysis$mediana)
-#graph_data_mediana = cbind(graph_data_mediana, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$mediana)
+graph_data_median = cbind(graph_data_median, Nh_basic_sum =  Nh_basic_sum_analysis$median)
+#graph_data_median = cbind(graph_data_median, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$median)
+graph_data_median = cbind(graph_data_median, Nh_basic_mean =  Nh_basic_mean_analysis$median)
+#graph_data_median = cbind(graph_data_median, Nh_basicvis_mean =  Nh_basicvis_mean_analysis$median)
 
 
-
+# Graph creation
 
 plot_name = str_c("Simulation_memoryfactor_", seed_number, "_notdisjoint_median.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
@@ -240,7 +228,9 @@ sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number
 png(filename = plot_name,
     width = 1000, height = 600)
 
-ggplot(graph_data_mediana) + 
+ggplot(graph_data_median) + 
+  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   

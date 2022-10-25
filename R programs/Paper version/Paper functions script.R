@@ -13,7 +13,6 @@ library(ggplot2)      #
 library(sampler)      #
 library(dplyr)        #
 library(truncnorm)    #
-#
 #######################
 
 ################################################################################
@@ -54,7 +53,7 @@ genPopulation <- function(n, prob_vect, prob_hp) {
   # prob_vect: vector with the Subpopulations probabilities
   # prob_hp:   probability of the occurrence of the Hidden Population
   
-  subpop_vect = n * prob_vect
+  subpop_vect = round(n * prob_vect)
   population_buc = data.frame(hidden_population = getHP(n,prob_hp))
   rownames(population_buc) <- c(1:n)
   
@@ -112,6 +111,7 @@ genPopulation_Disjoint_basic <- function(n, prob_vect,HP) {
     for (i in 1:n){
       if (as.logical(sum(i %in% subpop_ind))){
         subpop[i] = 1
+        
         # for k in 1:n appends 1 if a population is assigned
         gen_subpop[i] = 1
       }
@@ -162,6 +162,7 @@ genPopulation_Disjoint <- function(n, prob_vect,HP, M_vis, sub_mem_factor, r, r_
     for (i in 1:n){
       if (as.logical(sum(i %in% subpop_ind))){
         subpop[i] = 1
+        
         # for k in 1:n appends 1 if a population is assigned
         gen_subpop[i] = 1
       }
@@ -184,7 +185,7 @@ genPopulation_Disjoint <- function(n, prob_vect,HP, M_vis, sub_mem_factor, r, r_
   population_buc = cbind(population_buc, hp_total = hp_t)
   population_buc = cbind(population_buc, hp_survey = hp_s)
   
-  for(j in 1:(length(prob_vect)-1)){
+  for(j in 1:(length(prob_vect))){
     v_1 = rep(NA,N)
     for(i in 1:N) {
       vis_pob = sum(dplyr::select(population_buc[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
@@ -200,7 +201,7 @@ genPopulation_Disjoint <- function(n, prob_vect,HP, M_vis, sub_mem_factor, r, r_
   
   ind1 = 1:N
   i_hp_vis = rep(NA,N)
-  for (i in 1:(length(prob_vect)-1)) {
+  for (i in 1:(length(prob_vect))) {
     for (j in ind1){
       ind2 = dplyr::select(population_buc, starts_with("subpop") & ends_with(as.character(i)))[,1] != 0
       i_hp_vis[j] = round(rtruncnorm(1, a = -0.5, b =  2*sum(M_vis[ind2,j]) + 0.5, mean = sum(M_vis[ind2,j]), sd = sum(M_vis[ind2,j])*sub_mem_factor)) 
@@ -228,20 +229,25 @@ getSurvey = function(n_enc, dataframe){
 
 
 getSurvey_VF = function(n_enc, pop, vis_matrix, memory_fact){
-  # This function makes a sample of size n_enc from dataframe to make an estimate 
+  # This function makes a ordered sample of size n_enc from dataframe to make an estimate 
   # of the visibility factor
+  
   # n_enc: number of people surveyed
   # pop: Population dataframe
   # vis_matrix: Visibility matrix
   # memory_fact: Memoty factor
   
-  
+  # Sample from the hidden population
   enc_hp = pop[sample(nrow(pop[pop$hidden_population==1,]), n_enc, replace = FALSE),]
   
+  # Survey index
   ind_survey = as.numeric(rownames(pop[pop$hidden_population==1,]))[as.numeric(rownames(enc_hp))]
-  vect_reach_hp = colSums(vis_matrix[,ind_survey])
   
+  # Known variables 
+  vect_reach_hp = colSums(vis_matrix[,ind_survey])
   vect_reach = pop$reach[ind_survey]
+  
+  # New variables
   mem_vect_reach_hp = rep(NA,length(vect_reach_hp))
   mem_vect_reach = rep(NA,length(vect_reach_hp))
   
@@ -261,10 +267,20 @@ getSurvey_VF = function(n_enc, pop, vis_matrix, memory_fact){
     }
     
   }
+  # Output dataframe construction
   enc_pop = pop[ind_survey,]
+  
+  # New reach_memory variable
   enc_pop$reach_memory =  mem_vect_reach
+  
+  # New variables
   enc_pop = cbind(enc_pop, reach_hp = vect_reach_hp)
   enc_pop = cbind(enc_pop, reach_hp_memory = mem_vect_reach_hp)
+  
+  # Ordering the dataframe by index (future needs)
+  enc_pop = enc_pop[order(as.numeric(row.names(enc_pop))), ]
+  
+  
   return(enc_pop)
   
 }
@@ -611,3 +627,24 @@ getNh_Direct = function(survey,N){
   Nh = sum(survey$hidden_population)/nrow(survey) * N
   return(Nh)
 }
+
+
+################################################################################
+
+# Functions for the graphs
+
+data_analysis = function(Nh_df, Nh_ref_df){
+  # Estimation dataframe analysis
+  
+  df_analysis = data.frame( abserror = rowMeans(as.matrix(abs(Nh_df-Nh_ref_df))),
+                            mse      = rowMeans(as.matrix((Nh_df-Nh_ref_df)^2)),
+                            bias     = rowMeans(as.matrix(Nh_df)),
+                            sd       = rowSds(as.matrix(Nh_df)),
+                            median   = rowMedians(as.matrix(Nh_df)) )
+  
+  return(df_analysis)
+}
+
+
+
+
