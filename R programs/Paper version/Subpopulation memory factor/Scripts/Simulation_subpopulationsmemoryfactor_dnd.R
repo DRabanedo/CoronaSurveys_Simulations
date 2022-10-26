@@ -9,7 +9,7 @@ t = Sys.time()
 sub_memory_factor = 0      #Subpopulation memory factor (parameter to change variance of the perturbations' normal)
 ################################################################################
 
-N = 10000                     # Population size
+N = 1000                     # Population size
 v_pop_prob = rep(1/10, 5)     # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
 n_pop = length(v_pop_prob)    # Number of subpopulations
                               # sum(v_pop_prob) < 1. 
@@ -372,6 +372,7 @@ write.csv(simulaciones,                         # Data frame
           file = file_name,                     # Csv's name
           row.names = TRUE )                    # Row names: TRUE o FALSE 
 ################################################################################
+
 
 ################################################################################
 file_name_disjoint = str_c("Simulation_subpopulationmemoryfactor_disjoint_", seed,".csv")

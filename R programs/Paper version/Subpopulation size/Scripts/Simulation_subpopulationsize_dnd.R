@@ -32,7 +32,6 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 parameters = list(rep(1/10, 9), c(rep(1/20, 8),11/20), c(rep(1/20, 7),6/20,6/20), c(rep(1/20, 4), rep(4/20, 3)), c(rep(1/20, 3), rep(4/20, 4)),  
                   c(rep(1/40, 7),4/20, 4/20, 8/20), c(rep(1/20, 4), 2/20, 3/20, 4/20, 5/20), c(1/20, 2/20, 2/20, 3/20, 4/20, 5/20))
 
-
 ################################################################################
 
 ## Populations ##
@@ -63,7 +62,7 @@ for (k in 1:n_pop) {
 ## Auxiliar simulation data ##
 
 # Number of simulations
-b = 2 
+b = 100 
 
 # Variable creation
 lista_simulacion = list()
@@ -96,7 +95,7 @@ for (w in 1:length(parameters)) {
   
   # Parameter selection
   v_pop_prob = parameters[[w]]
-  n_pob      = length(parameters[[w]])
+  n_pop      = length(parameters[[w]])
   
   population_buc = data.frame(hidden_population = Population$hidden_population)
   
@@ -115,7 +114,6 @@ for (w in 1:length(parameters)) {
       else{
         subpop[i] = 0
       }
-      
     }
     
     #Dataframe append
@@ -123,10 +121,10 @@ for (w in 1:length(parameters)) {
     names(population_buc)[dim(population_buc)[2]] = str_c("subpopulation_",k)
   }
   
-  population_buc = cbind(population_buc, reach = Population$reach)
+  population_buc = cbind(population_buc, reach        = Population$reach)
   population_buc = cbind(population_buc, reach_memory = Population$reach_memory)
-  population_buc = cbind(population_buc, hp_total = Population$hp_total) 
-  population_buc = cbind(population_buc, hp_survey = Population$hp_survey)
+  population_buc = cbind(population_buc, hp_total     = Population$hp_total) 
+  population_buc = cbind(population_buc, hp_survey    = Population$hp_survey)
   
   for(j in 1:length(v_pop_prob)){
     v_1 = rep(NA,N)
@@ -162,6 +160,8 @@ for (w in 1:length(parameters)) {
   Population = population_buc
   
   
+  # Disjoint population loop #
+  
   population_disjoint_buc = data.frame(hidden_population = Population_disjoint$hidden_population)
   
   subpop_vect = round(N * v_pop_prob)
@@ -180,7 +180,6 @@ for (w in 1:length(parameters)) {
       else{
         subpop[i] = 0
       }
-      
     }
     
     #Dataframe append
@@ -188,10 +187,10 @@ for (w in 1:length(parameters)) {
     names(population_disjoint_buc)[dim(population_disjoint_buc)[2]] = str_c("subpopulation_",k)
   }
   
-  population_disjoint_buc = cbind(population_disjoint_buc, reach = Population$reach)
+  population_disjoint_buc = cbind(population_disjoint_buc, reach        = Population$reach)
   population_disjoint_buc = cbind(population_disjoint_buc, reach_memory = Population$reach_memory)
-  population_disjoint_buc = cbind(population_disjoint_buc, hp_total = Population$hp_total) 
-  population_disjoint_buc = cbind(population_disjoint_buc, hp_survey = Population$hp_survey)
+  population_disjoint_buc = cbind(population_disjoint_buc, hp_total     = Population$hp_total) 
+  population_disjoint_buc = cbind(population_disjoint_buc, hp_survey    = Population$hp_survey)
   
   for(j in 1:length(v_pop_prob)){
     v_1 = rep(NA,N)
@@ -202,7 +201,6 @@ for (w in 1:length(parameters)) {
       
       v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_memory_factor*vis_pob)))
     }
-    
     population_disjoint_buc = cbind(population_disjoint_buc,Subpoblacion_total = v_1)
     names(population_disjoint_buc)[dim(population_disjoint_buc)[2]] = str_c("kp_reach_",j)
   }
@@ -226,8 +224,8 @@ for (w in 1:length(parameters)) {
     v_pop_total_disjoint[k] = sum(dplyr::select(Population_disjoint, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
   }
     
-  #Variable reset
   
+  #Variable reset
   Nh_real =  rep(NA,b) 
   
   #Nh_basic_sum     = rep(NA,b) 
@@ -262,7 +260,7 @@ for (w in 1:length(parameters)) {
     vf_estimate = VF_Estimate(survey_hp_vf)
     
     # Hidden population estimates
-    Nh_real = sum(Population$Hidden_Population) 
+    Nh_real = sum(Population$hidden_population) 
     
     #Nh_basic_sum     = getNh_basic_sum(survey,N) 
     #Nh_basicvis_sum  = getNh_basicvis_sum(survey,N,vf_estimate) 
@@ -366,7 +364,7 @@ for (w in 1:length(parameters)) {
     vf_estimate = VF_Estimate(survey_hp_vf)
     
     #Hidden population estimates
-    Nh_real_disjoint = sum(Population_disjoint$Hidden_Population) 
+    Nh_real_disjoint = sum(Population_disjoint$hidden_population) 
     
     #Nh_basic_sum_disjoint     = getNh_basic_sum(survey,N) 
     #Nh_basicvis_sum_disjoint  = getNh_basicvis_sum(survey,N,vf_estimate) 
