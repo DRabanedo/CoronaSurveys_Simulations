@@ -257,9 +257,9 @@ for (w in 1:length(parameters)) {
   
   lista_sim_disjoint = list()
   
-  # Population for the VF estimate
-  Population_disjoint_vf = getSurvey_VF(sum(Population_disjoint$hidden_population), Population_disjoint, Mhp_vis, memory_factor)
-  
+  # Population for the visibility factor (vf) estimate
+  Population_disjoint_vf = cbind(Population_disjoint, reach_hp = Population_vf$reach_hp)
+  Population_disjoint_vf = cbind(Population_disjoint_vf, reach_hp_memory = Population_vf$reach_hp_memory)
   
   #Iterations
   for (l in 1:b) {
@@ -291,7 +291,7 @@ for (w in 1:length(parameters)) {
     #Nh_MoS_disjoint     = getNh_MoS(survey, v_pop_total_disjoint, N)
     #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_estimate)
     
-    #Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
+    #Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)
     
     
     #Dataframe for saving the estimates
@@ -349,16 +349,17 @@ simulaciones_disjoint["data"] = parameters
 
 ################################################################################
 file_name = str_c("Simulations_memoryfactor_", seed,".csv")
-write.csv(simulaciones,                                        # Data frame 
-          file = file_name,   # Csv name
-          row.names = TRUE )                      # Row names: TRUE or FALSE 
+write.csv(simulaciones,               # Data frame 
+          file = file_name,           # Csv name
+          row.names = TRUE )          # Row names: TRUE or FALSE 
 ################################################################################
 
 
 ################################################################################
-# write.csv(simulaciones_disjoint,                           # Data frame 
-#           file = "Simulations_memoryfactor_disjoint_207.csv",  # Csv name
-#           row.names = TRUE )                      # Row names: TRUE or FALSE 
+# file_name_disjoint = str_c("Simulations_memoryfactor_disjoint_", seed,".csv")
+# write.csv(simulaciones_disjoint,           # Data frame 
+#           file = file_name_disjoint,       # Csv name
+#           row.names = TRUE )               # Row names: TRUE or FALSE 
 ################################################################################
 
 

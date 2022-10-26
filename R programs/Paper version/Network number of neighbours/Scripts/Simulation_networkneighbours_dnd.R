@@ -28,12 +28,11 @@ nei = 75    # Number of neighbors that each node is connected to. They are neigh
 p   = 0.1   # Probability of randomize a connection. It is applied to all connections
 
 
-# Study parameters
-parameters = round(seq(from = 10, to = 150, length.out = 50))
-
-
 ################################################################################
 # AUXILIARY DATA FOR THE SIMULATION
+
+# Study parameters
+parameters = round(seq(from = 10, to = 150, length.out = 50))
 
 Population_ref = genPopulation(N, v_pop_prob, hp_prob)
 Population_disjoint_ref = genPopulation_Disjoint_basic(N, v_pop_prob, Population_ref$hidden_population)
@@ -215,18 +214,18 @@ for (w in 1:length(parameters)) {
     Nh_real = sum(Population$hidden_population) 
     
     Nh_basic_sum      = getNh_basic_sum(survey,N) 
-    #Nh_basicvis_sum  = getNh_basicvis_sum(survey,N,vf_subpop) 
+    #Nh_basicvis_sum  = getNh_basicvis_sum(survey,N,vf_estimate) 
     Nh_basic_mean     = getNh_basic_mean(survey,N) 
-    #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,vf_subpop) 
+    #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,vf_estimate) 
     
     Nh_PIMLE     = getNh_PIMLE(survey, v_pop_total, N)
-    #Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, vf_subpop)
+    #Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, vf_estimate)
     
     Nh_MLE      = getNh_MLE(survey, v_pop_total)
-    #Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, vf_subpop)
+    #Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, vf_estimate)
     
     Nh_MoS      = getNh_MoS(survey, v_pop_total, N)
-    #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_subpop)
+    #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
     
     Nh_GNSUM   =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
     
@@ -300,7 +299,7 @@ for (w in 1:length(parameters)) {
   
   # Population for the visibility factor (vf) estimate
   Population_disjoint_vf = cbind(Population_disjoint, reach_hp = Population_vf$reach_hp)
-  Population_disjoint_vf = cbind(Population_disjoint, reach_hp_memory = Population_vf$reach_hp_memory)
+  Population_disjoint_vf = cbind(Population_disjoint_vf, reach_hp_memory = Population_vf$reach_hp_memory)
   
   
   
@@ -324,20 +323,20 @@ for (w in 1:length(parameters)) {
     Nh_real_disjoint = sum(Population_disjoint$hidden_population) 
     
     Nh_basic_sum_disjoint      = getNh_basic_sum(survey,N) 
-    #Nh_basicvis_sum_disjoint  = getNh_basicvis_sum(survey,N,vf_subpop) 
+    #Nh_basicvis_sum_disjoint  = getNh_basicvis_sum(survey,N,vf_estimate) 
     Nh_basic_mean_disjoint     = getNh_basic_mean(survey,N) 
-    #Nh_basicvis_mean_disjoint = getNh_basicvis_mean(survey,N,vf_subpop) 
+    #Nh_basicvis_mean_disjoint = getNh_basicvis_mean(survey,N,vf_estimate) 
     
     Nh_PIMLE_disjoint     = getNh_PIMLE(survey, v_pop_total_disjoint, N)
-    #Nh_PIMLEvis_disjoint = getNh_PIMLEvis(survey, v_pop_total_disjoint, N, vf_subpop)
+    #Nh_PIMLEvis_disjoint = getNh_PIMLEvis(survey, v_pop_total_disjoint, N, vf_estimate)
     
     Nh_MLE_disjoint      = getNh_MLE(survey, v_pop_total_disjoint)
-    #Nh_MLEvis_disjoint  = getNh_MLEvis(survey, v_pop_total_disjoint, vf_subpop)
+    #Nh_MLEvis_disjoint  = getNh_MLEvis(survey, v_pop_total_disjoint, vf_estimate)
     
     Nh_MoS_disjoint      = getNh_MoS(survey, v_pop_total_disjoint, N)
-    #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_subpop)
+    #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_estimate)
     
-    Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
+    Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)
     
     
     #Dataframe for saving the estimates
@@ -391,7 +390,6 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 simulaciones_disjoint = bind_rows(lista_simulacion_disjoint)
 simulaciones_disjoint = cbind(simulaciones_disjoint, data = parameters)
-
 
 
 ################################################################################

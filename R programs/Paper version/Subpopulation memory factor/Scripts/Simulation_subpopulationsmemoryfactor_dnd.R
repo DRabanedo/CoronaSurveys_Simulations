@@ -60,7 +60,6 @@ for (k in 1:n_pop) {
 
 
 ################################################################################
-
 # Auxiliary simulation data #
 
 # Study parameters
@@ -173,21 +172,23 @@ for (w in 1:length(parameters)) {
   Nh_MoS = rep(NA,b) 
   #Nh_MoSvis = rep(NA,b) 
   
-  #Nh_GNSUM = rep(NA,b) 
+  Nh_GNSUM = rep(NA,b) 
   
   lista_sim = list()
   
+  # Population for the VF estimate
+  Population_vf = getSurvey_VF(sum(Population$hidden_population), Population, Mhp_vis, memory_factor)
   
   #Iterations
   for (l in 1:b) {
-    
     #We choose the same survey for each l in order to calculate the bias and variance
     #Surveys
     survey = Population[list_surveys[[l]],]
     survey_hp = Population[Population$hidden_population == 1,][list_surveys_hp[[l]],]
+    survey_hp_vf = Population_vf[list_surveys_hp[[l]],]
     
     #Visibility factor estimate
-    vf_subpop = visibility_factor
+    vf_estimate = VF_Estimate(survey_hp_vf)
     
     #Hidden population estimates
     Nh_real = sum(Population$hidden_population) 
@@ -206,7 +207,7 @@ for (w in 1:length(parameters)) {
     Nh_MoS     = getNh_MoS(survey, v_pop_total, N)
     #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_subpop)
     
-    #Nh_GNSUM   =  getNh_GNSUM(Population, survey, survey_hp, Mhp_vis, v_pop_total, N)
+    Nh_GNSUM    =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
     
     
     #Dataframe for saving the estimates
@@ -243,8 +244,8 @@ for (w in 1:length(parameters)) {
     #sim = cbind(sim,Nh_MoSvis = Nh_MoSvis)
     #names(sim)[dim(sim)[2]] = str_c("Nh_MoSvis_",l)
     
-    #sim = cbind(sim,Nh_GNSUM = Nh_GNSUM)
-    #names(sim)[dim(sim)[2]] = str_c("Nh_GNSUM_",l)
+    sim = cbind(sim,Nh_GNSUM = Nh_GNSUM)
+    names(sim)[dim(sim)[2]] = str_c("Nh_GNSUM_",l)
     
     lista_sim[[l]] = sim
   }
@@ -272,10 +273,13 @@ for (w in 1:length(parameters)) {
   Nh_MoS_disjoint = rep(NA,b) 
   #Nh_MoSvis_disjoint = rep(NA,b) 
   
-  #Nh_GNSUM_disjoint = rep(NA,b) 
+  Nh_GNSUM_disjoint = rep(NA,b) 
   
   lista_sim_disjoint = list()
   
+  # Population for the visibility factor (vf) estimate
+  Population_disjoint_vf = cbind(Population_disjoint, reach_hp = Population_vf$reach_hp)
+  Population_disjoint_vf = cbind(Population_disjoint_vf, reach_hp_memory = Population_vf$reach_hp_memory)
   
   #Iterations
   for (l in 1:b) {
@@ -284,9 +288,10 @@ for (w in 1:length(parameters)) {
     #Surveys
     survey = Population_disjoint[list_surveys[[l]],]
     survey_hp = Population_disjoint[Population_disjoint$hidden_population == 1,][list_surveys_hp[[l]],]
+    survey_hp_vf = Population_vf[list_surveys_hp[[l]],]
     
     #Visibility factor estimate
-    vf_subpop = visibility_factor
+    vf_estimate = VF_Estimate(survey_hp_vf)
     
     #Hidden population estimates
     Nh_real_disjoint = sum(Population_disjoint$hidden_population) 
@@ -305,8 +310,7 @@ for (w in 1:length(parameters)) {
     Nh_MoS_disjoint     = getNh_MoS(survey, v_pop_total_disjoint, N)
     #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_subpop)
     
-    #Nh_GNSUM_disjoint   =  getNh_GNSUM(Population_disjoint, survey, survey_hp, Mhp_vis, v_pop_total_disjoint, N)
-    
+    Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)    
     
     #Dataframe for saving the estimates
     sim_disjoint = data.frame(Nh_real = Nh_real_disjoint)
@@ -342,8 +346,8 @@ for (w in 1:length(parameters)) {
     #sim_disjoint = cbind(sim_disjoint,Nh_MoSvis = Nh_MoSvis_disjoint)
     #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MoSvis_",l)
     
-    #sim_disjoint = cbind(sim_disjoint, Nh_GNSUM = Nh_GNSUM_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_GNSUM_",l)
+    sim_disjoint = cbind(sim_disjoint, Nh_GNSUM = Nh_GNSUM_disjoint)
+    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_GNSUM_",l)
     
     lista_sim_disjoint[[l]] = sim_disjoint
   }
@@ -363,25 +367,23 @@ simulaciones_disjoint = cbind(simulaciones_disjoint, data = parameters)
 
 
 ################################################################################
-write.csv(simulaciones,                                  # Data frame
-          file = "Simulation_subpopulationmemoryfactor_notdisjoint.csv", # Csv's name
-          row.names = TRUE )                             # Row names: TRUE o FALSE 
+file_name = str_c("Simulation_subpopulationmemoryfactor_notdisjoint_", seed, ".csv")
+write.csv(simulaciones,                         # Data frame
+          file = file_name,                     # Csv's name
+          row.names = TRUE )                    # Row names: TRUE o FALSE 
 ################################################################################
 
 ################################################################################
-write.csv(simulaciones_disjoint,                                  # Data frame
-          file = "Simulation_subpopulationmemoryfactor_disjoint.csv", # Csv's name
-          row.names = TRUE )                             # Row names: TRUE o FALSE 
+file_name_disjoint = str_c("Simulation_subpopulationmemoryfactor_disjoint_", seed,".csv")
+write.csv(simulaciones_disjoint,                # Data frame
+          file = file_name_disjoint,            # Csv's name
+          row.names = TRUE )                    # Row names: TRUE o FALSE 
 ################################################################################
 
 timer = Sys.time() - t
 timer
+
 #################### COMPUTATION TIME ANALYSIS ###########################
-
-# Computation time (N=1000) (my pc)
-#timer -> 11.85093 mins   
-
 # Computation time (N=10000) (virtual machine) IN PROCESS
-#timer -> 
-
+# timer -> 
 ###########################################################################

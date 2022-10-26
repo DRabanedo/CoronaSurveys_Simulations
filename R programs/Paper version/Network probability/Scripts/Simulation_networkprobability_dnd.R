@@ -125,7 +125,7 @@ for (w in 1:length(parameters)) {
   
   v_pop_total = rep(NA, n_pop)
   for (k in 1:n_pop) {
-    v_pop_total[k] = sum(Population[,k+1]) # N_k
+    v_pop_total[k] = sum(dplyr::select(Population, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
   }
   
   
@@ -164,21 +164,13 @@ for (w in 1:length(parameters)) {
   
   
   #Vector with the number of people in each subpopulation
-  
   v_pop_total_disjoint = rep(NA, n_pop)
   for (k in 1:n_pop) {
-    v_pop_total_disjoint[k] = sum(Population_disjoint[,k+1]) # N_k
+    v_pop_total_disjoint[k] = sum(dplyr::select(Population_disjoint, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
   }
+  
   
   # Not disjoint population analysis #
-  
-  
-  #Vector with the number of people in each subpopulation
-  
-  v_pop_total = rep(NA, n_pop)
-  for (k in 1:n_pop) {
-    v_pop_total[k] = sum(Population[,k+1]) # N_k
-  }
   
   #Variable reset
   Nh_real =  rep(NA,b) 
@@ -206,7 +198,6 @@ for (w in 1:length(parameters)) {
   
   #Iterations
   for (l in 1:b) {
-    
     #We choose the same survey for each l in order to calculate the bias and variance
     #Surveys
     survey = Population[list_surveys[[l]],]
@@ -219,21 +210,21 @@ for (w in 1:length(parameters)) {
     #Hidden population estimates
     Nh_real = sum(Population$hidden_population) 
     
-    Nh_basic_sum    = getNh_basic_sum(survey,N) 
-    #Nh_basicvis_sum = getNh_basicvis_sum(survey,N,vf_estimate) 
-    Nh_basic_mean    = getNh_basic_mean(survey,N) 
+    Nh_basic_sum      = getNh_basic_sum(survey,N) 
+    #Nh_basicvis_sum  = getNh_basicvis_sum(survey,N,vf_estimate) 
+    Nh_basic_mean     = getNh_basic_mean(survey,N) 
     #Nh_basicvis_mean = getNh_basicvis_mean(survey,N,vf_estimate) 
     
-    Nh_PIMLE    = getNh_PIMLE(survey, v_pop_total, N)
+    Nh_PIMLE     = getNh_PIMLE(survey, v_pop_total, N)
     #Nh_PIMLEvis = getNh_PIMLEvis(survey, v_pop_total, N, vf_estimate)
     
-    Nh_MLE     = getNh_MLE(survey, v_pop_total)
+    Nh_MLE      = getNh_MLE(survey, v_pop_total)
     #Nh_MLEvis  = getNh_MLEvis(survey, v_pop_total, vf_estimate)
     
-    Nh_MoS     = getNh_MoS(survey, v_pop_total, N)
+    Nh_MoS      = getNh_MoS(survey, v_pop_total, N)
     #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
     
-    Nh_GNSUM   =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
+    Nh_GNSUM    =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
     
     
     #Dataframe for saving the estimates
@@ -303,8 +294,9 @@ for (w in 1:length(parameters)) {
   
   lista_sim_disjoint = list()
   
-  # Population for the VF estimate
-  Population_vf = getSurvey_VF(sum(Population_disjoint$hidden_population), Population_disjoint, Mhp_vis, memory_factor)
+  # Population for the visibility factor (vf) estimate
+  Population_disjoint_vf = cbind(Population_disjoint, reach_hp = Population_vf$reach_hp)
+  Population_disjoint_vf = cbind(Population_disjoint_vf, reach_hp_memory = Population_vf$reach_hp_memory)
   
   #Iterations
   for (l in 1:b) {
@@ -321,18 +313,18 @@ for (w in 1:length(parameters)) {
     #Hidden population estimates
     Nh_real_disjoint = sum(Population_disjoint$hidden_population) 
     
-    Nh_basic_sum_disjoint    = getNh_basic_sum(survey,N) 
-    #Nh_basicvis_sum_disjoint = getNh_basicvis_sum(survey,N,vf_estimate) 
-    Nh_basic_mean_disjoint    = getNh_basic_mean(survey,N) 
+    Nh_basic_sum_disjoint      = getNh_basic_sum(survey,N) 
+    #Nh_basicvis_sum_disjoint  = getNh_basicvis_sum(survey,N,vf_estimate) 
+    Nh_basic_mean_disjoint     = getNh_basic_mean(survey,N) 
     #Nh_basicvis_mean_disjoint = getNh_basicvis_mean(survey,N,vf_estimate) 
     
-    Nh_PIMLE_disjoint    = getNh_PIMLE(survey, v_pop_total_disjoint, N)
+    Nh_PIMLE_disjoint     = getNh_PIMLE(survey, v_pop_total_disjoint, N)
     #Nh_PIMLEvis_disjoint = getNh_PIMLEvis(survey, v_pop_total_disjoint, N, vf_estimate)
     
-    Nh_MLE_disjoint     = getNh_MLE(survey, v_pop_total_disjoint)
+    Nh_MLE_disjoint      = getNh_MLE(survey, v_pop_total_disjoint)
     #Nh_MLEvis_disjoint  = getNh_MLEvis(survey, v_pop_total_disjoint, vf_estimate)
     
-    Nh_MoS_disjoint     = getNh_MoS(survey, v_pop_total_disjoint, N)
+    Nh_MoS_disjoint      = getNh_MoS(survey, v_pop_total_disjoint, N)
     #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_estimate)
     
     Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)
@@ -393,31 +385,28 @@ simulaciones_disjoint = cbind(simulaciones_disjoint, data = parameters)
 
 ################################################################################
 file_name = str_c("Simulation_networkprobability_notdisjoint_", seed,".csv")
-write.csv(simulaciones,                                           # Data frame 
-          file = file_name, # Csv name
-          row.names = TRUE )                          # Row names: TRUE or FALSE 
+
+write.csv(simulaciones,                     # Data frame 
+          file = file_name,                 # Csv name
+          row.names = TRUE )                # Row names: TRUE or FALSE 
 
 ################################################################################
 
 
 ################################################################################
 file_name_disjoint = str_c("Simulation_networkprobability_disjoint_", seed,".csv")
-write.csv(simulaciones_disjoint,                                # Data frame 
-          file = file_name_disjoint,  # Csv name
-          row.names = TRUE )                       # Row names: TRUE or FALSE 
+
+write.csv(simulaciones_disjoint,            # Data frame 
+          file = file_name_disjoint,        # Csv name
+          row.names = TRUE )                # Row names: TRUE or FALSE 
 
 ################################################################################
 
-
-
 timer = Sys.time() - t
 timer
-#################### COMPUTATION TIME ANALYSIS ###########################
 
-# Computation time (N=1000) (my PC)
-#timer -> 17.22806 mins
 
+#################### COMPUTATION TIME ANALYSIS ############################
 # Computation time (N=10000) (virtual machine)
-#timer ->  6.721422 hours
-
+#timer ->  1.78 days
 ###########################################################################
