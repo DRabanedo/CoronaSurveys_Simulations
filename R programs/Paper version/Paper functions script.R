@@ -6,7 +6,6 @@
 #######################
 # Libraries used #    #
 library(igraph)       #
-library(igraph)       #
 library(tidyverse)    #
 library(stringr)      #
 library(ggplot2)      #
