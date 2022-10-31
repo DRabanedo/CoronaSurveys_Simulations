@@ -1,0 +1,16 @@
+## Barabasi network ##
+size     = 10000
+power_sa = seq(0.4,1.5,0.1)
+nei      = 20
+n_links  = 9
+links    = 1.2 * c(rep(30, size * (1-size_sw)/n_links), rep(40, size * (1-size_sw)/n_links), rep(50, size * (1-size_sw)/n_links),
+          	rep(60, size * (1-size_sw)/n_links), rep(70, size * (1-size_sw)/n_links), rep(80, size * (1-size_sw)/n_links), 
+          	rep(90, size * (1-size_sw)/n_links),  rep(65, 1/4* size * (1-size_sw)/n_links), rep(70, 1/4 * size * (1-size_sw)/n_links), 
+          	rep(75, 1/4* size * (1-size_sw)/n_links), rep(80, 1/4* size * (1-size_sw)/n_links), rep(85, 1/4* size * (1-size_sw)/n_links),
+          	rep(90, 1/4* size * (1-size_sw)/n_links), rep(95, 1/4* size * (1-size_sw)/n_links), rep(100, 1/4* size * (1-size_sw)/n_links))
+out.seq = links
+
+# Small world network #
+size_sw = 0.1
+size    = size*size_sw
+p       = 0

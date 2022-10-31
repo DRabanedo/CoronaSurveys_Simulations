@@ -1,0 +1,15 @@
+# We use a small world method #
+
+# Barabasi network #
+size = 10000
+m = 60
+power_sa = seq(0,1.5,0.1)
+ 
+# Small world network (start graph)#
+nei = 10
+size_sw = 0.1
+size = size*size_sw
+p = 0
+
+
+                     
