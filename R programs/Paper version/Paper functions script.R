@@ -37,7 +37,6 @@ getHP <- function(n, prob_hp) {
     else{
       vect_hp[i] = 0
     }
-    
   }
   return(vect_hp)
 }
@@ -303,6 +302,20 @@ getV_pop = function(n_pop, Population){
 # Matrix for the GNSUM #
 ########################
 
+to_matrix = function(x){
+  # Converts to matrix the ad. matix
+  if(x!=0){
+    return(1)
+  }
+  else {
+    return(0)
+  }
+}
+
+to_matrix_SIR = function(x) {
+  ifelse(x %in% c(0,2,3), 0, 1)
+}
+
 matrixHP = function(grafo,Pob){
   # Adjacency matrix of the directed graph of connections with the hidden population
   
@@ -316,11 +329,12 @@ matrixHP = function(grafo,Pob){
       ad[,j] = 0
     }
   }
+  ad = apply(ad, c(1,2), to_matrix)
   return(ad)
 }
 
 
-# Visibility factor calculate for a matrix
+# Visibility factor calculate for an adjacent matrix (apply method)
 
 berHP = function(x,p){
   # Binomial general function for the visibility matrix (element by element)
