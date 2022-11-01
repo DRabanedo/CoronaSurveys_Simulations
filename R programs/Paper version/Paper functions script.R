@@ -12,6 +12,8 @@ library(ggplot2)      #
 library(sampler)      #
 library(dplyr)        #
 library(truncnorm)    #
+library(rjags)        #
+library(rstan)        #
 #######################
 
 ################################################################################
@@ -641,6 +643,159 @@ getNh_Direct = function(survey,N){
   return(Nh)
 }
 
+
+##################################
+# Teo et al. (2019) bayesian model
+##################################
+
+modelTeo = 'model {
+
+for(i in 1:N)
+
+{
+  
+  for(k in 1:Ku)
+  
+  {
+  
+  nu[i,k] ~ dpois(lambda*alpha[i]*Su[k])
+  
+  }
+  
+  for(k in 1:Kk)
+  
+  {
+  
+  nk[i,k] ~ dpois(lambda*alpha[i]*Sk[k])
+  
+  }
+  
+  alpha[i]~dlnorm(0,tau)
+  
+}
+
+for(k in 1:Ku)
+
+{
+  
+  Su[k]~dunif(0,2500000)
+  
+}
+
+for(k in 1:Kk)
+
+{
+  
+  Sk[k]~dunif(0,2500000)
+  
+}
+
+lambda ~ dunif(0,10)
+
+tau ~ dunif(0,10)
+
+}
+'
+
+getNh_Teo = function(survey,knowpopulation_data,NITERATION)
+{
+  #knownpopulation_data contains the number of individuals from each subpopulation
+  popindex = colnames(survey %>% dplyr::select(starts_with("kp_reach_")| hp_survey ))
+  data0 = survey[,popindex]
+  indexk = grep("k", colnames(data0))
+  indexu = grep("h",colnames(data0))
+  dataset=list(
+    N=dim(data0)[1],
+    Kk=length(indexk),
+    nk=data0[,indexk],
+    Ku=length(indexu),
+    nu=as.data.frame(x=data0[,indexu],col.names=indexu),
+    Sk=knowpopulation_data, 
+    #Sk=as.data.frame(knowpopulation_data),
+    Su=rep(NA,length(indexu)))
+  
+  initialisation=list(lambda=0.1)
+  jagmod=jags.model(textConnection(modelTeo),data=dataset,inits=initialisation,n.chains=2)
+  update(jagmod, n.iter=5000, progress.bar="text")
+  posterior = coda.samples(jagmod, c("alpha","lambda","tau","Su"),n.iter=NITERATION,progress.bar="text",thin=1)
+  dicsamples = dic.samples(jagmod,type = "pD",n.iter=20000,thin=1)
+  results = list(indexk=indexk,indexu=indexu,dataset = dataset,posterior=posterior,dicsamples=dicsamples)
+  # uses only the first chain to obtain the hidden population estimation
+  Nh = mean(as.matrix(results$posterior[[1]])[,1])
+  return(list(results,Nh))
+}
+
+#########################################
+# Zheng et al. (2005) overdispersed model
+#########################################
+
+overdispersed_model = "
+data {             
+  int<lower=0> I;                        // respondents
+  int<lower=0> K;                        // subpopulations
+  vector[K] mu_beta;                     // prior mean of beta
+  vector<lower=0>[K] sigma_beta;         // prior variance of beta
+  int  y[I,K];                           // known by respondent i in subpopulation k
+  }
+
+parameters {
+  vector[I] alpha;                       // log degree
+  vector[K] beta;                        // log prevalence of group in population
+  vector<lower = 0 , upper = 1>[K] inv_omega;  // ineverse overdispersion; implies the uniform prior 
+  real mu_alpha;                         // prior mean for alpha
+  real<lower=0> sigma_alpha;             // prior scale for alpha
+  }
+
+model {
+// priors
+  alpha ~ normal(mu_alpha, sigma_alpha);  
+  beta ~ normal(mu_beta, sigma_beta);     // informative prior on beta: location and scale are identified             
+
+// hyperpriors
+  //mu_alpha ~ normal(0,25);                // weakly informative (no prior in paper)
+  //sigma_alpha ~ normal(0,5);              // weakly informative (no prior in paper)
+
+
+  for (k in 1:K) {
+    real omega_k_m1;
+    omega_k_m1 = inv(inv(inv_omega[k]) - 1) ;
+    for (i in 1:I) {
+      real xi_i_k;
+      xi_i_k = omega_k_m1 * exp(alpha[i] + beta[k])  ;
+      y[i,k] ~ neg_binomial(xi_i_k, omega_k_m1);             
+      }
+    }
+  }"
+
+getNh_overdispersed = function(survey, v_pop_total,N, warmup,iterations,chains=1){
+  y0 = survey %>% dplyr::select(starts_with("KP")| HP_total_apvis )
+  y <- array(dim = c(nrow(y0), ncol(y0)))
+  for (i in 1:nrow(y)) {
+    for (k in 1:ncol(y)) {
+      y[i,k] <- y0[i,k]
+    }
+  }
+  #Inizialization
+  mu_beta = rep(NA,ncol(y))
+  sigma_beta =rep(NA,ncol(y))
+  mu_beta[1:(ncol(y)-1)] = log(v_pop_total)
+  sigma_beta[-ncol(y)] = log(sd(y[,-ncol(y)]/survey$Reach_memory*N))
+  mu_beta[ncol(y)] =  log(mean(survey$HP_total_apvis/survey$Reach_memory*N))
+  sigma_beta[ncol(y)] = log(sd(survey$HP_total_apvis/survey$Reach_memory*N))
+  
+  data <- list(I = nrow(y), K = ncol(y), mu_beta = mu_beta, sigma_beta = sigma_beta, y = y)
+  
+  fit <- stan(model_code = overdispersed_model, #file='NB_norecall.stan', 
+              data = data, 
+              # warmup = 1000, iter = 2000,  # takes ~ 40min/chain
+              warmup = warmup, iter=iterations,
+              chains = chains)
+  out <- extract(fit)
+  beta_post <- out $ beta
+  beta_hat <- apply(beta_post, 2, mean)
+  Nh = exp(beta_hat[length(beta_hat)])
+  return(list(out,Nh))
+}
 
 ################################################################################
 
