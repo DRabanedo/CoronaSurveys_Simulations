@@ -14,8 +14,8 @@ library(truncnorm)    #
 gen_SIRpop = function(N, net ,beta, gamma, chosen_nodes, infected_people){
   # SIR method for determination of the hidden population
   
-  # beta: infection rate
-  # gamma: removal rate
+  # beta: infection rate 0.3 = R_0*gamma
+  # gamma: removal rate 1/10
   # infected_people: number of infected people
   # chosen_nodes: nodes from which we start
   
