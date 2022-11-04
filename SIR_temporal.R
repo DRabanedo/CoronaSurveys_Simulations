@@ -112,20 +112,19 @@ get_Time_matrix = function(N, nei, t, dim = 1, p = 0.1, beta = 0.1, gamma = 0.03
 # Simulationes en tiempo #
 
 # Variables para la estructura de la red #
-N   = 10000        # Tamaño de la población a estudiar
-nei = 36           # Media de vecinos que tiene cada nodo (introducir un número par)
+N   = 10000         # Tamaño de la población a estudiar
+nei = 36            # Media de vecinos que tiene cada nodo (introducir un número par)
 
 # Variables del modelo SIR
 R_0     = 3         # R_0 del modelo SIR, en este caso elegimos 3
 beta    = 0.03      # Probabilidad de infectar a un vecino en cada unidad de tiempo
 gamma   = beta/R_0  # Probabilidad de que una persona enferma se recupere en cada unidad de tiempo
-n_nodes = 4         # Número de nodos infectados al comenzar el proceso (número de focos)
+n_nodes = 1         # Número de nodos infectados al comenzar el proceso (número de focos)
 
-t   = 30     # Número de iteraciones temporales
+t   = 30   # Número de iteraciones temporales
 
 # Generación de los datos #
 matrix_data = get_Time_matrix(N, round(nei/2), t, beta = beta, gamma = gamma, dim = 1, p = 0.1, chosen_nodes = round(seq(1,N,N/n_nodes)))
-
 
 ################################################################################
 
@@ -137,7 +136,6 @@ for (i in 1:t){
 
 ggplot() + 
   geom_line(aes(x = 1:t, y =  hp_prop)) +
-  theme(axis.text.x = 1:t) +
   scale_color_discrete("Legend") + 
   labs(title = "Infected people distribution",
        x = "Time",
