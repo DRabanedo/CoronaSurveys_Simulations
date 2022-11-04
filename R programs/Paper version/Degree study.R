@@ -72,6 +72,7 @@ for (h in 1:length(p_iter)){
 }
 getwd()
 
+
 # Graph representation #
 
 degree_summary =  degree_df$Probability_0.1
@@ -83,8 +84,6 @@ degree_min = min(degree_summary)
 sub_title = str_c("Probability = ", p_iter, ", median = ", degree_median, ", var = ", degree_var,", min = ", degree_min, ", max = ", degree_max, ". Small World model")
 plot_name = str_c("Smallword_", p_iter,".png")
 
-png(filename = plot_name,
-    width = 1000, height = 600)
 
 degree_graph = ggplot(degree_df) +
   geom_histogram( aes(x = Probability_0.1, y = ..count../sum(..count..)), binwidth = 1, color = "black", fill = "grey", alpha = 0.4) +
@@ -98,4 +97,7 @@ degree_graph = ggplot(degree_df) +
 
 degree_graph
 
-dev.off()
+
+# Network analysis
+transitivity(network)
+

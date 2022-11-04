@@ -152,6 +152,9 @@ for (w in 1:length(parameters)) {
   
   #Nh_GNSUM = rep(NA,b) 
   
+  #Nh_Teo = getNh_Teo(survey,knowpopulation_data,NITERATION)
+  #Nh_overdispersed = getNh_overdispersed(survey, v_pop_total,N, warmup,iterations,chains=1)
+  
   lista_sim = list()
   
   # Population for the VF estimate
@@ -187,6 +190,10 @@ for (w in 1:length(parameters)) {
     #Nh_MoSvis  = getNh_MoSvis(survey, v_pop_total, N, vf_estimate)
     
     #Nh_GNSUM   =  getNh_GNSUM(survey, survey_hp, v_pop_total, N)
+    
+    #Nh_Teo           = getNh_Teo(survey,v_pop_total)
+    #Nh_overdispersed = getNh_overdispersed(survey, v_pop_total,N)
+    
     
     
     #Dataframe for saving the estimates
@@ -226,6 +233,14 @@ for (w in 1:length(parameters)) {
     #sim = cbind(sim,Nh_GNSUM = Nh_GNSUM)
     #names(sim)[dim(sim)[2]]  = str_c("Nh_GNSUM_",l)
     
+    #sim_disjoint = cbind(sim,Nh_Teo = Nh_Teo)
+    #names(sim_disjoint)[dim(sim)[2]] = str_c("Nh_Teo_",l)
+    
+    #sim_disjoint = cbind(sim,Nh_Overdispersed = Nh_Overdispersed)
+    #names(sim_disjoint)[dim(sim)[2]] = str_c("Nh_Overdispersed_",l)
+    
+    
+    
     lista_sim[[l]] = sim
   }
   simulacion = bind_cols(lista_sim)
@@ -254,6 +269,9 @@ for (w in 1:length(parameters)) {
   #Nh_MoSvis_disjoint = rep(NA,b) 
   
   #Nh_GNSUM_disjoint = rep(NA,b) 
+  
+  #Nh_Teo_disjoint           = rep(NA,b) 
+  #Nh_overdispersed_disjoint = rep(NA,b) 
   
   lista_sim_disjoint = list()
   
@@ -293,6 +311,8 @@ for (w in 1:length(parameters)) {
     
     #Nh_GNSUM_disjoint   =  getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)
     
+    #Nh_Teo_disjoint           = getNh_Teo(survey,v_pop_total_disjoint)
+    #Nh_Overdispersed_disjoint = getNh_overdispersed(survey, v_pop_total_disjoint,N)
     
     #Dataframe for saving the estimates
     sim_disjoint = data.frame(Nh_real = Nh_real_disjoint)
@@ -330,6 +350,12 @@ for (w in 1:length(parameters)) {
     
     #sim_disjoint = cbind(sim_disjoint,Nh_GNSUM = Nh_GNSUM_disjoint)
     #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_GNSUM_",l)
+    
+    #sim_disjoint = cbind(sim_disjoint,Nh_Teo = Nh_Teo_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Teo_",l)
+    
+    #sim_disjoint = cbind(sim_disjoint,Nh_Overdispersed = Nh_Overdispersed_disjoint)
+    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_Overdispersed_",l)
     
     lista_sim_disjoint[[l]] = sim_disjoint
   }
