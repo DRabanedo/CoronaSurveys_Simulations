@@ -716,13 +716,13 @@ getNh_Teo = function(survey,knowpopulation_data,NITERATION)
   
   initialisation=list(lambda=0.1)
   jagmod=jags.model(textConnection(modelTeo),data=dataset,inits=initialisation,n.chains=2)
-  update(jagmod, n.iter=5000, progress.bar="text")
-  posterior = coda.samples(jagmod, c("alpha","lambda","tau","Su"),n.iter=NITERATION,progress.bar="text",thin=1)
+  update(jagmod, n.iter=5000, progress.bar="none")
+  posterior = coda.samples(jagmod, c("alpha","lambda","tau","Su"),n.iter=NITERATION,progress.bar="none",thin=1)
   dicsamples = dic.samples(jagmod,type = "pD",n.iter=20000,thin=1)
   results = list(indexk=indexk,indexu=indexu,dataset = dataset,posterior=posterior,dicsamples=dicsamples)
   # uses only the first chain to obtain the hidden population estimation
   Nh = mean(as.matrix(results$posterior[[1]])[,1])
-  return(list(results,Nh))
+  return(Nh)
 }
 
 #########################################
@@ -734,7 +734,7 @@ data {
   int<lower=0> I;                        // respondents
   int<lower=0> K;                        // subpopulations
   vector[K] mu_beta;                     // prior mean of beta
-  vector<lower=0>[K] sigma_beta;         // prior variance of beta
+  //vector<lower=0>[K] sigma_beta;         // prior variance of beta
   int  y[I,K];                           // known by respondent i in subpopulation k
   }
 
@@ -744,6 +744,7 @@ parameters {
   vector<lower = 0 , upper = 1>[K] inv_omega;  // ineverse overdispersion; implies the uniform prior 
   real mu_alpha;                         // prior mean for alpha
   real<lower=0> sigma_alpha;             // prior scale for alpha
+  vector<lower=0>[K] sigma_beta;         // prior variance of beta
   }
 
 model {
@@ -767,8 +768,10 @@ model {
     }
   }"
 
+
+
 getNh_overdispersed = function(survey, v_pop_total,N, warmup,iterations,chains=1){
-  y0 = survey %>% dplyr::select(starts_with("KP")| HP_total_apvis )
+  y0 = survey %>% dplyr::select(starts_with("kp_reach_")| hp_survey )
   y <- array(dim = c(nrow(y0), ncol(y0)))
   for (i in 1:nrow(y)) {
     for (k in 1:ncol(y)) {
@@ -776,14 +779,16 @@ getNh_overdispersed = function(survey, v_pop_total,N, warmup,iterations,chains=1
     }
   }
   #Inizialization
-  mu_beta = rep(NA,ncol(y))
-  sigma_beta =rep(NA,ncol(y))
-  mu_beta[1:(ncol(y)-1)] = log(v_pop_total)
-  sigma_beta[-ncol(y)] = log(sd(y[,-ncol(y)]/survey$Reach_memory*N))
-  mu_beta[ncol(y)] =  log(mean(survey$HP_total_apvis/survey$Reach_memory*N))
-  sigma_beta[ncol(y)] = log(sd(survey$HP_total_apvis/survey$Reach_memory*N))
+  b= rep(NA,ncol(y))
+  b[1:(ncol(y)-1)] = v_pop_total
+  a=rep(NA,nrow(y))
+  for (i in 1:length(a)) {
+    a[i] = glm(y[i,1:(ncol(y)-1)]~ b[1:(ncol(y)-1)]-1,family = "poisson")$coefficients
+  }
+  b[ncol(y)] = glm(y[,ncol(y)]~a-1,family = "poisson")$coefficients
+  mu_beta = log(b)
   
-  data <- list(I = nrow(y), K = ncol(y), mu_beta = mu_beta, sigma_beta = sigma_beta, y = y)
+  data <- list(I = nrow(y), K = ncol(y), mu_beta = mu_beta, y = y)
   
   fit <- stan(model_code = overdispersed_model, #file='NB_norecall.stan', 
               data = data, 
@@ -794,7 +799,7 @@ getNh_overdispersed = function(survey, v_pop_total,N, warmup,iterations,chains=1
   beta_post <- out $ beta
   beta_hat <- apply(beta_post, 2, mean)
   Nh = exp(beta_hat[length(beta_hat)])
-  return(list(out,Nh))
+  return(Nh)
 }
 
 ################################################################################
