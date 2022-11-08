@@ -242,6 +242,5 @@ ggplot(graph_data_median) +
        x = "Memory factor",
        y = "Median")
 
-
 dev.off()
 

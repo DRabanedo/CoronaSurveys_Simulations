@@ -53,7 +53,6 @@ gen_SIRpop = function(N, net ,beta, gamma, chosen_nodes, infected_people){
     else{
       hp_vector[i] = 0
     }
-    1
   }
   return(hp_vector)
 }

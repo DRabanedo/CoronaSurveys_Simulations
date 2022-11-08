@@ -12,8 +12,9 @@ library(ggplot2)      #
 library(sampler)      #
 library(dplyr)        #
 library(truncnorm)    #
+library(gridExtra)    #
+library(cowplot)      #
 library(rjags)        #
-library(rstan)        #
 #######################
 
 ################################################################################
@@ -41,6 +42,8 @@ getHP <- function(n, prob_hp) {
   }
   return(vect_hp)
 }
+
+
 # This function assings using a SIR structure the individuals who belong to the hidden population
 gen_SIRpop = function(N, net ,beta, gamma, chosen_nodes, infected_people){
   # SIR method for determination of the hidden population
@@ -82,7 +85,7 @@ gen_SIRpop = function(N, net ,beta, gamma, chosen_nodes, infected_people){
     infected_nodes = infected_survivors
   }
   
-  final_infected_nodes = infected_nodes[1:infected_people] # CUIDADO (cambiar esto)
+  final_infected_nodes = infected_survivors
   
   hp_vector = rep(NA, N)
   
@@ -190,7 +193,7 @@ genPopulation_Disjoint_basic <- function(n, prob_vect,HP) {
 
 # This function generates the population with disjoint populations
 
-genPopulation_Disjoint <- function(n, prob_vect,HP, M_vis, sub_mem_factor, r, r_mem, hp_t, hp_s) {
+genPopulation_Disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor, r, r_mem, hp_t, hp_s) {
   # Generates a data frame with the population and the belonging to the Hidden Population
   
   # n: the number of individuals
@@ -243,8 +246,8 @@ genPopulation_Disjoint <- function(n, prob_vect,HP, M_vis, sub_mem_factor, r, r_
   for(j in 1:(length(prob_vect))){
     v_1 = rep(NA,N)
     for(i in 1:N) {
-      vis_pob = sum(dplyr::select(population_buc[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
-      vis_yij = sum(population_buc[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(population_buc[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
+      vis_pob = sum(dplyr::select(population_buc[net[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
+      vis_yij = sum(population_buc[net[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(population_buc[net[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
       
       # Visibility of population j by i, applying a normal in order to represent the real visibility
       v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_mem_factor*vis_pob)))
@@ -411,7 +414,7 @@ berHP = function(x,p){
 
 # General population generation #
 
-getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, sub_mem_factor, beta = 0.3, gamma = 0.1, n_chosen_nodes = 2){
+getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, sub_mem_factor, beta = 0.1, gamma = 0.1/1.5, n_chosen_nodes = 1){
   # list, contains the network, the population data and the matrix for the GNSUM
   
   # N:  Population size
@@ -424,13 +427,13 @@ getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, s
   # mem_factor: Memory factor
   # sub_mem_factor: Subpopulation memory factor
   
-  net_sw = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
+  net = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
   
   # SIR generation of the hidden population 
   infected_people   = round(prob_hp*N)
   chosen_nodes      = round(seq(1,N,N/n_chosen_nodes))
   
-  hidden_population = gen_SIRpop(N, net_sw ,beta, gamma, chosen_nodes, infected_people)
+  hidden_population = gen_SIRpop(N, net ,beta, gamma, chosen_nodes, infected_people)
   
   # First we generate the population, then we remplace the apropiate column
   Population = genPopulation(N, prob_vect,prob_hp) # hidden population without SIR
@@ -444,7 +447,7 @@ getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, s
   vect_reach_re = rep(NA,N) # reach vector applying memory error
   
   # Matrix representing the directed graph that connects individuals with the people of the Hidden Population they know 
-  Mhp = matrixHP(net_sw,Population)
+  Mhp = matrixHP(net,Population)
   Mhp_vis =  apply(Mhp,c(1,2), berHP,p = vis_factor)
   
   # Mhp_hp calculation for making two different Bernouillis
@@ -460,10 +463,10 @@ getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, s
   # Mhp_vis = apply(Mhp_sir, c(1,2), to_matrix_SIR)
   
   for (i in 1:N) {
-    # net_sw[[i]], list with one element, the list of the adjacent vertices to i
+    # net[[i]], list with one element, the list of the adjacent vertices to i
     
     vect_hp[i] = sum(Mhp[i,])
-    vect_reach[i] = length(net_sw[[i]][[1]])
+    vect_reach[i] = length(net[[i]][[1]])
     vect_hp_vis[i] = round(rtruncnorm(1, a = max(-0.5,  2 * sum(Mhp_vis[i,]) - vect_reach[i] + 0.5 ) , b = min(2 * sum(Mhp_vis[i,]) + 0.5, vect_reach[i]-0.5), mean = sum(Mhp_vis[i,]), sd = mem_factor*sum(Mhp_vis[i,])))
     
     vect_reach_re[i] = max(1,round(rtruncnorm(1, a = vect_hp_vis[i] - 0.5, b = 2*vect_reach[i] - vect_hp_vis[i] + 0.5, mean = vect_reach[i], sd = mem_factor*vect_reach[i])))
@@ -477,8 +480,8 @@ getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, s
   for(j in 1:length(prob_vect)){
     v_1 = rep(NA,N)
     for(i in 1:N) {
-      vis_pob = sum(dplyr::select(Population[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
-      vis_yij = sum(Population[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(Population[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
+      vis_pob = sum(dplyr::select(Population[net[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
+      vis_yij = sum(Population[net[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(Population[net[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
       # Visibility of population j by i, applying a normal in order to represent the real visibility
       
       v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_mem_factor*vis_pob)))
@@ -499,7 +502,7 @@ getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, s
     names(Population)[dim(Population)[2]] = str_c("kp_alters_",i)
   }
   
-  return(list(net_sw, Population, Mhp_vis))
+  return(list(net, Population, Mhp_vis))
 }
 
 ################################################################################
@@ -784,13 +787,13 @@ getNh_Teo = function(survey,knowpopulation_data,NITERATION)
   
   initialisation=list(lambda=0.1)
   jagmod=jags.model(textConnection(modelTeo),data=dataset,inits=initialisation,n.chains=2)
-  update(jagmod, n.iter=5000, progress.bar="text")
-  posterior = coda.samples(jagmod, c("alpha","lambda","tau","Su"),n.iter=NITERATION,progress.bar="text",thin=1)
+  update(jagmod, n.iter=5000, progress.bar="none")
+  posterior = coda.samples(jagmod, c("alpha","lambda","tau","Su"),n.iter=NITERATION,progress.bar="none",thin=1)
   dicsamples = dic.samples(jagmod,type = "pD",n.iter=20000,thin=1)
   results = list(indexk=indexk,indexu=indexu,dataset = dataset,posterior=posterior,dicsamples=dicsamples)
   # uses only the first chain to obtain the hidden population estimation
   Nh = mean(as.matrix(results$posterior[[1]])[,1])
-  return(list(results,Nh))
+  return(Nh)
 }
 
 #########################################
@@ -802,7 +805,7 @@ data {
   int<lower=0> I;                        // respondents
   int<lower=0> K;                        // subpopulations
   vector[K] mu_beta;                     // prior mean of beta
-  vector<lower=0>[K] sigma_beta;         // prior variance of beta
+  //vector<lower=0>[K] sigma_beta;         // prior variance of beta
   int  y[I,K];                           // known by respondent i in subpopulation k
   }
 
@@ -812,6 +815,7 @@ parameters {
   vector<lower = 0 , upper = 1>[K] inv_omega;  // ineverse overdispersion; implies the uniform prior 
   real mu_alpha;                         // prior mean for alpha
   real<lower=0> sigma_alpha;             // prior scale for alpha
+  vector<lower=0>[K] sigma_beta;         // prior variance of beta
   }
 
 model {
@@ -835,8 +839,10 @@ model {
     }
   }"
 
-getNh_overdispersed = function(survey, v_pop_total,N, warmup,iterations,chains=1){
-  y0 = survey %>% dplyr::select(starts_with("KP")| HP_total_apvis )
+
+ 
+getNh_overdispersed = function(survey, v_pop_total,N, warmup = 2000, iterations = 5000,chains=1){
+  y0 = survey %>% dplyr::select(starts_with("kp_reach_")| hp_survey )
   y <- array(dim = c(nrow(y0), ncol(y0)))
   for (i in 1:nrow(y)) {
     for (k in 1:ncol(y)) {
@@ -844,14 +850,16 @@ getNh_overdispersed = function(survey, v_pop_total,N, warmup,iterations,chains=1
     }
   }
   #Inizialization
-  mu_beta = rep(NA,ncol(y))
-  sigma_beta =rep(NA,ncol(y))
-  mu_beta[1:(ncol(y)-1)] = log(v_pop_total)
-  sigma_beta[-ncol(y)] = log(sd(y[,-ncol(y)]/survey$Reach_memory*N))
-  mu_beta[ncol(y)] =  log(mean(survey$HP_total_apvis/survey$Reach_memory*N))
-  sigma_beta[ncol(y)] = log(sd(survey$HP_total_apvis/survey$Reach_memory*N))
+  b= rep(NA,ncol(y))
+  b[1:(ncol(y)-1)] = v_pop_total
+  a=rep(NA,nrow(y))
+  for (i in 1:length(a)) {
+    a[i] = glm(y[i,1:(ncol(y)-1)]~ b[1:(ncol(y)-1)]-1,family = "poisson")$coefficients
+  }
+  b[ncol(y)] = glm(y[,ncol(y)]~a-1,family = "poisson")$coefficients
+  mu_beta = log(b)
   
-  data <- list(I = nrow(y), K = ncol(y), mu_beta = mu_beta, sigma_beta = sigma_beta, y = y)
+  data <- list(I = nrow(y), K = ncol(y), mu_beta = mu_beta, y = y)
   
   fit <- stan(model_code = overdispersed_model, #file='NB_norecall.stan', 
               data = data, 
@@ -862,11 +870,11 @@ getNh_overdispersed = function(survey, v_pop_total,N, warmup,iterations,chains=1
   beta_post <- out $ beta
   beta_hat <- apply(beta_post, 2, mean)
   Nh = exp(beta_hat[length(beta_hat)])
-  return(list(out,Nh))
+  return(Nh)
 }
 
 ################################################################################
-# Functions for the graphs
+####################### Functions for the graphs ###############################
 
 data_analysis = function(Nh_df, Nh_ref_df){
   # Estimation dataframe analysis
@@ -879,6 +887,99 @@ data_analysis = function(Nh_df, Nh_ref_df){
   
   return(df_analysis)
 }
+
+################################################################################
+################# Functions for the network analysis ###########################
+
+net_degree_distribution = function(net, p, nei){
+  # Variables #
+  size = net$size 
+  degree_vect = c()
+  degree_loop = rep(NA, size)
+  for (j in 1:size){
+    degree_loop[j] = length(net[[j]][[1]])
+  }
+    
+  degree_vect = append(degree_vect, degree_loop)
+  degree_df = data.frame(degrees = degree_vect)
+  
+  # Variables of interest #
+  degree_var    = round(var(degree_vect), digits = 2)
+  degree_mean   = round(mean(degree_vect), digits = 2)
+  degree_median = median(degree_vect)
+  degree_max    = max(degree_vect)
+  degree_min    = min(degree_vect)
+  
+  # Graph representation #
+  sub_title = str_c("Mean = ", degree_mean, ", median = ", degree_median, ", var = ", degree_var,", min = ", degree_min, ", max = ", degree_max, ". Small World model with p = ", p, " and nei = ", nei, ".")
+  
+  degree_graph = ggplot(degree_df) +
+    geom_histogram( aes(x = degrees, y = ..count../sum(..count..)), binwidth = 1, color = "black", fill = "grey", alpha = 0.4) +
+    labs(title = "Network degree distribution",
+         subtitle = sub_title,
+         x = "Number of neighbors",
+         y = "Proportion")
+  
+  return(degree_graph)
+}
+
+net_hplinks_distribution = function(net, pop){
+  
+  final_infected_nodes = as.integer(row.names(pop)[pop$hidden_population == 1])
+  links_hp = rep(NA, N)
+  for (j in 1:N){
+    count = 0
+    for (l in net_sw[[j]][[1]]){
+      if (as.logical(sum(l %in% final_infected_nodes))){
+        count = count + 1
+      }
+    }
+    links_hp[j] = count
+  }
+  
+  # Variables of interest #
+  link_var    = round(var(links_hp), digits = 2)
+  link_mean   = round(mean(links_hp), digits = 2)
+  link_median = median(links_hp)
+  link_max    = max(links_hp)
+  link_min    = min(links_hp)
+  
+  sub_title = str_c("Mean = ", link_mean, ", median = ", link_median, ", var = ", link_var,", min = ", link_min, ", max = ", link_max, ". SIR model with beta = 0.1, gamma = 0.067 & 1 hotspot.")
+  links_graph = ggplot() + 
+    geom_line(aes(x = 1:N , y = links_hp)) +
+    scale_color_discrete("Legend") + 
+    labs(title = "Hidden population distribution",
+         subtitle = sub_title,
+         x = "People",
+         y = "Hidden population links")
+  
+  return(links_graph)
+  
+}
+
+net_analysis = function(net, pop, p, nei){
+  # Double plot
+  plot1 =  net_degree_distribution(net, p, nei)
+  plot2 = net_hplinks_distribution(net, pop)
+  plt   = grid.arrange(plot1,plot2)
+  
+  #Variables analysis
+  Global_cluster_coefficent = transitivity(net, type = "global")
+  Mean_distance = mean_distance(net_sw, weights = NULL, directed = F, unconnected = TRUE, details = FALSE)
+  Diameter = diameter(net_sw, directed = F, unconnected = TRUE, weights = NULL)
+  Radius = radius(net_sw, mode = "all")
+  
+  sub_title = str_c("Network parameters: Cluster coefficient = ", round(Global_cluster_coefficent, 2), ", Mean distance = ", round(Mean_distance, 2), ", Diameter = ", Diameter,", Radius = ", Radius) 
+    
+  title <- ggdraw() + 
+    draw_label(sub_title, x = 0.05, fontfamily = "bold", hjust = 0, size = 14)
+    
+  
+  result_graph = plot_grid(title, plt, ncol = 1, rel_heights = c(0.1, 1)
+  )
+  return(result_graph)
+}
+
 
 
 

@@ -9,7 +9,7 @@ t = Sys.time()
 ## Simulation data ##
 #####################
 
-N = 10000                     # Population size
+N = 1000                     # Population size
 v_pop_prob = rep(1/10, 5)     # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
                               # sum(v_pop_prob) < 1. 
 n_pop = length(v_pop_prob)    # Number of subpopulations
@@ -32,7 +32,7 @@ set.seed(seed)
 
 #Graph
 dim = 1      # Graph dimension 
-nei = 75     # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
+nei = 15     # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
              # before applying the randomization.
 p   = 0.1    # Probability of randomize a connection. It is applied to all connections
 
@@ -45,55 +45,42 @@ p   = 0.1    # Probability of randomize a connection. It is applied to all conne
 
 Graph_population_matrix = getData(N, v_pop_prob, hp_prob, dim, nei, p, visibility_factor, memory_factor,sub_memory_factor)
 
-net_sw = Graph_population_matrix[[1]]       # Population´s graph
+net_sw     = Graph_population_matrix[[1]]   # Population´s graph
 Population = Graph_population_matrix[[2]]   # Population
-Mhp_vis = Graph_population_matrix[[3]]      # Population's visibility matrix
+Mhp_vis    = Graph_population_matrix[[3]]   # Population's visibility matrix
 
 # Population number
-v_pop_total = rep(NA, n_pop)
-for (k in 1:n_pop) {
-  v_pop_total[k] = sum(dplyr::select(Population, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
-}
-
+v_pop_total = getV_pop(n_pop, Population)
 
 # Disjoint population #
 
-Population_disjoint =  genPopulation_Disjoint(N,v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
+Population_disjoint =  genPopulation_Disjoint(N, net_sw, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
 
 # Population number (disjoint)
-v_pop_total_disjoint = rep(NA, n_pop)
-for (k in 1:n_pop) {
-  v_pop_total_disjoint[k] = sum(dplyr::select(Population_disjoint, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
-}
-
+v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 
 ################################################################################
 
 ## Auxiliary data for the simulation ##
 
 # Study parameters
-parameters = seq(from = 0, to = 0.5, length.out = 50)
+parameters = seq(from = 0, to = 1, length.out = 1)
 
 #Dataframe to save the data
 simulaciones          = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
-# Variablesreach vector
+# Variables reach vector
 vect_reach    =  Population$reach
-vect_hp_vis   =  Population$hp_survey
+vect_hp       =  Population$hp_total
+vect_hp_vis   =  rep(NA, nrow(Population))
 vect_reach_re =  rep(NA, nrow(Population))
 
 #Number of iterations for the simulation
-b = 100 
+b = 1
 
 lista_simulacion          = list()
 lista_simulacion_disjoint = list()
-
-# Visibility factor estimate
-survey_hp_vf = getSurvey_VF(50, Population, Mhp_vis, memory_factor)
-
-# hp_total vector
-vect_hp_vis  = Population$hp_total
 
 ################################################################################
 
@@ -116,19 +103,22 @@ for (h in 1:b) {
 # Simulation
 
 for (w in 1:length(parameters)) {
-   
   ## Parameter implementation ##
-  
   memory_factor = parameters[w]   
   
   for (j in 1:nrow(Population)) {
-    vect_reach_re[j] =  max(1,round(rtruncnorm(1, a = vect_hp_vis[j] - 0.5, b = 2*vect_reach[j] - vect_hp_vis[j] + 0.5, mean = vect_reach[j], sd = memory_factor*vect_reach[j])))
-
+    
+    vect_hp_vis[j] = round(rtruncnorm(1, a = max(-0.5,  2 * vect_hp[j] - vect_reach[j] + 0.5 ) , b = min(2 * vect_hp[j] + 0.5, vect_reach[j]-0.5), mean = vect_hp[j], sd = memory_factor*vect_hp[j]))
+    vect_reach_re[j] = max(1,round(rtruncnorm(1, a = vect_hp_vis[j] - 0.5, b = 2*vect_reach[j] - vect_hp_vis[j] + 0.5, mean = vect_reach[j], sd = memory_factor*vect_reach[j])))
   }
   
   Population$reach_memory = vect_reach_re
+  Population$hp_survey    = vect_hp_vis
+  
   Population_disjoint$reach_memory = vect_reach_re
+  Population_disjoint$hp_survey    = vect_hp_vis
 
+  
   ##########################################  
   ##   Not disjoint population analysis   ##
   
@@ -239,8 +229,6 @@ for (w in 1:length(parameters)) {
     #sim_disjoint = cbind(sim,Nh_Overdispersed = Nh_Overdispersed)
     #names(sim_disjoint)[dim(sim)[2]] = str_c("Nh_Overdispersed_",l)
     
-    
-    
     lista_sim[[l]] = sim
   }
   simulacion = bind_cols(lista_sim)
@@ -276,7 +264,7 @@ for (w in 1:length(parameters)) {
   lista_sim_disjoint = list()
   
   # Population for the visibility factor (vf) estimate
-  Population_disjoint_vf = cbind(Population_disjoint, reach_hp = Population_vf$reach_hp)
+  Population_disjoint_vf = cbind(Population_disjoint[Population_disjoint$hidden_population == 1,], reach_hp = Population_vf$reach_hp)
   Population_disjoint_vf = cbind(Population_disjoint_vf, reach_hp_memory = Population_vf$reach_hp_memory)
   
   #Iterations
@@ -313,6 +301,7 @@ for (w in 1:length(parameters)) {
     
     #Nh_Teo_disjoint           = getNh_Teo(survey,v_pop_total_disjoint)
     #Nh_Overdispersed_disjoint = getNh_overdispersed(survey, v_pop_total_disjoint,N)
+    
     
     #Dataframe for saving the estimates
     sim_disjoint = data.frame(Nh_real = Nh_real_disjoint)
@@ -380,7 +369,6 @@ write.csv(simulaciones,               # Data frame
           row.names = TRUE )          # Row names: TRUE or FALSE 
 ################################################################################
 
-
 ################################################################################
 # file_name_disjoint = str_c("Simulations_memoryfactor_disjoint_", seed,".csv")
 # write.csv(simulaciones_disjoint,           # Data frame 
@@ -388,9 +376,13 @@ write.csv(simulaciones,               # Data frame
 #           row.names = TRUE )               # Row names: TRUE or FALSE 
 ################################################################################
 
-
 timer = Sys.time() - t
 timer
+
+
+####################### Network analysis #######################################
+###### Links to the hidden population distribution & Degree distribution #######
+net_analysis(net_sw, Population, p, 2*nei)
 
 #################### COMPUTATION TIME ANALYSIS #################################
 # Computation time (N=10000) (office PC) (length(parameters) = 50)
