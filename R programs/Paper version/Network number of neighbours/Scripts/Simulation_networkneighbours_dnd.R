@@ -32,7 +32,7 @@ p   = 0.1   # Probability of randomize a connection. It is applied to all connec
 # AUXILIARY DATA FOR THE SIMULATION
 
 # Study parameters
-parameters = round(seq(from = 10, to = 150, length.out = 50))
+parameters = round(seq(from = 1, to = 50, length.out = 50))
 
 Population_ref = genPopulation(N, v_pop_prob, hp_prob)
 Population_disjoint_ref = genPopulation_Disjoint_basic(N, v_pop_prob, Population_ref$hidden_population)

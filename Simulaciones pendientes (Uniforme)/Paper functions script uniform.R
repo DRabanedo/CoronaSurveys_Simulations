@@ -45,7 +45,7 @@ getHP <- function(n, prob_hp) {
 
 
 # This function assings using a SIR structure the individuals who belong to the hidden population
-gen_SIRpop = function(N, net ,beta, gamma, chosen_nodes, n_iter){
+# gen_SIRpop = function(N, net ,beta, gamma, chosen_nodes, n_iter){
   # SIR method for determination of the hidden population
   
   # beta: infection rate
@@ -429,14 +429,14 @@ getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, s
   net = sample_smallworld(dim, N, nei, p, loops = FALSE, multiple = FALSE)
   
   # SIR generation of the hidden population 
-  infected_people   = round(prob_hp*N)
-  chosen_nodes      = round(seq(1,N,N/n_chosen_nodes))
+  #infected_people   = round(prob_hp*N)
+  #chosen_nodes      = round(seq(1,N,N/n_chosen_nodes))
   
-  hidden_population = gen_SIRpop(N, net ,beta, gamma, chosen_nodes, n_iter)
+  #hidden_population = gen_SIRpop(N, net ,beta, gamma, chosen_nodes, n_iter)
   
   # First we generate the population, then we remplace the apropiate column
   Population = genPopulation(N, prob_vect,prob_hp) # hidden population without SIR
-  Population$hidden_population = hidden_population # hidden population using SIR
+  #Population$hidden_population = hidden_population # hidden population using SIR
   
   n_populations = length(prob_vect)
   # initializes the vectors
@@ -943,9 +943,10 @@ net_hplinks_distribution = function(net, pop){
   link_max    = max(links_hp)
   link_min    = min(links_hp)
   
-  sub_title = str_c("Mean = ", link_mean, ", median = ", link_median, ", var = ", link_var,", min = ", link_min, ", max = ", link_max, ". SIR model with beta = 0.115, gamma = 0.0767, 1 hotspot & 5 iterations. HP = ", sum(pop$hidden_population))
+  sub_title = str_c("Mean = ", link_mean, ", median = ", link_median, ", var = ", link_var,", min = ", link_min, ", max = ", link_max, ". Uniform model with HP = ", sum(pop$hidden_population))
   links_graph = ggplot() + 
-    geom_line(aes(x = 1:N , y = links_hp)) +
+    geom_line(aes(x = 1:N, y = links_hp)) +
+    geom_line(aes(x = 1:N, y = pop$reach)) + 
     scale_color_discrete("Legend") + 
     labs(title = "Hidden population distribution",
          subtitle = sub_title,

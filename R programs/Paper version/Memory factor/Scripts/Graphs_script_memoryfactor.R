@@ -12,7 +12,8 @@ library(stringr)
 
 ######################
 # Data import
-simulation_data = read.csv("C:/Users/David Rabanedo/Documents/Simulations_memoryfactor_207.csv")
+setwd("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Memory factor/Graphs")
+simulation_data = read.csv("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Memory factor/CSV/Simulations_memoryfactor_207.csv")
 
 seed_number = "207"
 getwd()
@@ -214,6 +215,7 @@ dev.off()
 
 graph_data_median = data.frame( data = simulation_data$data)
 
+graph_data_median = cbind(graph_data_median, Nh_real =  simulation_data$Nh_real_1)
 graph_data_median = cbind(graph_data_median, Nh_basic_sum =  Nh_basic_sum_analysis$median)
 #graph_data_median = cbind(graph_data_median, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$median)
 graph_data_median = cbind(graph_data_median, Nh_basic_mean =  Nh_basic_mean_analysis$median)

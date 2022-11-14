@@ -12,9 +12,9 @@ library(stringr)
 ######################
 # Data import
 
-simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_notdisjoint_207.csv")
-simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_disjoint_207.csv")
-  
+simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_notdisjoint_207.csv")
+simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_disjoint_207.csv")
+setwd("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation memory factor")
 seed_number = 207
 
 
@@ -100,16 +100,16 @@ Nh_GNSUM_analysis_disjoint   = data_analysis(Nh_GNSUM_dataframe_disjoint, Nh_rea
 
 graph_data_abserror = data.frame( data = simulation_data$data)
 
-graph_data_abserror = cbind(graph_data_abserror, Nh_PIMLE =  Nh_PIMLE_analysis$abs_error)
-#graph_data_abserror = cbind(graph_data_abserror, Nh_PIMLEvis =  Nh_PIMLEvis_analysis$abs_error)
+graph_data_abserror = cbind(graph_data_abserror, Nh_PIMLE =  Nh_PIMLE_analysis$abserror)
+#graph_data_abserror = cbind(graph_data_abserror, Nh_PIMLEvis =  Nh_PIMLEvis_analysis$abserror)
 
-graph_data_abserror = cbind(graph_data_abserror, Nh_MLE =  Nh_MLE_analysis$abs_error)
-#graph_data_abserror = cbind(graph_data_abserror, Nh_MLEvis =  Nh_MLEvis_analysis$abs_error)
+graph_data_abserror = cbind(graph_data_abserror, Nh_MLE =  Nh_MLE_analysis$abserror)
+#graph_data_abserror = cbind(graph_data_abserror, Nh_MLEvis =  Nh_MLEvis_analysis$abserror)
 
-graph_data_abserror = cbind(graph_data_abserror, Nh_MoS =  Nh_MoS_analysis$abs_error)
-#graph_data_abserror = cbind(graph_data_abserror, Nh_MoSvis =  Nh_MoSvis_analysis$abs_error)
+graph_data_abserror = cbind(graph_data_abserror, Nh_MoS =  Nh_MoS_analysis$abserror)
+#graph_data_abserror = cbind(graph_data_abserror, Nh_MoSvis =  Nh_MoSvis_analysis$abserror)
 
-graph_data_abserror = cbind(graph_data_abserror, Nh_GNSUM  =  Nh_GNSUM_analysis$abs_error)
+graph_data_abserror = cbind(graph_data_abserror, Nh_GNSUM  =  Nh_GNSUM_analysis$abserror)
 
 
 # Graph creation
@@ -147,16 +147,16 @@ dev.off()
 
 graph_data_abserror_disjoint = data.frame( data = simulation_data_disjoint$data)
 
-graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_PIMLE_disjoint =  Nh_PIMLE_analysis_disjoint$abs_error)
-#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_PIMLEvis_disjoint =  Nh_PIMLEvis_analysis_disjoint$abs_error)
+graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_PIMLE_disjoint =  Nh_PIMLE_analysis_disjoint$abserror)
+#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_PIMLEvis_disjoint =  Nh_PIMLEvis_analysis_disjoint$abserror)
 
-graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLE_disjoint =  Nh_MLE_analysis_disjoint$abs_error)
-#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLEvis_disjoint =  Nh_MLEvis_analysis_disjoint$abs_error)
+graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLE_disjoint =  Nh_MLE_analysis_disjoint$abserror)
+#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLEvis_disjoint =  Nh_MLEvis_analysis_disjoint$abserror)
 
-graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MoS_disjoint =  Nh_MoS_analysis_disjoint$abs_error)
-#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MoSvis_disjoint =  Nh_MoSvis_analysis_disjoint$abs_error)
+graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MoS_disjoint =  Nh_MoS_analysis_disjoint$abserror)
+#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MoSvis_disjoint =  Nh_MoSvis_analysis_disjoint$abserror)
 
-graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_GNSUM_disjoint  =  Nh_GNSUM_analysis_disjoint$abs_error)
+graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_GNSUM_disjoint  =  Nh_GNSUM_analysis_disjoint$abserror)
 
 
 # Graph creation
@@ -435,6 +435,8 @@ dev.off()
 
 graph_data_bias_disjoint = data.frame(data = simulation_data_disjoint$data)
 
+graph_data_bias_disjoint = cbind(graph_data_bias_disjoint, Nh_real =  simulation_data_disjoint$Nh_real_1)
+
 graph_data_bias_disjoint = cbind(graph_data_bias_disjoint, Nh_PIMLE_disjoint =  Nh_PIMLE_analysis_disjoint$bias)
 #graph_data_bias_disjoint = cbind(graph_data_bias_disjoint, Nh_PIMLEvis_disjoint =  Nh_PIMLEvis_analysis_disjoint$bias)
 
@@ -456,6 +458,8 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_bias_disjoint) + 
+  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  
   #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
@@ -479,7 +483,7 @@ dev.off()
 
 # Dataframe creation
 
-graph_data_bias_total = cbind(graph_data_bias, graph_data_bias_disjoint[2:ncol(graph_data_bias_disjoint)])
+graph_data_bias_total = cbind(graph_data_bias, graph_data_bias_disjoint[3:ncol(graph_data_bias_disjoint)])
 
 
 # Graph creation
@@ -491,6 +495,8 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_bias_total) +
+  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
@@ -665,11 +671,13 @@ dev.off()
 
 
 ################################################################################
-#### Meadian analysis ####
+#### Median analysis ####
 
 # Dataframe creation
 
 graph_data_median = data.frame( data = simulation_data$data)
+
+graph_data_median = cbind(graph_data_median, Nh_real =  simulation_data$Nh_real_1)
 
 graph_data_median = cbind(graph_data_median, Nh_PIMLE =  Nh_PIMLE_analysis$median)
 #graph_data_median = cbind(graph_data_median, Nh_PIMLEvis =  Nh_PIMLEvis_analysis$median)
@@ -693,6 +701,8 @@ png(filename = plot_name,
 
 
 ggplot(graph_data_median) + 
+  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
@@ -708,7 +718,7 @@ ggplot(graph_data_median) +
   labs(title = "Simulations based on the subpopulation memory factor",
        subtitle = sub_title,
        x = "Subpopulation memory factor",
-       y = "Standard deviation")
+       y = "Median")
 
 dev.off()
 
@@ -718,6 +728,8 @@ dev.off()
 
 
 graph_data_median_disjoint = data.frame(data = simulation_data_disjoint$data)
+
+graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_real =  simulation_data_disjoint$Nh_real_1)
 
 graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_PIMLE_disjoint =  Nh_PIMLE_analysis_disjoint$median)
 #graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_PIMLEvis_disjoint =  Nh_PIMLEvis_analysis_disjoint$median)
@@ -740,6 +752,8 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_median_disjoint) + 
+  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  
   #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
@@ -755,7 +769,7 @@ ggplot(graph_data_median_disjoint) +
   labs(title = "Simulations based on the subpopulation memory factor",
        subtitle = sub_title,
        x = "Subpopulation memory factor",
-       y = "Standard deviation")
+       y = "Median")
 
 dev.off()
 
@@ -763,7 +777,7 @@ dev.off()
 
 #Dataframe creation
 
-graph_data_median_total = cbind(graph_data_median, graph_data_median_disjoint[2:ncol(graph_data_median_disjoint)])
+graph_data_median_total = cbind(graph_data_median, graph_data_median_disjoint[3:ncol(graph_data_median_disjoint)])
 
 
 # Graph creation
@@ -775,6 +789,8 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_median_total) +
+  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  
   #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
@@ -800,7 +816,7 @@ ggplot(graph_data_median_total) +
   labs(title = "Simulations based on the subpopulation memory factor",
        subtitle = sub_title,
        x = "Subpopulation memory factor",
-       y = "Standard error")
+       y = "Median")
 
 dev.off()
 
