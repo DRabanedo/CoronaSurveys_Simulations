@@ -45,7 +45,7 @@ getHP <- function(n, prob_hp) {
 
 
 # This function assings using a SIR structure the individuals who belong to the hidden population
-# gen_SIRpop = function(N, net ,beta, gamma, chosen_nodes, n_iter){
+ gen_SIRpop = function(N, net ,beta, gamma, chosen_nodes, n_iter){
   # SIR method for determination of the hidden population
   
   # beta: infection rate
