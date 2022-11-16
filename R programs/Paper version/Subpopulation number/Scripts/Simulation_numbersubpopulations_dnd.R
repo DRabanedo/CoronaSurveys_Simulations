@@ -161,15 +161,24 @@ for (w in 1:length(parameters)) {
   subpop_vect = round(N * v_pop_prob)
   rownames(population_disjoint_buc) <- c(1:N)
   
+  # Variables for the loop
+  sampling_vect = 1:n
+  gen_subpop = rep(0, n)
+  n_vect = 1:n
+  
   for (k in 1:length(subpop_vect)) {
-    # Index belonging to the subpopulation 
-    subpop_ind = sample(1:N, subpop_vect[k], replace = FALSE)
+    # Index belonging to the subpopulation k
+    subpop_ind = sample(sampling_vect, subpop_vect[k], replace = FALSE)
     
-    # Index transformed into a 0 & 1 vector
-    subpop = rep(NA, N)
-    for (i in 1:N){
+    # Index transformed into a 0 & 1 vector to represent the populations
+    subpop = rep(NA, n)
+    
+    for (i in 1:n){
       if (as.logical(sum(i %in% subpop_ind))){
         subpop[i] = 1
+        
+        # for k in 1:n appends 1 if a population is assigned
+        gen_subpop[i] = 1
       }
       else{
         subpop[i] = 0
@@ -177,10 +186,15 @@ for (w in 1:length(parameters)) {
       
     }
     
-    #Dataframe append
+    # Creates a vector with the people who does not have a population 
+    sampling_vect = n_vect[gen_subpop == 0]
+    
+    #Dataframe append population k
     population_disjoint_buc = cbind(population_disjoint_buc, Subpopulation = subpop)
     names(population_disjoint_buc)[dim(population_disjoint_buc)[2]] = str_c("subpopulation_",k)
   }
+
+  
   
   population_disjoint_buc = cbind(population_disjoint_buc, reach = Population$reach)
   population_disjoint_buc = cbind(population_disjoint_buc, reach_memory = Population$reach_memory)

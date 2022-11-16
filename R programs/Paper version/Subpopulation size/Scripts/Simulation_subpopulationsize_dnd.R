@@ -29,47 +29,45 @@ p   = 0.1  # Probability of randomize a connection. It is applied to all connect
 
 
 # Study parameters
-parameters = list(rep(1/10, 9), c(rep(1/20, 8),11/20), c(rep(1/20, 7),6/20,6/20), c(rep(1/20, 4), rep(4/20, 3)), c(rep(1/20, 3), rep(4/20, 4)),  
-                  c(rep(1/40, 7),4/20, 4/20, 8/20), c(rep(1/20, 4), 2/20, 3/20, 4/20, 5/20), c(1/20, 2/20, 2/20, 3/20, 4/20, 5/20))
+parameters = list(rep(0.1,5), c(0.2, 0.1, 0.05, 0.05, 0.05, 0.05), c(0.4, rep(0.025, 4)), rep(0.05, 10),
+                  c(0.15, 0.1, 0.05, 0.2), c(0.15, 0.125, 0.1, 0.075, 0.05), rep(0.05, 5), c(0.5, 0.025, 0.025, 0.025, 0.025),
+                  c(rep(0.02,10), rep(0.04, 5), 0.08, 0.08, 0.16))
 
 ################################################################################
 
 ## Populations ##
+
 # Not disjoint population #
 
 Graph_population_matrix = getData(N, v_pop_prob, hp_prob, dim, nei, p, visibility_factor, memory_factor,sub_memory_factor)
 
-net_sw = Graph_population_matrix[[1]]       # Population´s graph
-Population = Graph_population_matrix[[2]]   # Population
-Mhp_vis = Graph_population_matrix[[3]]      # Population's visibility matrix
+net_sw = Graph_population_matrix[[1]]      # Population´s graph
+Population = Graph_population_matrix[[2]]  # Population
+Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
-v_pop_total = rep(NA, n_pop)
-for (k in 1:n_pop) {
-  v_pop_total[k] = sum(dplyr::select(Population, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
-}
+# Population number
+v_pop_total = getV_pop(n_pop, Population)
 
 # Disjoint population #
 
-Population_disjoint =  genPopulation_Disjoint(N,v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
+Population_disjoint =  genPopulation_Disjoint(N, net_sw, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
 
-v_pop_total_disjoint = rep(NA, n_pop)
-for (k in 1:n_pop) {
-  v_pop_total_disjoint[k] = sum(dplyr::select(Population_disjoint, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
-}
+# Population number (disjoint)
+v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 
 ################################################################################
 
 ## Auxiliar simulation data ##
 
-# Number of simulations
-b = 100 
+#Dataframe to save the data
+simulaciones          = data.frame(data = parameters)
+simulaciones_disjoint = data.frame(data = parameters)
 
-# Variable creation
-lista_simulacion = list()
-lista_sim = list()
+#Number of iterations for the simulation
+b = 100
 
+lista_simulacion          = list()
 lista_simulacion_disjoint = list()
-lista_sim_disjoint = list()
 
 
 ################################################################################
@@ -349,7 +347,7 @@ for (w in 1:length(parameters)) {
   lista_sim_disjoint  = list()
   
   # Population for the visibility factor (vf) estimate
-  Population_disjoint_vf = cbind(Population_disjoint, reach_hp = Population_vf$reach_hp)
+  Population_disjoint_vf = cbind(Population_disjoint[Population_disjoint$hidden_population == 1,], reach_hp = Population_vf$reach_hp)
   Population_disjoint_vf = cbind(Population_disjoint_vf, reach_hp_memory = Population_vf$reach_hp_memory)
   
   #Iterations
@@ -451,6 +449,16 @@ write.csv(simulaciones,                    # Data frame
 
 timer = Sys.time() - t
 timer
+
+####################### Network analysis #######################################
+###### Links to the hidden population distribution & Degree distribution #######
+plot_name = str_c("Network_subpopulationsize_dnd_", seed, ".png")
+
+png(filename = plot_name,
+    width = 1000, height = 1000)
+net_analysis(net_sw, Population, p, 2*nei)
+dev.off()
+
 
 #################### COMPUTATION TIME ANALYSIS #############################
 # Computation time (N=10000) (office PC)

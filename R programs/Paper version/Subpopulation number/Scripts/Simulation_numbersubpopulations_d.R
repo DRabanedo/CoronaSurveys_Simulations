@@ -23,7 +23,7 @@ set.seed(seed)
 #Graph
 dim = 1    # Graph dimension 
 nei = 18   # Number of neighbours that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
-           # before applying the randomization.
+# before applying the randomization.
 p   = 0.1  # Probability of randomize a connection. It is applied to all connections
 
 
@@ -41,13 +41,6 @@ Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 # Population number
 v_pop_total = getV_pop(n_pop, Population)
 
-# Disjoint population #
-
-Population_disjoint =  genPopulation_Disjoint(N, net_sw, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
-
-# Population number (disjoint)
-v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
-
 
 ################################################################################
 
@@ -58,17 +51,13 @@ parameters = round(seq(from = 1, to = 20, length.out = 10))
 
 #Dataframe to save the data
 simulaciones          = data.frame(data = parameters)
-simulaciones_disjoint = data.frame(data = parameters)
 
 #Number of simulations
-b = 5
+b = 100
 
 #Variable creation
 lista_simulacion = list()
 lista_sim = list()
-
-lista_simulacion_disjoint = list()
-lista_sim_disjoint = list()
 
 ################################################################################
 ## Surveys ##
@@ -90,8 +79,8 @@ for (h in 1:b) {
 
 # Simulation 
 for (w in 1:length(parameters)) {
-  n_pob = parameters[w]
-  v_pop_prob = c(0.25, rep(0.75/n_pob, n_pob))
+  n_pop = parameters[w]
+  v_pop_prob = c( rep(0.1, n_pop))
   
   population_buc = data.frame(hidden_population = Population$hidden_population)
   
@@ -153,84 +142,6 @@ for (w in 1:length(parameters)) {
   
   Population = population_buc
   
-  
-  # Disjoint population #
-  
-  population_disjoint_buc = data.frame(hidden_population = Population_disjoint$hidden_population)
-  
-  subpop_vect = round(N * v_pop_prob)
-  rownames(population_disjoint_buc) <- c(1:N)
-  
-  # Variables for the loop
-  sampling_vect = 1:n
-  gen_subpop = rep(0, n)
-  n_vect = 1:n
-  
-  for (k in 1:length(subpop_vect)) {
-    # Index belonging to the subpopulation k
-    subpop_ind = sample(sampling_vect, subpop_vect[k], replace = FALSE)
-    
-    # Index transformed into a 0 & 1 vector to represent the populations
-    subpop = rep(NA, n)
-    
-    for (i in 1:n){
-      if (as.logical(sum(i %in% subpop_ind))){
-        subpop[i] = 1
-        
-        # for k in 1:n appends 1 if a population is assigned
-        gen_subpop[i] = 1
-      }
-      else{
-        subpop[i] = 0
-      }
-      
-    }
-    
-    # Creates a vector with the people who does not have a population 
-    sampling_vect = n_vect[gen_subpop == 0]
-    
-    #Dataframe append population k
-    population_disjoint_buc = cbind(population_disjoint_buc, Subpopulation = subpop)
-    names(population_disjoint_buc)[dim(population_disjoint_buc)[2]] = str_c("subpopulation_",k)
-  }
-  
-  population_disjoint_buc = cbind(population_disjoint_buc, reach = Population$reach)
-  population_disjoint_buc = cbind(population_disjoint_buc, reach_memory = Population$reach_memory)
-  population_disjoint_buc = cbind(population_disjoint_buc, hp_total = Population$hp_total) 
-  population_disjoint_buc = cbind(population_disjoint_buc, hp_survey = Population$hp_survey)
-  
-  for(j in 1:length(v_pop_prob)){
-    v_1 = rep(NA,N)
-    for(i in 1:N) {
-      vis_pob = sum(dplyr::select(population_disjoint_buc[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
-      vis_yij = sum(population_disjoint_buc[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(population_disjoint_buc[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
-      # Visibility of population j by i, applying a normal in order to represent the real visibility
-      
-      v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_memory_factor*vis_pob)))
-    }
-    
-    population_disjoint_buc = cbind(population_disjoint_buc,Subpoblacion_total = v_1)
-    names(population_disjoint_buc)[dim(population_disjoint_buc)[2]] = str_c("kp_reach_",j)
-  }
-  
-  ind1 = 1:N
-  i_hp_vis = rep(NA,N)
-  for (i in 1:length(v_pop_prob)) {
-    for (j in ind1){
-      ind2 = dplyr::select(population_disjoint_buc, starts_with("subpop") & ends_with(as.character(i)))[,1] != 0
-      i_hp_vis[j] = round(rtruncnorm(1, a = -0.5, b =  2*sum(Mhp_vis[ind2,j]) + 0.5, mean = sum(Mhp_vis[ind2,j]), sd = sum(Mhp_vis[ind2,j])*sub_memory_factor)) 
-    }
-    population_disjoint_buc = cbind(population_disjoint_buc, Subpoblacion_total = i_hp_vis)
-    names(population_disjoint_buc)[dim(population_disjoint_buc)[2]] = str_c("kp_alters_",i)
-  }
-  
-  Population_disjoint = population_disjoint_buc
-  
-  # Population number (disjoint)
-  v_pop_total_disjoint = rep(NA, n_pop)
-  for (k in 1:n_pop) {
-    v_pop_total_disjoint[k] = sum(dplyr::select(Population_disjoint, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
-  }
   
   ###########################
   ## Not disjoint analysis ##
