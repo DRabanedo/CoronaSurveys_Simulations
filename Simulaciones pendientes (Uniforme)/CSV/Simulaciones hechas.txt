@@ -4,9 +4,9 @@ Networks subpopulationsmemory factor 207, 2022, 2023 (2024,2025)
 
 Simulations_memory factor 207, 2022, 2023
 
-Simulation_networkneighbours_dnd 207
+Simulation_networkneighbours_dnd 207, 2022
 
 
 ** Simulaciones en proceso **
 
-Simulation_networkneighbours_dnd 2022
+Simulation_networkneighbours_dnd 2023
