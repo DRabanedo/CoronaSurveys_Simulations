@@ -123,6 +123,7 @@ for (w in 1:length(parameters)) {
     names(Population)[dim(Population)[2]] = str_c("kp_alters_",i)
   }
   
+  
   # Disjoint #
   Population_disjoint = dplyr::select(Population_disjoint, -starts_with("kp_reach") & -starts_with("kp_alters"))
   
@@ -151,6 +152,19 @@ for (w in 1:length(parameters)) {
     names(Population_disjoint)[dim(Population_disjoint)[2]] = str_c("kp_alters_",i)
   }
   
+  ## Disjoint & not Disjoint ##
+  # Hidden population memory factor #
+  memory_factor = sub_memory_factor 
+  vect_reach    = Population$reach
+  vect_hp       = Population$hidden_population
+  vect_hp_vis   = rep(NA, N)
+  
+  for (j in 1:nrow(Population)) {
+    vect_hp_vis[j] = round(rtruncnorm(1, a = max(-0.5,  2 * vect_hp[j] - vect_reach[j] + 0.5 ) , b = min(2 * vect_hp[j] + 0.5, vect_reach[j]-0.5), mean = vect_hp[j], sd = memory_factor*vect_hp[j]))
+    }
+
+  Population$hp_survey    = vect_hp_vis
+  Population_disjoint$hp_survey    = vect_hp_vis
   
   ##########################################  
   ##   Not disjoint population analysis   ##
