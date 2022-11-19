@@ -12,10 +12,10 @@ library(stringr)
 ######################
 # Data import
 
-simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_notdisjoint_207.csv")
-simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_disjoint_207.csv")
+simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_notdisjoint_2023.csv")
+simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation memory factor/CSV/Simulation_subpopulationmemoryfactor_disjoint_2023.csv")
 setwd("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation memory factor")
-seed_number = 207
+seed_number = 2023
 
 
 ##################
