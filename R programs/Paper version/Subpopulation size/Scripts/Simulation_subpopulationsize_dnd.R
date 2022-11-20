@@ -442,7 +442,7 @@ write.csv(simulaciones,                 # Data frame
 
 ################################################################################
 file_name_disjoint = str_c("Simulations_subpopulationsize_disjoint_", seed,".csv")
-write.csv(simulaciones,                    # Data frame
+write.csv(simulaciones_disjoint,                    # Data frame
           file = file_name_disjoint,       # CSV name
           row.names = FALSE )              # Row names: TRUE or FALSE
 ################################################################################

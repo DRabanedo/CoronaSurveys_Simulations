@@ -11,11 +11,12 @@ library(stringr)
 
 ######################
 # Data import
+setwd("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation size/Graphs")
 
-simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Subpopulation size/CSV/Simulation_subpopulationsize_notdisjoint_207.csv")
-simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Subpopulation size/CSV/Simulation_subpopulationsize_disjoint_207.csv")
+simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation size/CSV/Simulations_subpopulationsize_disjoint_2023.csv")
+simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation size/CSV/Simulations_subpopulationsize_notdisjoint_2023.csv")
 
-seed_number = 207
+seed_number = 2023
 
 
 ################################################################################
@@ -107,16 +108,16 @@ Nh_GNSUM_analysis_disjoint   = data_analysis(Nh_GNSUM_dataframe_disjoint, Nh_rea
 
 graph_data_abserror = data.frame( data = simulation_data$data)
 
-graph_data_abserror = cbind(graph_data_abserror, Nh_PIMLE =  Nh_PIMLE_analysis$abs_error)
-#graph_data_abserror = cbind(graph_data_abserror, Nh_PIMLEvis =  Nh_PIMLEvis_analysis$abs_error)
+graph_data_abserror = cbind(graph_data_abserror, Nh_PIMLE =  Nh_PIMLE_analysis$abserror)
+#graph_data_abserror = cbind(graph_data_abserror, Nh_PIMLEvis =  Nh_PIMLEvis_analysis$abserror)
 
-graph_data_abserror = cbind(graph_data_abserror, Nh_MLE =  Nh_MLE_analysis$abs_error)
-#graph_data_abserror = cbind(graph_data_abserror, Nh_MLEvis =  Nh_MLEvis_analysis$abs_error)
+graph_data_abserror = cbind(graph_data_abserror, Nh_MLE =  Nh_MLE_analysis$abserror)
+#graph_data_abserror = cbind(graph_data_abserror, Nh_MLEvis =  Nh_MLEvis_analysis$abserror)
 
-graph_data_abserror = cbind(graph_data_abserror, Nh_MoS =  Nh_MoS_analysis$abs_error)
-#graph_data_abserror = cbind(graph_data_abserror, Nh_MoSvis =  Nh_MoSvis_analysis$abs_error)
+graph_data_abserror = cbind(graph_data_abserror, Nh_MoS =  Nh_MoS_analysis$abserror)
+#graph_data_abserror = cbind(graph_data_abserror, Nh_MoSvis =  Nh_MoSvis_analysis$abserror)
 
-graph_data_abserror = cbind(graph_data_abserror, Nh_GNSUM  =  Nh_GNSUM_analysis$abs_error)
+graph_data_abserror = cbind(graph_data_abserror, Nh_GNSUM  =  Nh_GNSUM_analysis$abserror)
 
 
 # Graph creation
@@ -128,16 +129,16 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_abserror) +
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -155,16 +156,16 @@ dev.off()
 
 graph_data_abserror_disjoint = data.frame( data = simulation_data_disjoint$data)
 
-graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_PIMLE_disjoint =  Nh_PIMLE_analysis_disjoint$abs_error)
-#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_PIMLEvis_disjoint =  Nh_PIMLEvis_analysis_disjoint$abs_error)
+graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_PIMLE_disjoint =  Nh_PIMLE_analysis_disjoint$abserror)
+#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_PIMLEvis_disjoint =  Nh_PIMLEvis_analysis_disjoint$abserror)
 
-graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLE_disjoint =  Nh_MLE_analysis_disjoint$abs_error)
-#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLEvis_disjoint =  Nh_MLEvis_analysis_disjoint$abs_error)
+graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLE_disjoint =  Nh_MLE_analysis_disjoint$abserror)
+#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MLEvis_disjoint =  Nh_MLEvis_analysis_disjoint$abserror)
 
-graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MoS_disjoint =  Nh_MoS_analysis_disjoint$abs_error)
-#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MoSvis_disjoint =  Nh_MoSvis_analysis_disjoint$abs_error)
+graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MoS_disjoint =  Nh_MoS_analysis_disjoint$abserror)
+#graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_MoSvis_disjoint =  Nh_MoSvis_analysis_disjoint$abserror)
 
-graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_GNSUM_disjoint  =  Nh_GNSUM_analysis_disjoint$abs_error)
+graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_GNSUM_disjoint  =  Nh_GNSUM_analysis_disjoint$abserror)
 
 
 # Graph creation
@@ -176,16 +177,16 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_abserror_disjoint) +
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -212,27 +213,27 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_abserror_total) +
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
@@ -273,16 +274,16 @@ png(filename = plot_name,
 
 ggplot(graph_data_mse) + 
   
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -319,16 +320,16 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_mse_disjoint) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -354,27 +355,27 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_mse_total) +
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
@@ -418,18 +419,18 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_bias) + 
-  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  geom_point(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -469,18 +470,18 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_bias_disjoint) + 
-  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  geom_point(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -506,29 +507,29 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_bias_total) +
-  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  geom_point(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
@@ -569,16 +570,16 @@ png(filename = plot_name,
 
 
 ggplot(graph_data_sd) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -616,16 +617,16 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_sd_disjoint) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -651,27 +652,27 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_sd_total) +
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
@@ -710,16 +711,16 @@ png(filename = plot_name,
 
 
 ggplot(graph_data_median) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -758,16 +759,16 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_median_disjoint) + 
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
@@ -793,27 +794,27 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_median_total) +
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis, col = "Nh_PIMLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE, col = "Nh_PIMLE")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
+  geom_point(aes(x = data, y =  Nh_MLE, col = "Nh_MLE")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis, col = "Nh_MLEvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
+  geom_point(aes(x = data, y =  Nh_MoS, col = "Nh_MoS")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis, col = "Nh_MoSvis")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
-  #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
-  geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MLE_disjoint, col = "Nh_MLE_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MLEvis_disjoint, col = "Nh_MLEvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
-  #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
+  #geom_point(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_point(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
   scale_color_discrete("Legend") + 
   labs(title = "Simulations based on the subpopulation size",
        subtitle = sub_title,
