@@ -23,7 +23,7 @@ set.seed(seed)
 #Graph
 dim = 1    # Graph dimension 
 nei = 18   # Number of neighbours that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
-           # before applying the randomization.
+# before applying the randomization.
 p   = 0.1  # Probability of randomize a connection. It is applied to all connections
 
 
@@ -61,7 +61,7 @@ simulaciones          = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
 #Number of simulations
-b = 5
+b = 100
 
 #Variable creation
 lista_simulacion = list()
@@ -91,7 +91,7 @@ for (h in 1:b) {
 # Simulation 
 for (w in 1:length(parameters)) {
   n_pob = parameters[w]
-  v_pop_prob = c(0.25, rep(0.75/n_pob, n_pob))
+  v_pop_prob = rep(0.75/n_pob, n_pob)
   
   population_buc = data.frame(hidden_population = Population$hidden_population)
   
@@ -162,18 +162,18 @@ for (w in 1:length(parameters)) {
   rownames(population_disjoint_buc) <- c(1:N)
   
   # Variables for the loop
-  sampling_vect = 1:n
-  gen_subpop = rep(0, n)
-  n_vect = 1:n
+  sampling_vect = 1:N
+  gen_subpop = rep(0, N)
+  n_vect = 1:N
   
   for (k in 1:length(subpop_vect)) {
     # Index belonging to the subpopulation k
     subpop_ind = sample(sampling_vect, subpop_vect[k], replace = FALSE)
     
     # Index transformed into a 0 & 1 vector to represent the populations
-    subpop = rep(NA, n)
+    subpop = rep(NA, N)
     
-    for (i in 1:n){
+    for (i in 1:N){
       if (as.logical(sum(i %in% subpop_ind))){
         subpop[i] = 1
         
