@@ -20,10 +20,9 @@ visibility_factor = 1      # Visibility factor (Binomial's probability)
 seed = 207                 # Seed
 set.seed(seed)
 
-
 #Graph
 dim = 1    # Graph dimension 
-nei = 75   # Number of neighbours that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
+nei = 18   # Number of neighbours that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
            # before applying the randomization.
 p   = 0.1  # Probability of randomize a connection. It is applied to all connections
 
@@ -45,15 +44,11 @@ net_sw = Graph_population_matrix[[1]]      # Population´s graph
 Population = Graph_population_matrix[[2]]  # Population
 Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
-# Population number
-v_pop_total = getV_pop(n_pop, Population)
 
 # Disjoint population #
 
 Population_disjoint =  genPopulation_Disjoint(N, net_sw, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
 
-# Population number (disjoint)
-v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 
 ################################################################################
 
@@ -149,17 +144,14 @@ for (w in 1:length(parameters)) {
     names(population_buc)[dim(population_buc)[2]] = str_c("kp_alters_",i)
   }
   
-  # Population number
-  v_pop_total = rep(NA, n_pop)
-  for (k in 1:n_pop) {
-    v_pop_total[k] = sum(dplyr::select(population_buc, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
-  }
-  
   Population = population_buc
+  
+  # Subpopulation number
+  v_pop_total = getV_pop(n_pop, Population)
+  
   
   
   # Disjoint population loop #
-  
   population_disjoint_buc = data.frame(hidden_population = Population_disjoint$hidden_population)
   
   subpop_vect = round(N * v_pop_prob)
@@ -217,10 +209,7 @@ for (w in 1:length(parameters)) {
   Population_disjoint = population_disjoint_buc
   
   # Population number (disjoint)
-  v_pop_total_disjoint = rep(NA, n_pop)
-  for (k in 1:n_pop) {
-    v_pop_total_disjoint[k] = sum(dplyr::select(Population_disjoint, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
-  }
+  v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
     
   
   #Variable reset

@@ -99,8 +99,8 @@ for (w in 1:length(parameters)) {
   for(j in 1:length(v_pop_prob)){
     v_1 = rep(NA,N)
     for(i in 1:N) {
-      vis_pob = sum(dplyr::select(Population[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
-      vis_yij = sum(Population[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(Population[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
+      vis_pob = sum(dplyr::select(Population[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(str_c("_", as.character(j) )))) 
+      vis_yij = sum(Population[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(Population[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(str_c("_", as.character(j) )))[,1]),]) 
       # Visibility of population j by i, applying a normal in order to represent the real visibility
       
       v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_memory_factor*vis_pob)))
@@ -114,7 +114,7 @@ for (w in 1:length(parameters)) {
   i_hp_vis = rep(NA,N)
   for (i in 1:(length(v_pop_prob))) {
     for (j in ind1){
-      ind2 = dplyr::select(Population, starts_with("subpop") & ends_with(as.character(i)))[,1] != 0
+      ind2 = dplyr::select(Population, starts_with("subpop") & ends_with(str_c("_", as.character(i) )))[,1] != 0
       i_hp_vis[j] = round(rtruncnorm(1, a = -0.5, b =  2*sum(Mhp_vis[ind2,j]) + 0.5, mean = sum(Mhp_vis[ind2,j]), sd = sum(Mhp_vis[ind2,j])*sub_memory_factor)) 
     }
     Population = cbind(Population, Subpoblacion_total = i_hp_vis)
@@ -125,7 +125,7 @@ for (w in 1:length(parameters)) {
   #Vector with the number of people in each subpopulation
   v_pop_total = rep(NA, n_pop)
   for (k in 1:n_pop) {
-    v_pop_total[k] =  sum(dplyr::select(Population, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
+    v_pop_total[k] =  sum(dplyr::select(Population, starts_with("subpop") & ends_with(str_c("_", as.character(k) )) ) ) # N_k
   }
   
   
@@ -141,8 +141,8 @@ for (w in 1:length(parameters)) {
   for(j in 1:length(v_pop_prob)){
     v_1 = rep(NA,N)
     for(i in 1:N) {
-      vis_pob = sum(dplyr::select(Population_disjoint[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
-      vis_yij = sum(Population_disjoint[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(Population_disjoint[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
+      vis_pob = sum(dplyr::select(Population_disjoint[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(str_c("_", as.character(j) )))) 
+      vis_yij = sum(Population_disjoint[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(Population_disjoint[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(str_c("_", as.character(j) )))[,1]),]) 
       # Visibility of population j by i, applying a normal in order to represent the real visibility
       
       v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_memory_factor*vis_pob)))
@@ -156,7 +156,7 @@ for (w in 1:length(parameters)) {
   i_hp_vis = rep(NA,N)
   for (i in 1:(length(v_pop_prob))) {
     for (j in ind1){
-      ind2 = dplyr::select(Population_disjoint, starts_with("subpop") & ends_with(as.character(i)))[,1] != 0
+      ind2 = dplyr::select(Population_disjoint, starts_with("subpop") & ends_with(str_c("_", as.character(i) )))[,1] != 0
       i_hp_vis[j] = round(rtruncnorm(1, a = -0.5, b =  2*sum(Mhp_vis[ind2,j]) + 0.5, mean = sum(Mhp_vis[ind2,j]), sd = sum(Mhp_vis[ind2,j])*sub_memory_factor)) 
     }
     Population_disjoint = cbind(Population_disjoint, Subpoblacion_total = i_hp_vis)
@@ -167,7 +167,7 @@ for (w in 1:length(parameters)) {
   #Vector with the number of people in each subpopulation
   v_pop_total_disjoint = rep(NA, n_pop)
   for (k in 1:n_pop) {
-    v_pop_total_disjoint[k] = sum(dplyr::select(Population_disjoint, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
+    v_pop_total_disjoint[k] = sum(dplyr::select(Population_disjoint, starts_with("subpop") & ends_with(str_c("_", as.character(k) )) ) ) # N_k
   }
   
   
