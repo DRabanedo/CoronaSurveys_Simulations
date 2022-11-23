@@ -1,7 +1,5 @@
 ** Simulaciones hechas **
 
-Networks subpopulationsmemory factor 207, 2022, 2023 (2024,2025)
-
 Simulations_memory factor 207, 2022, 2023
 
 Simulation_networkneighbours_dnd 207, 2022, 2023
@@ -11,4 +9,11 @@ Simulation_networkprobability_dnd 207, 2022, 2023
 
 ** Simulaciones en proceso **
 
-Simulation_numbersubpopulations_dnd 
+
+
+** Simulaciones pendientes ** 
+
+Simulation_numbersubpopulations_dnd (hay que repetir estas)
+Simulation_subpopulationsmemoryfactor_dnd
+Networks subpopulationsmemory factor 
+Simulation_numbersubpopulations_d
