@@ -61,7 +61,7 @@ simulaciones          = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
 
 #Number of simulations
-b = 5
+b = 100
 
 #Variable creation
 lista_simulacion = list()
@@ -91,7 +91,7 @@ for (h in 1:b) {
 # Simulation 
 for (w in 1:length(parameters)) {
   n_pob = parameters[w]
-  v_pop_prob = c(0.25, rep(0.75/n_pob, n_pob))
+  v_pop_prob = c(rep(0.75/n_pob, n_pob))
   
   population_buc = data.frame(hidden_population = Population$hidden_population)
   

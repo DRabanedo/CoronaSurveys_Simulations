@@ -11,11 +11,12 @@ library(stringr)
 
 ######################
 # Data import
+setwd("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Network probability")
 
-simulation_data =  read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Network probability/CSV/Simulation_networkprobability_notdisjoint_2024.csv")
-simulation_data_disjoint =  read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Disjoint and no disjoint ensemble/Simulations and csv analysis/Network probability/CSV/Simulation_networkprobability_disjoint_2024.csv")
+simulation_data =  read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Network probability/Simulation_networkprobability_notdisjoint_2022.csv")
+simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Network probability/Simulation_networkprobability_disjoint_2022.csv")
 
-seed_number = "2024"
+seed_number = "2022"
 getwd()
 
 simulation_data$data = simulation_data$data
@@ -578,7 +579,7 @@ dev.off()
 
 graph_data_bias_disjoint = data.frame(data = simulation_data_disjoint$data)
 
-graph_data_bias_disjoint = cbind(graph_data_bias_disjoint, Nh_Real =  simulation_data_disjoint$Nh_real_1_disjoint)
+graph_data_bias_disjoint = cbind(graph_data_bias_disjoint, Nh_Real =  simulation_data_disjoint$Nh_real_1)
 
 graph_data_bias_disjoint = cbind(graph_data_bias_disjoint, Nh_basic_sum_disjoint =  Nh_basic_sum_analysis_disjoint$bias)
 #graph_data_bias_disjoint = cbind(graph_data_bias_disjoint, Nh_basicvis_sum_disjoint =  Nh_basicvis_sum_analysis_disjoint$bias)
@@ -899,7 +900,7 @@ dev.off()
 
 ################################################################################
 
-#### Standard deviation analysis ####
+#### Median ####
 
 #Dataframe creation
 
@@ -910,6 +911,8 @@ dev.off()
 
 
 graph_data_median = data.frame(data = simulation_data$data)
+
+graph_data_median = cbind(graph_data_median, Nh_Real =  simulation_data$Nh_real_1)
 
 graph_data_median = cbind(graph_data_median, Nh_basic_sum =  Nh_basic_sum_analysis$median)
 #  graph_data_median = cbind(graph_data_median, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$median)
@@ -934,6 +937,8 @@ png(filename = plot_name,
 
 
 ggplot(graph_data_median) + 
+  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
   
@@ -956,7 +961,7 @@ ggplot(graph_data_median) +
   labs(title = "Simulations based on the network probability",
        subtitle = sub_title,
        x = "Network probability",
-       y = "Standard deviation")
+       y = "Median")
 
 dev.off()
 
@@ -967,6 +972,8 @@ dev.off()
 #Dataframe creation
 
 graph_data_median_disjoint = data.frame(data = simulation_data_disjoint$data)
+
+graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_Real =  simulation_data_disjoint$Nh_real_1)
 
 graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_basic_sum_disjoint =  Nh_basic_sum_analysis_disjoint$median)
 #  graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_basicvis_sum_disjoint =  Nh_basicvis_sum_analysis_disjoint$median)
@@ -994,7 +1001,10 @@ sub_title = str_c("Disjoint populations plot, seed ", seed_number)
 png(filename = plot_name,
     width = 1000, height = 600)
 
-ggplot(graph_data_median_disjoint) + 
+ggplot(graph_data_median_disjoint) +
+  
+  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  
   geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
   
@@ -1016,7 +1026,7 @@ ggplot(graph_data_median_disjoint) +
   labs(title = "Simulations based on the network probability",
        subtitle = sub_title,
        x = "Network probability",
-       y = "Standard deviation")
+       y = "Median")
 
 
 dev.off()
@@ -1028,7 +1038,7 @@ dev.off()
 
 # Dataframe creation
 
-graph_data_median_total = cbind(graph_data_median, graph_data_median_disjoint[2:ncol(graph_data_median_disjoint)])
+graph_data_median_total = cbind(graph_data_median, graph_data_median_disjoint[3:ncol(graph_data_median_disjoint)])
 
 
 # Graph creation
@@ -1078,7 +1088,7 @@ ggplot(graph_data_median_total) +
   labs(title = "Simulations based on the network probability",
        subtitle = sub_title,
        x = "Network probability",
-       y = "Standard deviation")
+       y = "Median")
 
 
 dev.off()

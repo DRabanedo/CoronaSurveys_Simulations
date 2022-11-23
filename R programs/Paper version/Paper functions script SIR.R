@@ -245,8 +245,8 @@ genPopulation_Disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor,
   for(j in 1:(length(prob_vect))){
     v_1 = rep(NA,N)
     for(i in 1:N) {
-      vis_pob = sum(dplyr::select(population_buc[net[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
-      vis_yij = sum(population_buc[net[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(population_buc[net[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
+      vis_pob = sum(dplyr::select(population_buc[net[[i]][[1]],],starts_with("subpop") & ends_with( str_c("_", as.character(j) )))) 
+      vis_yij = sum(population_buc[net[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(population_buc[net[[i]][[1]],],starts_with("subpop") & ends_with( str_c("_", as.character(j) )))[,1]),]) 
       
       # Visibility of population j by i, applying a normal in order to represent the real visibility
       v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_mem_factor*vis_pob)))
@@ -260,7 +260,7 @@ genPopulation_Disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor,
   i_hp_vis = rep(NA,N)
   for (i in 1:(length(prob_vect))) {
     for (j in ind1){
-      ind2 = dplyr::select(population_buc, starts_with("subpop") & ends_with(as.character(i)))[,1] != 0
+      ind2 = dplyr::select(population_buc, starts_with("subpop") & ends_with( str_c("_", as.character(i) )))[,1] != 0
       i_hp_vis[j] = round(rtruncnorm(1, a = -0.5, b =  2*sum(M_vis[ind2,j]) + 0.5, mean = sum(M_vis[ind2,j]), sd = sum(M_vis[ind2,j])*sub_mem_factor)) 
     }
     population_buc = cbind(population_buc, Subpoblacion_total = i_hp_vis)
@@ -347,7 +347,7 @@ getV_pop = function(n_pop, Population){
   
   v_pop_total = rep(NA, n_pop)
   for (k in 1:n_pop) {
-    v_pop_total[k] = sum(dplyr::select(Population, starts_with("subpop") & ends_with(as.character(k)) ) ) # N_k
+    v_pop_total[k] = sum(dplyr::select(Population, starts_with("subpop") & ends_with( str_c("_", as.character(k) )) ) ) # N_k
   }
   return(v_pop_total)
 }
@@ -479,8 +479,8 @@ getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, s
   for(j in 1:length(prob_vect)){
     v_1 = rep(NA,N)
     for(i in 1:N) {
-      vis_pob = sum(dplyr::select(Population[net[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))) 
-      vis_yij = sum(Population[net[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(Population[net[[i]][[1]],],starts_with("subpop") & ends_with(as.character(j)))[,1]),]) 
+      vis_pob = sum(dplyr::select(Population[net[[i]][[1]],],starts_with("subpop") & ends_with( str_c("_", as.character(j) )))) 
+      vis_yij = sum(Population[net[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(Population[net[[i]][[1]],],starts_with("subpop") & ends_with( str_c("_", as.character(j) )))[,1]),]) 
       # Visibility of population j by i, applying a normal in order to represent the real visibility
       
       v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_mem_factor*vis_pob)))
@@ -494,7 +494,7 @@ getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, s
   i_hp_vis = rep(NA,N)
   for (i in 1:length(prob_vect)) {
     for (j in ind1){
-      ind2 = dplyr::select(Population, starts_with("subpop") & ends_with(as.character(i)))[,1] != 0
+      ind2 = dplyr::select(Population, starts_with("subpop") & ends_with( str_c("_", as.character(i) )))[,1] != 0
       i_hp_vis[j] = round(rtruncnorm(1, a = -0.5, b =  2*sum(Mhp_vis[ind2,j]) + 0.5, mean = sum(Mhp_vis[ind2,j]), sd = sum(Mhp_vis[ind2,j])*sub_mem_factor)) 
     }
     Population = cbind(Population, Subpoblacion_total = i_hp_vis)
