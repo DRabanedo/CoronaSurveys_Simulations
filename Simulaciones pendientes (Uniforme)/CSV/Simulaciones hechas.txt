@@ -11,4 +11,4 @@ Simulation_networkprobability_dnd 207, 2022, 2023
 
 ** Simulaciones en proceso **
 
-Simulation_numbersubpopulations_dnd 207, 2022, 2023
+Simulation_numbersubpopulations_dnd 

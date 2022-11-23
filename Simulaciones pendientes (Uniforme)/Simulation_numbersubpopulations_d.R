@@ -91,7 +91,7 @@ for (h in 1:b) {
 # Simulation 
 for (w in 1:length(parameters)) {
   n_pop = parameters[w]
-  v_pop_prob = rep(0.75/n_pop, n_pop)
+  v_pop_prob = c(rep(0.1, n_pop))
   
   population_buc = data.frame(hidden_population = Population$hidden_population)
   
@@ -148,86 +148,10 @@ for (w in 1:length(parameters)) {
     names(population_buc)[dim(population_buc)[2]] = str_c("kp_alters_",i)
   }
   
-  Population = population_buc
-  
   # Population number
+  Population = population_buc
   v_pop_total = getV_pop(n_pop, Population)
-  
-  
-  # Disjoint population #
-  
-  population_disjoint_buc = data.frame(hidden_population = Population_disjoint$hidden_population)
-  
-  subpop_vect = round(N * v_pop_prob)
-  rownames(population_disjoint_buc) <- c(1:N)
-  
-  # Variables for the loop
-  sampling_vect = 1:N
-  gen_subpop = rep(0, N)
-  n_vect = 1:N
-  
-  for (k in 1:length(subpop_vect)) {
-    # Index belonging to the subpopulation k
-    subpop_ind = sample(sampling_vect, subpop_vect[k], replace = FALSE)
-    
-    # Index transformed into a 0 & 1 vector to represent the populations
-    subpop = rep(NA, N)
-    
-    for (i in 1:N){
-      if (as.logical(sum(i %in% subpop_ind))){
-        subpop[i] = 1
-        
-        # for k in 1:n appends 1 if a population is assigned
-        gen_subpop[i] = 1
-      }
-      else{
-        subpop[i] = 0
-      }
-      
-    }
-    
-    # Creates a vector with the people who does not have a population 
-    sampling_vect = n_vect[gen_subpop == 0]
-    
-    #Dataframe append population k
-    population_disjoint_buc = cbind(population_disjoint_buc, Subpopulation = subpop)
-    names(population_disjoint_buc)[dim(population_disjoint_buc)[2]] = str_c("subpopulation_",k)
-  }
-  
-  population_disjoint_buc = cbind(population_disjoint_buc, reach = Population$reach)
-  population_disjoint_buc = cbind(population_disjoint_buc, reach_memory = Population$reach_memory)
-  population_disjoint_buc = cbind(population_disjoint_buc, hp_total = Population$hp_total) 
-  population_disjoint_buc = cbind(population_disjoint_buc, hp_survey = Population$hp_survey)
-  
-  for(j in 1:length(v_pop_prob)){
-    v_1 = rep(NA,N)
-    for(i in 1:N) {
-      vis_pob = sum(dplyr::select(population_disjoint_buc[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(str_c("_", as.character(j) )))) 
-      vis_yij = sum(population_disjoint_buc[net_sw[[i]][[1]],]["hidden_population"][as.logical(dplyr::select(population_disjoint_buc[net_sw[[i]][[1]],],starts_with("subpop") & ends_with(str_c("_", as.character(j) )))[,1]),]) 
-      # Visibility of population j by i, applying a normal in order to represent the real visibility
-      
-      v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_memory_factor*vis_pob)))
-    }
-    
-    population_disjoint_buc = cbind(population_disjoint_buc,Subpoblacion_total = v_1)
-    names(population_disjoint_buc)[dim(population_disjoint_buc)[2]] = str_c("kp_reach_",j)
-  }
-  
-  ind1 = 1:N
-  i_hp_vis = rep(NA,N)
-  for (i in 1:length(v_pop_prob)) {
-    for (j in ind1){
-      ind2 = dplyr::select(population_disjoint_buc, starts_with("subpop") & ends_with(str_c("_", as.character(i) )))[,1] != 0
-      i_hp_vis[j] = round(rtruncnorm(1, a = -0.5, b =  2*sum(Mhp_vis[ind2,j]) + 0.5, mean = sum(Mhp_vis[ind2,j]), sd = sum(Mhp_vis[ind2,j])*sub_memory_factor)) 
-    }
-    population_disjoint_buc = cbind(population_disjoint_buc, Subpoblacion_total = i_hp_vis)
-    names(population_disjoint_buc)[dim(population_disjoint_buc)[2]] = str_c("kp_alters_",i)
-  }
-  
-  Population_disjoint = population_disjoint_buc
-  
-  # Population number (disjoint)
-  v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
+
   
   ###########################
   ## Not disjoint analysis ##
@@ -327,112 +251,6 @@ for (w in 1:length(parameters)) {
   }
   simulacion = bind_cols(lista_sim)
   lista_simulacion[[w]] = simulacion
-  
-  
-  
-  ######################################
-  ## Disjoint subpopulations analysis ##
-  
-  ## Variable reset ##
-  
-  Nh_real_disjoint =  rep(NA,b) 
-  
-  #Nh_basic_sum_disjoint = rep(NA,b) 
-  #Nh_basicvis_sum_disjoint = rep(NA,b) 
-  #Nh_basic_mean_disjoint = rep(NA,b) 
-  #Nh_basicvis_mean_disjoint = rep(NA,b)                                      
-  
-  Nh_PIMLE_disjoint = rep(NA,b) 
-  #Nh_PIMLEvis_disjoint = rep(NA,b) 
-  
-  Nh_MLE_disjoint = rep(NA,b) 
-  #Nh_MLEvis_disjoint = rep(NA,b) 
-  
-  Nh_MoS_disjoint = rep(NA,b) 
-  #Nh_MoSvis_disjoint = rep(NA,b) 
-  
-  Nh_GNSUM_disjoint = rep(NA,b) 
-  
-  lista_sim_disjoint = list()
-  
-  # Population for the visibility factor (vf) estimate
-  Population_disjoint_vf = cbind(Population_disjoint[Population_disjoint$hidden_population == 1,], reach_hp = Population_vf$reach_hp)
-  Population_disjoint_vf = cbind(Population_disjoint_vf, reach_hp_memory = Population_vf$reach_hp_memory)
-  
-  #Iterations
-  for (l in 1:b) {
-    
-    #We choose the same survey for each l in order to calculate the bias and variance
-    #Surveys
-    survey = Population_disjoint[list_surveys[[l]],]
-    survey_hp = Population_disjoint[Population_disjoint$hidden_population == 1,][list_surveys_hp[[l]],]
-    survey_hp_vf = Population_vf[list_surveys_hp[[l]],]
-    
-    #Visibility factor estimate
-    vf_estimate = VF_Estimate(survey_hp_vf)
-    
-    #Hidden population estimates
-    Nh_real_disjoint = sum(Population_disjoint$hidden_population) 
-    
-    #Nh_basic_sum_disjoint     = getNh_basic_sum(survey,N) 
-    #Nh_basicvis_sum_disjoint  = getNh_basicvis_sum(survey,N,vf_estimate) 
-    #Nh_basic_mean_disjoint    = getNh_basic_mean(survey,N) 
-    #Nh_basicvis_mean_disjoint = getNh_basicvis_mean(survey,N,vf_estimate) 
-    
-    Nh_PIMLE_disjoint     = getNh_PIMLE(survey, v_pop_total_disjoint, N)
-    #Nh_PIMLEvis_disjoint = getNh_PIMLEvis(survey, v_pop_total_disjoint, N, vf_estimate)
-    
-    Nh_MLE_disjoint      = getNh_MLE(survey, v_pop_total_disjoint)
-    #Nh_MLEvis_disjoint  = getNh_MLEvis(survey, v_pop_total_disjoint, vf_estimate)
-    
-    Nh_MoS_disjoint      = getNh_MoS(survey, v_pop_total_disjoint, N)
-    #Nh_MoSvis_disjoint  = getNh_MoSvis(survey, v_pop_total_disjoint, N, vf_estimate)
-    
-    Nh_GNSUM_disjoint    = getNh_GNSUM(survey, survey_hp, v_pop_total_disjoint, N)
-    
-    
-    #Dataframe for saving the estimates
-    sim_disjoint = data.frame(Nh_real = Nh_real_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_real_",l)
-    
-    #sim_disjoint = cbind(sim_disjoint,Nh_basic_sum = Nh_basic_sum_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basic_sum_",l)
-    
-    #sim_disjoint = cbind(sim_disjoint,Nh_basicvis_sum = Nh_basicvis_sum_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basicvis_sum_",l)
-    
-    #sim_disjoint = cbind(sim_disjoint,Nh_basic_mean = Nh_basic_mean_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basic_mean_",l)
-    
-    #sim_disjoint = cbind(sim_disjoint,Nh_basicvis_mean = Nh_basicvis_mean_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_basicvis_mean_",l)
-    
-    sim_disjoint = cbind(sim_disjoint,Nh_PIMLE = Nh_PIMLE_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_PIMLE_",l)
-    
-    #sim_disjoint = cbind(sim_disjoint,Nh_PIMLEvis = Nh_PIMLEvis_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_PIMLEvis_",l)
-    
-    sim_disjoint = cbind(sim_disjoint,Nh_MLE = Nh_MLE_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLE_",l)
-    
-    #sim_disjoint = cbind(sim_disjoint,Nh_MLEvis = Nh_MLEvis_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MLEvis_",l)
-    
-    sim_disjoint = cbind(sim_disjoint,Nh_MoS = Nh_MoS_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MoS_",l)
-    
-    #sim_disjoint = cbind(sim_disjoint,Nh_MoSvis = Nh_MoSvis_disjoint)
-    #names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_MoSvis_",l)
-    
-    sim_disjoint = cbind(sim_disjoint, Nh_GNSUM = Nh_GNSUM_disjoint)
-    names(sim_disjoint)[dim(sim_disjoint)[2]] = str_c("Nh_GNSUM_",l)
-    
-    lista_sim_disjoint[[l]] = sim_disjoint
-  }
-  simulacion_disjoint = bind_cols(lista_sim_disjoint)
-  lista_simulacion_disjoint[[w]] = simulacion_disjoint
-  
   print(w)
   
 }
@@ -440,26 +258,15 @@ for (w in 1:length(parameters)) {
 simulaciones = bind_rows(lista_simulacion)
 simulaciones = cbind(simulaciones, data = parameters)
 
-simulaciones_disjoint = bind_rows(lista_simulacion_disjoint)
-simulaciones_disjoint = cbind(simulaciones_disjoint, data = parameters)
 
 
 
 
 ################################################################################
-file_name = str_c("Simulation_subpopulationnumber_notdisjoint", seed,".csv")
+file_name = str_c("Simulation_subpopulationnumber_notdisjoint_d_", seed,".csv")
 write.csv(simulaciones,                      # Data frame
           file = file_name,                  # CSV name
           row.names = FALSE )                 # row names: TRUE or FALSE 
-
-################################################################################
-
-
-################################################################################
-file_name_disjoint = str_c("Simulation_subpopulationnumber_disjoint", seed,".csv")
-write.csv(simulaciones_disjoint,              # Data frame
-          file = file_name_disjoint,          # CSV name
-          row.names = FALSE )                  # row names: TRUE or FALSE 
 
 ################################################################################
 
@@ -468,7 +275,7 @@ timer
 
 ####################### Network analysis #######################################
 ###### Links to the hidden population distribution & Degree distribution #######
-plot_name = str_c("Network_numbersubpopulations_", seed, ".png")
+plot_name = str_c("Network_numbersubpopulations_d_", seed, ".png")
 
 png(filename = plot_name,
     width = 1000, height = 1000)
