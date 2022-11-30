@@ -10,14 +10,14 @@ Simulation_numbersubpopulations_dnd 207, ¿2022?
 
 Simulation_numbersubpopulations_d 207, 2022, 2023
 
-Simulation_subpopulationsmemoryfactor_dnd 207, 2022,
+Simulation_subpopulationsmemoryfactor_dnd 207, 2022, 2023
+
+Simulation_subpopulationsize_dnd 207
  
 
 ** Simulaciones en proceso **
 
-Simulation_subpopulationsmemoryfactor_dnd 2023
-
-Simulation_subpopulationsize_dnd 207, 2022, 2023
+Simulation_subpopulationsize_dnd 2022, 2023
 
 ** Simulaciones pendientes ** 
 
