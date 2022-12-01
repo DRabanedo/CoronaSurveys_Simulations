@@ -38,15 +38,10 @@ net_sw = Graph_population_matrix[[1]]      # Population´s graph
 Population = Graph_population_matrix[[2]]  # Population
 Mhp_vis = Graph_population_matrix[[3]]     # Population's visibility matrix
 
-# Population number
-v_pop_total = getV_pop(n_pop, Population)
 
 # Disjoint population #
 
 Population_disjoint =  genPopulation_Disjoint(N, net_sw, v_pop_prob, Population$hidden_population, Mhp_vis, sub_memory_factor, Population$reach, Population$reach_memory, Population$hp_total, Population$hp_survey)
-
-# Population number (disjoint)
-v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 
 
 ################################################################################
@@ -54,7 +49,7 @@ v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 # Auxiliary simulation data
 
 # Study parameters
-parameters = round(seq(from = 1, to = 20, length.out = 10))
+parameters = round(seq(from = 1, to = 20, length.out = 20))
 
 #Dataframe to save the data
 simulaciones          = data.frame(data = parameters)
@@ -163,16 +158,16 @@ for (w in 1:length(parameters)) {
   rownames(population_disjoint_buc) <- c(1:N)
   
   # Variables for the loop
-  sampling_vect = 1:n
-  gen_subpop = rep(0, n)
-  n_vect = 1:n
+  sampling_vect = 1:N
+  gen_subpop = rep(0, N)
+  n_vect = 1:N
   
   for (k in 1:length(subpop_vect)) {
     # Index belonging to the subpopulation k
     subpop_ind = sample(sampling_vect, subpop_vect[k], replace = FALSE)
     
     # Index transformed into a 0 & 1 vector to represent the populations
-    subpop = rep(NA, n)
+    subpop = rep(NA, N)
     
     for (i in 1:n){
       if (as.logical(sum(i %in% subpop_ind))){
@@ -446,7 +441,6 @@ simulaciones = cbind(simulaciones, data = parameters)
 
 simulaciones_disjoint = bind_rows(lista_simulacion_disjoint)
 simulaciones_disjoint = cbind(simulaciones_disjoint, data = parameters)
-
 
 
 
