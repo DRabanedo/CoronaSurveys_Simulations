@@ -1,6 +1,7 @@
-#################### Network probability graphs scripts ########################
+################## Number of neighbors graphs scripts ##########################
 
 # This script generates the graphs automatically as a png archive #
+
 
 ###### Packages ######
 
@@ -11,36 +12,38 @@ library(stringr)
 
 ######################
 # Data import
-setwd("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Network probability")
 
-simulation_data =  read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Network probability/Simulation_networkprobability_notdisjoint_2023.csv")
-simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Network probability/Simulation_networkprobability_disjoint_2023.csv")
+setwd("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Number of neighbors")
+simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Number of neighbors/Simulation_networkneighbours_disjoint207.csv")
+simulation_data =  read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Number of neighbors/Simulation_networkneighbours_notdisjoint207.csv")
 
-seed_number = "2023"
+seed_number = "207"
 getwd()
 
-simulation_data$data = simulation_data$data
-simulation_data_disjoint$data = simulation_data_disjoint$data
+simulation_data$data = simulation_data$data*2
+simulation_data_disjoint$data = simulation_data_disjoint$data*2
 
-##################
+################################################################################
+################################################################################
+
 ## Not disjoint ##
 
 Nh_real_dataframe = dplyr::select(simulation_data, starts_with("Nh_real"))
 
-Nh_basic_sum_dataframe     = dplyr::select(simulation_data, starts_with("Nh_basic_sum"))
+Nh_basic_sum_dataframe = dplyr::select(simulation_data, starts_with("Nh_basic_sum"))
 #Nh_basicvis_sum_dataframe = dplyr::select(simulation_data, starts_with("Nh_basicvis_sum"))
 
-Nh_basic_mean_dataframe     = dplyr::select(simulation_data, starts_with("Nh_basic_mean"))
+Nh_basic_mean_dataframe = dplyr::select(simulation_data, starts_with("Nh_basic_mean"))
 #Nh_basicvis_mean_dataframe = dplyr::select(simulation_data, starts_with("Nh_basicvis_mean"))
 
-Nh_PIMLE_dataframe     = dplyr::select(simulation_data, starts_with("Nh_PIMLE_"))
+Nh_PIMLE_dataframe    = dplyr::select(simulation_data, starts_with("Nh_PIMLE_"))
 #Nh_PIMLEvis_dataframe = dplyr::select(simulation_data, starts_with("Nh_PIMLEvis_"))
 
-Nh_MLE_dataframe       = dplyr::select(simulation_data, starts_with("Nh_MLE_"))
-#Nh_MLEvis_dataframe   = dplyr::select(simulation_data, starts_with("Nh_MLEvis_"))
+Nh_MLE_dataframe     = dplyr::select(simulation_data, starts_with("Nh_MLE_"))
+#Nh_MLEvis_dataframe  = dplyr::select(simulation_data, starts_with("Nh_MLEvis_"))
 
-Nh_MoS_dataframe       = dplyr::select(simulation_data, starts_with("Nh_MoS_"))
-#Nh_MoSvis_dataframe   = dplyr::select(simulation_data, starts_with("Nh_MoSvis_"))
+Nh_MoS_dataframe     = dplyr::select(simulation_data, starts_with("Nh_MoS_"))
+#Nh_MoSvis_dataframe  = dplyr::select(simulation_data, starts_with("Nh_MoSvis_"))
 
 Nh_GNSUM_dataframe   = dplyr::select(simulation_data, starts_with("Nh_GNSUM"))
 
@@ -67,7 +70,9 @@ Nh_MoS_analysis     = data_analysis(Nh_MoS_dataframe, Nh_real_dataframe)
 Nh_GNSUM_analysis  = data_analysis(Nh_GNSUM_dataframe, Nh_real_dataframe)
 
 
-##############
+################################################################################
+################################################################################
+
 ## Disjoint ##
 
 
@@ -112,8 +117,7 @@ Nh_MoS_analysis_disjoint     = data_analysis(Nh_MoS_dataframe_disjoint, Nh_real_
 
 Nh_GNSUM_analysis_disjoint   = data_analysis(Nh_GNSUM_dataframe_disjoint, Nh_real_dataframe)
 
-
-
+################################################################################
 ################################################################################
 
 ####### Graph representation #######
@@ -148,7 +152,7 @@ graph_data_abserror = cbind(graph_data_abserror, Nh_GNSUM  =  Nh_GNSUM_analysis$
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_notdisjoint_abserror.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_notdisjoint_abserror.png")
 sub_title = str_c("Not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -175,9 +179,9 @@ ggplot(graph_data_abserror) +
   
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Mean Absolute Error")
 
 dev.off()
@@ -210,7 +214,7 @@ graph_data_abserror_disjoint = cbind(graph_data_abserror_disjoint, Nh_GNSUM_disj
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_disjoint_abserror.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_disjoint_abserror.png")
 sub_title = str_c("Disjoint populations plot, seed ", seed_number)
 
 
@@ -220,7 +224,7 @@ png(filename = plot_name,
 ggplot(graph_data_abserror_disjoint) + 
   geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
-  
+
   geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
   
@@ -234,12 +238,12 @@ ggplot(graph_data_abserror_disjoint) +
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
-  
+
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
-       y = "Mean Absolute Error")
+      x = "Number of neighbours",
+      y = "Mean Absolute Error")
 
 
 dev.off()
@@ -256,7 +260,7 @@ graph_data_abserror_total = cbind(graph_data_abserror, graph_data_abserror_disjo
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_total_abserror.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_total_abserror.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -265,13 +269,13 @@ png(filename = plot_name,
 ggplot(graph_data_abserror_total) + 
   geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
-  
+
   geom_line(aes(x = data, y =  Nh_basic_mean_disjoint, col = "Nh_basic_mean_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_mean_disjoint, col = "Nh_basicvis_mean_disjoint")) +
-  
+
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
-  
+
   geom_line(aes(x = data, y =  Nh_basic_mean, col = "Nh_basic_mean")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_mean, col = "Nh_basicvis_mean")) +
   
@@ -296,12 +300,12 @@ ggplot(graph_data_abserror_total) +
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
-  
+
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
-       y = "Mean Absolute Error")
+           x = "Number of neighbours",
+           y = "Mean Absolute Error")
 
 
 dev.off()
@@ -339,12 +343,11 @@ graph_data_mse = cbind(graph_data_mse, Nh_GNSUM  =  Nh_GNSUM_analysis$mse)
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_notdisjoint_mse.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_notdisjoint_mse.png")
 sub_title = str_c("Not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
     width = 1000, height = 600)
-
 
 ggplot(graph_data_mse) + 
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
@@ -364,11 +367,10 @@ ggplot(graph_data_mse) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
-  
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Mean of Squares Error")
 
 dev.off()
@@ -401,7 +403,7 @@ graph_data_mse_disjoint = cbind(graph_data_mse_disjoint, Nh_GNSUM_disjoint  =  N
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_disjoint_mse.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_disjoint_mse.png")
 sub_title = str_c("Disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -426,9 +428,9 @@ ggplot(graph_data_mse_disjoint) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Mean of Squares Error")
 
 
@@ -436,17 +438,16 @@ dev.off()
 
 
 
-
 ## Not disjoint & disjoint ##
 
-#Dataframe creation
+# Dataframe creation
 
 graph_data_mse_total = cbind(graph_data_mse, graph_data_mse_disjoint[2:ncol(graph_data_mse_disjoint)])
 
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_total_mse.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_total_mse.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -488,15 +489,13 @@ ggplot(graph_data_mse_total) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Mean of Squares Error")
 
 
 dev.off()
-
-
 
 
 
@@ -507,7 +506,7 @@ dev.off()
 
 ## Not disjoint ##
 
-#Dataframe creation
+# Dataframe creation
 
 graph_data_bias = data.frame(data = simulation_data$data)
 
@@ -532,9 +531,7 @@ graph_data_bias = cbind(graph_data_bias, Nh_GNSUM  =  Nh_GNSUM_analysis$bias)
 
 
 
-# Graph creation
-
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_notdisjoint_bias.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_notdisjoint_bias.png")
 sub_title = str_c("Not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -559,13 +556,12 @@ ggplot(graph_data_bias) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
-  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_Real")) +
-  
+  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_Real")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Hidden population estimate")
 
 dev.off()
@@ -575,7 +571,6 @@ dev.off()
 ## Disjoint ##
 
 #Dataframe creation
-
 
 graph_data_bias_disjoint = data.frame(data = simulation_data_disjoint$data)
 
@@ -601,7 +596,7 @@ graph_data_bias_disjoint = cbind(graph_data_bias_disjoint, Nh_GNSUM_disjoint  = 
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_disjoint_bias.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_disjoint_bias.png")
 sub_title = str_c("Disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -625,12 +620,12 @@ ggplot(graph_data_bias_disjoint) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
   
-  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_Real")) +
+  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_Real")) + 
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Hidden population estimate")
 
 
@@ -641,14 +636,14 @@ dev.off()
 
 ## Not disjoint & disjoint ##
 
-#Dataframe creation
+# Dataframe creation
 
 graph_data_bias_total = cbind(graph_data_bias, graph_data_bias_disjoint[3:ncol(graph_data_bias_disjoint)])
 
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_total_bias.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_total_bias.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -678,6 +673,8 @@ ggplot(graph_data_bias_total) +
   
   geom_line(aes(x = data, y =  Nh_GNSUM, col = "Nh_GNSUM")) + 
   
+  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_Real")) + 
+  
   #geom_line(aes(x = data, y =  Nh_PIMLEvis_disjoint, col = "Nh_PIMLEvis_disjoint")) + 
   geom_line(aes(x = data, y =  Nh_PIMLE_disjoint, col = "Nh_PIMLE_disjoint")) + 
   
@@ -687,14 +684,14 @@ ggplot(graph_data_bias_total) +
   geom_line(aes(x = data, y =  Nh_MoS_disjoint, col = "Nh_MoS_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_MoSvis_disjoint, col = "Nh_MoSvis_disjoint")) + 
   
-  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) + 
+  geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +  
   
-  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_Real")) + 
+  
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Hidden population estimate")
 
 
@@ -737,7 +734,7 @@ graph_data_sd = cbind(graph_data_sd, Nh_GNSUM  =  Nh_GNSUM_analysis$sd)
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_notdisjoint_sd.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_notdisjoint_sd.png")
 sub_title = str_c("Not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -764,9 +761,9 @@ ggplot(graph_data_sd) +
   
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Standard deviation")
 
 dev.off()
@@ -797,10 +794,9 @@ graph_data_sd_disjoint = cbind(graph_data_sd_disjoint, Nh_MoS_disjoint =  Nh_MoS
 graph_data_sd_disjoint = cbind(graph_data_sd_disjoint, Nh_GNSUM_disjoint  =  Nh_GNSUM_analysis_disjoint$sd)
 
 
-
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_disjoint_sd.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_disjoint_sd.png")
 sub_title = str_c("Disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -825,9 +821,9 @@ ggplot(graph_data_sd_disjoint) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Standard deviation")
 
 
@@ -838,14 +834,14 @@ dev.off()
 
 ## Not disjoint & disjoint ##
 
-# Dataframe creation
+#Dataframe creation
 
 graph_data_sd_total = cbind(graph_data_sd, graph_data_sd_disjoint[2:ncol(graph_data_sd_disjoint)])
 
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_total_sd.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_total_sd.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -887,9 +883,9 @@ ggplot(graph_data_sd_total) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Standard deviation")
 
 
@@ -900,7 +896,7 @@ dev.off()
 
 ################################################################################
 
-#### Median ####
+#### Median analysis ####
 
 #Dataframe creation
 
@@ -909,10 +905,9 @@ dev.off()
 
 #Dataframe creation
 
-
 graph_data_median = data.frame(data = simulation_data$data)
 
-graph_data_median = cbind(graph_data_median, Nh_real =  simulation_data$Nh_real_1)
+graph_data_median = cbind(graph_data_median, Nh_Real =  simulation_data$Nh_real_1)
 
 graph_data_median = cbind(graph_data_median, Nh_basic_sum =  Nh_basic_sum_analysis$median)
 #  graph_data_median = cbind(graph_data_median, Nh_basicvis_sum =  Nh_basicvis_sum_analysis$median)
@@ -929,7 +924,7 @@ graph_data_median = cbind(graph_data_median, Nh_GNSUM  =  Nh_GNSUM_analysis$medi
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_notdisjoint_median.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_notdisjoint_mediana.png")
 sub_title = str_c("Not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
@@ -937,7 +932,8 @@ png(filename = plot_name,
 
 
 ggplot(graph_data_median) + 
-  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  
+  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) + 
   
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
@@ -958,9 +954,9 @@ ggplot(graph_data_median) +
   
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Median")
 
 dev.off()
@@ -973,7 +969,7 @@ dev.off()
 
 graph_data_median_disjoint = data.frame(data = simulation_data_disjoint$data)
 
-graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_real =  simulation_data_disjoint$Nh_real_1)
+graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_Real =  simulation_data_disjoint$Nh_real_1)
 
 graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_basic_sum_disjoint =  Nh_basic_sum_analysis_disjoint$median)
 #  graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_basicvis_sum_disjoint =  Nh_basicvis_sum_analysis_disjoint$median)
@@ -995,14 +991,13 @@ graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_GNSUM_disjoint
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_disjoint_median.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_disjoint_mediana.png")
 sub_title = str_c("Disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
     width = 1000, height = 600)
 
-ggplot(graph_data_median_disjoint) +
-  
+ggplot(graph_data_median_disjoint) + 
   geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
   geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
@@ -1023,9 +1018,9 @@ ggplot(graph_data_median_disjoint) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Median")
 
 
@@ -1043,13 +1038,14 @@ graph_data_median_total = cbind(graph_data_median, graph_data_median_disjoint[3:
 
 # Graph creation
 
-plot_name = str_c("Simulation_probabilitynetwork_", seed_number, "_total_median.png")
+plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_total_mediana.png")
 sub_title = str_c("Disjoint & not disjoint populations plot, seed ", seed_number)
 
 png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_median_total) + 
+  
   geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
   
   geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
@@ -1087,14 +1083,10 @@ ggplot(graph_data_median_total) +
   geom_line(aes(x = data, y =  Nh_GNSUM_disjoint, col = "Nh_GNSUM_disjoint")) +   
   
   scale_color_discrete("Legend") + 
-  labs(title = "Simulations based on the network probability",
+  labs(title = "Simulations based on the number of neighbours",
        subtitle = sub_title,
-       x = "Network probability",
+       x = "Number of neighbours",
        y = "Median")
 
 
 dev.off()
-
-
-
-

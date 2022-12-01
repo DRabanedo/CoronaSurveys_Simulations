@@ -1,18 +1,18 @@
 ** Simulaciones hechas **
 
-Simulations_memory factor 207, 2022, 2023
+Simulations_memory factor 207, 2022, 2023 y sus correspondientes gráficas.
 
-Simulation_networkneighbours_dnd 207, 2022, 2023
+Simulation_networkprobability_dnd 207, 2022, 2023 y sus correspondientes gráficas.
 
-Simulation_networkprobability_dnd 207, 2022, 2023
+Simulation_networkneighbours_dnd 207, 2022, 2023 y sus correspondientes gráficas.
 
-Simulation_numbersubpopulations_dnd 207, ¿2022?
+Simulation_subpopulationsmemoryfactor_dnd 207, 2022, 2023 HAN SALIDO FATAL LAS SIMULACIONES 
+
+Simulation_numbersubpopulations_dnd 207, ¿2022? NO ME FIO REPETIR
 
 Simulation_numbersubpopulations_d 207, 2022, 2023
 
-Simulation_subpopulationsmemoryfactor_dnd 207, 2022, 2023
-
-Simulation_subpopulationsize_dnd 207, 2022, 2023
+Simulation_subpopulationsize_dnd 207, 2022, 2023 y sus correspondientes gráficas
  
 
 ** Simulaciones en proceso **
@@ -22,6 +22,3 @@ Simulation_numbersubpopulations_dnd 2022, 2023
 ** Simulaciones pendientes ** 
 
 Simulation_numbersubpopulations_dnd (hay que repetir estas)
-Simulation_numbersubpopulations_d
-Simulation_subpopulationsmemoryfactor_dnd
-Simulation_subpopulationsize_dnd
