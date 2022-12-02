@@ -305,7 +305,7 @@ gen_Subpopulation_disjoint = function(n, prob_vect){
 
 
 # Subpopulation memory factor function
-gen_Subpopulation_memoryfactor = function(population_buc, M_vis, sub_mem_factor){
+gen_Subpopulation_memoryfactor = function(population_buc, M_vis, sub_mem_factor, net){
   # Function that appends to a dataframe the memory factor (recall error) applied
   # to the subpopulation present
   
@@ -400,8 +400,8 @@ gen_Population_disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor
   population_buc  = cbind(population_buc, reach_memory = r_mem)
   population_buc  = cbind(population_buc, hp_total = hp_t)
   population_buc  = cbind(population_buc, hp_survey = hp_s)
-  population_buc  = cbind(population_buc, gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor))
-  population_buc  = cbind(population_buc, gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor))
+  population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor)
+  population_buc  = gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor)
 
   return(population_buc)
 }
@@ -410,22 +410,22 @@ gen_Population_disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor
 ## Surveys ##
 
 # Uniform survey
-getSurvey = function(n_enc, dataframe){
+gen_Survey = function(n_enc, dataframe){
   # This function makes a sample of size n_enc from dataframe
   
   # n_enc = number of individuals interviewed
   # dataframe = general population 
   
-  sur = dataframe[sample(nrow(dataframe), n_enc, replace = FALSE),]
+  sur = sample(nrow(dataframe), n_enc, replace = FALSE)
   
   # Ordering the dataframe by index
-  enc_pop = enc_pop[order(as.numeric(row.names(enc_pop))), ]
+  sur = sur[order(sur)]
   
   return(sur)
 }
 
 # Survey for the visibility factor estimate
-getSurvey_VF = function(n_enc, pop, vis_matrix, memory_fact){
+gen_Survey_VF = function(n_enc, pop, vis_matrix, memory_fact){
   # This function makes a ordered sample of size n_enc from dataframe to make an estimate 
   # of the visibility factor
   
@@ -547,6 +547,41 @@ matrixHP_visibility = function(M_hp, vis_factor){
 
 # General population generation #
 
+
+gen_Data_uniform = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_mem_factor, beta = 0.115, gamma = 0.115/1.5, chosen_nodes = 1, n_iter = 5, net){
+  # list, contains the network, the population data and the matrix for the GNSUM
+  
+  # N:  Population size
+  # prob_vect:  Vector with the population's probabilities
+  # prob_hp: Hidden Population proportion
+  # vis_factor: Visibility factor
+  # mem_factor: Memory factor
+  # sub_mem_factor: Subpopulation memory factor
+  
+  # Subpopulation dataframe
+  subpop_df = gen_Subpopulation(n, prob_vect)
+  
+  # Hidden population distribution dataframe
+  hp_df = gen_HP(n, prob_hp)
+  
+  # Matrix representing the directed graph that connects individuals with the people of the Hidden Population they know 
+  M_hp     =  matrixHP(net, hp_df)
+  M_vis =  matrixHP_visibility(M_hp, vis_factor)
+  
+  # Dataframe of the population generation
+  population_buc  = hp_df #Hidden population
+  population_buc  = cbind(population_buc, subpop_df) #Subpopulations
+  population_buc  = cbind(population_buc, gen_Reach(net)) #Reach variable
+  population_buc  = cbind(population_buc, gen_Reach_hp(M_hp)) # HP reach variable
+  population_buc  = cbind(population_buc, gen_Reach_hp_memory(population_buc, M_vis, mem_factor)) # HP reach recall error variable
+  population_buc  = cbind(population_buc, gen_Reach_memory(population_buc, mem_factor)) #Reach recall error variable
+  population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor)
+  population_buc  = gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor)
+  
+  # Returns the netwpork, the dataframe with the population data and the visibility matrix
+  return(list(net, population_buc, M_vis))
+}
+
 gen_Data_SIR = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_mem_factor, beta = 0.115, gamma = 0.115/1.5, chosen_nodes = 1, n_iter = 5, net){
   # list, contains the network, the population data and the matrix for the GNSUM
   
@@ -575,7 +610,7 @@ gen_Data_SIR = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_mem_f
   population_buc  = cbind(population_buc, gen_Reach_hp_memory(population_buc, M_vis, mem_factor)) # HP reach recall error variable
   population_buc  = cbind(population_buc, gen_Reach_memory(population_buc, mem_factor)) #Reach recall error variable
   population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor)
-  population_buc  = cbind(population_buc, gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor))
+  population_buc  = gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor)
   
   # Returns the netwpork, the dataframe with the population data and the visibility matrix
   return(list(net, population_buc, M_vis))

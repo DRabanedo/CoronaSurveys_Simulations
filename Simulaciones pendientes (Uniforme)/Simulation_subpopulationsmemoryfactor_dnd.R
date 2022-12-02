@@ -2,6 +2,7 @@
 # Simulation based on the value of the memory factor of the subpopulations, leaving the rest of parameters fixed
 ################################################################################################################
 
+
 t = Sys.time()
 ################ WARNING #########################################################
 # IT IS IMPORTANT TO LEAVE THIS FACTOR AS 0, SINCE THE FIRST POPULATION THAT WE ARE 
@@ -90,7 +91,6 @@ for (h in 1:b) {
 ################################################################################
 
 # Simulation
-  
 for (w in 1:length(parameters)) {
   ## Parameter implementation ##
   sub_memory_factor = parameters[w] 
@@ -156,7 +156,7 @@ for (w in 1:length(parameters)) {
   # Hidden population memory factor #
   memory_factor = sub_memory_factor 
   vect_reach    = Population$reach
-  vect_hp       = Population$hidden_population
+  vect_hp       = Population$hp_total
   vect_hp_vis   = rep(NA, N)
   
   for (j in 1:nrow(Population)) {

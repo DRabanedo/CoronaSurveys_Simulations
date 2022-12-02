@@ -8,7 +8,7 @@ Simulation_networkneighbours_dnd 207, 2022, 2023 y sus correspondientes gráfica
 
 Simulation_subpopulationsmemoryfactor_dnd 207, 2022, 2023 HAN SALIDO FATAL LAS SIMULACIONES 
 
-Simulation_numbersubpopulations_dnd 207, ¿2022? NO ME FIO REPETIR
+Simulation_numbersubpopulations_dnd 207, ¿2022?
 
 Simulation_numbersubpopulations_d 207, 2022, 2023
 
