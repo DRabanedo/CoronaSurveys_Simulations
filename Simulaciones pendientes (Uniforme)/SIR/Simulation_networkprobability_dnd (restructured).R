@@ -5,7 +5,7 @@
 t = Sys.time()
 
 
-N = 10000                   # Population size
+N = 1000                   # Population size
 v_pop_prob = rep(1/10, 5)   # Probability of each subpopulation. As we are working with disjoint and no disjoint subpopulations
                             # sum(v_pop_prob) < 1.
 n_pop = length(v_pop_prob)  # Number of subpopulations
@@ -105,11 +105,11 @@ for (w in 1:length(parameters)) {
   Population_disjoint = cbind(Population_disjoint, reach_memory = Population$reach_memory)
   Population_disjoint = cbind(Population_disjoint, hp_total = Population$hp_total) 
   Population_disjoint = cbind(Population_disjoint, hp_survey = Population$hp_survey)
-  Population_disjoint  = gen_Subpopulation_memoryfactor(Population_disjoint, Mhp_vis, sub_memory_factor, net_sw)
-  Population_disjoint  = gen_Subpopulation_alters_memoryfactor(Population_disjoint, Mhp_vis, sub_memory_factor)
+  Population_disjoint = gen_Subpopulation_memoryfactor(Population_disjoint, Mhp_vis, sub_memory_factor, net_sw)
+  Population_disjoint = gen_Subpopulation_alters_memoryfactor(Population_disjoint, Mhp_vis, sub_memory_factor)
   
   #Vector with the number of people in each subpopulation
-  v_pop_total = getV_pop(n_pop, Population_disjoint)
+  v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
   
   # Not disjoint population analysis #
   
@@ -135,7 +135,7 @@ for (w in 1:length(parameters)) {
   lista_sim = list()
   
   # Population for the VF estimate
-  Population_vf = getSurvey_VF(sum(Population$hidden_population), Population, Mhp_vis, memory_factor)
+  Population_vf = gen_Survey_VF(sum(Population$hidden_population), Population, Mhp_vis, memory_factor)
   
   #Iterations
   for (l in 1:b) {
@@ -236,7 +236,7 @@ for (w in 1:length(parameters)) {
   lista_sim_disjoint = list()
   
   # Population for the visibility factor (vf) estimate
-  Population_disjoint_vf = cbind(Population_disjoint[Population_disjoint$hidden_population == 1,], reach_hp = Population_vf$reach_hp)
+  Population_disjoint_vf = cbind(Population_disjoint[Population_disjoint$hidden_population == 1,] , reach_hp = Population_vf$reach_hp)
   Population_disjoint_vf = cbind(Population_disjoint_vf, reach_hp_memory = Population_vf$reach_hp_memory)
   
   #Iterations
