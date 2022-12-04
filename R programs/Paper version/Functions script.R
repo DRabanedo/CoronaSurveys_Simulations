@@ -381,31 +381,6 @@ getV_pop = function(n_pop, population_buc){
   return(v_pop_total)
 }
 
-
-
-##################################################
-## Auxiliar functions for expecific simulations ##
-
-# This function generates the population with disjoint populations
-gen_Population_disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor, r, r_mem, hp_t, hp_s) {
-  # Generates the entire data for the population
-  
-  # n: the number of individuals
-  # prob_vect: vector with the Subpopulations probabilities
-  # HP:  Hidden Population vector
-  
-  population_buc  = data.frame("hidden_population" = HP)
-  population_buc  = cbind(population_buc, gen_Subpopulation_disjoint(n, prob_vect))
-  population_buc  = cbind(population_buc, reach = r)
-  population_buc  = cbind(population_buc, reach_memory = r_mem)
-  population_buc  = cbind(population_buc, hp_total = hp_t)
-  population_buc  = cbind(population_buc, hp_survey = hp_s)
-  population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor)
-  population_buc  = gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor)
-
-  return(population_buc)
-}
-
 #############
 ## Surveys ##
 
@@ -575,7 +550,7 @@ gen_Data_uniform = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_m
   population_buc  = cbind(population_buc, gen_Reach_hp(M_hp)) # HP reach variable
   population_buc  = cbind(population_buc, gen_Reach_hp_memory(population_buc, M_vis, mem_factor)) # HP reach recall error variable
   population_buc  = cbind(population_buc, gen_Reach_memory(population_buc, mem_factor)) #Reach recall error variable
-  population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor)
+  population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor, net)
   population_buc  = gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor)
   
   # Returns the netwpork, the dataframe with the population data and the visibility matrix
@@ -610,12 +585,33 @@ gen_Data_SIR = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_mem_f
   population_buc  = cbind(population_buc, gen_Reach_hp(M_hp)) # HP reach variable
   population_buc  = cbind(population_buc, gen_Reach_hp_memory(population_buc, M_vis, mem_factor)) # HP reach recall error variable
   population_buc  = cbind(population_buc, gen_Reach_memory(population_buc, mem_factor)) #Reach recall error variable
-  population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor)
+  population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor, net)
   population_buc  = gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor)
   
   # Returns the netwpork, the dataframe with the population data and the visibility matrix
   return(list(net, population_buc, M_vis))
 }
+
+# This function generates the population with disjoint populations
+gen_Population_disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor, r, r_mem, hp_t, hp_s) {
+  # Generates the entire data for the population
+  
+  # n: the number of individuals
+  # prob_vect: vector with the Subpopulations probabilities
+  # HP:  Hidden Population vector
+  
+  population_buc  = data.frame("hidden_population" = HP)
+  population_buc  = cbind(population_buc, gen_Subpopulation_disjoint(n, prob_vect))
+  population_buc  = cbind(population_buc, reach = r)
+  population_buc  = cbind(population_buc, reach_memory = r_mem)
+  population_buc  = cbind(population_buc, hp_total = hp_t)
+  population_buc  = cbind(population_buc, hp_survey = hp_s)
+  population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor, net)
+  population_buc  = gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor)
+  
+  return(population_buc)
+}
+
 
 ################################################################################
 # Visibility factor estimate #
