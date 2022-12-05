@@ -508,7 +508,7 @@ getData = function(N, prob_vect, prob_hp, dim, nei, p, vis_factor, mem_factor, s
 # Visibility factor estimate #
 
 VF_Estimate = function(enc_hp){
-  return(sum(enc_hp$reach_hp_memory))/sum(enc_hp$reach_memory)
+  return(sum(enc_hp$reach_hp_memory)/sum(enc_hp$reach_memory))
 }
 ################################################################################
 

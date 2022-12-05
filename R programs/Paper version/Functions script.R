@@ -617,7 +617,7 @@ gen_Population_disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor
 # Visibility factor estimate #
 
 VF_Estimate = function(enc_hp){
-  return(sum(enc_hp$reach_hp_memory))/sum(enc_hp$reach_memory)
+  return(sum(enc_hp$reach_hp_memory)/sum(enc_hp$reach_memory))
 }
 ################################################################################
 
