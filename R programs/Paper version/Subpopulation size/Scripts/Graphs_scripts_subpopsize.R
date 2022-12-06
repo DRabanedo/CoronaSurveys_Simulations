@@ -12,10 +12,9 @@ library(stringr)
 ######################
 # Data import
 
-simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Subpopulations size/Simulations_subpopulationsize_notdisjoint_2023.csv")
-simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Subpopulations size/Simulations_subpopulationsize_disjoint_2023.csv")
+simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation size/CSV/Simulations_subpopulationsize_notdisjoint_2023.csv")
+simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Subpopulation size/CSV/Simulations_subpopulationsize_disjoint_2023.csv")
 getwd()
-  
 seed_number = 2023
 
 

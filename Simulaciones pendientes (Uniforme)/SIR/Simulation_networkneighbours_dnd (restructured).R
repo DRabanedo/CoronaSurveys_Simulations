@@ -108,7 +108,7 @@ for (w in 1:length(parameters)) {
   Population_disjoint  = gen_Subpopulation_alters_memoryfactor(Population_disjoint, Mhp_vis, sub_memory_factor)
   
   #Vector with the number of people in each subpopulation
-  v_pop_total = getV_pop(n_pop, Population_disjoint)
+  v_pop_total_disjoint = getV_pop(n_pop, Population_disjoint)
 
   # Not disjoint population analysis #
   #Variable reset
