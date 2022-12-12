@@ -260,7 +260,7 @@ timer
 
 ####################### Network analysis #######################################
 ###### Links to the hidden population distribution & Degree distribution #######
-plot_name = str_c("Network_numbersubpopulations_d_", seed_number, ".png")
+plot_name = str_c("Network_numbersubpopulations_d_", seed, ".png")
 
 png(filename = plot_name,
     width = 1000, height = 1000)

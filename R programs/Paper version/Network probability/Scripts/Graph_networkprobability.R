@@ -11,10 +11,9 @@ library(stringr)
 
 ######################
 # Data import
-setwd("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Network probability")
+simulation_data =  read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Network probability/CSV/Simulation_networkprobability_notdisjoint_2023.csv")
+simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Network probability/CSV/Simulation_networkprobability_disjoint_2023.csv")
 
-simulation_data =  read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Network probability/Simulation_networkprobability_notdisjoint_2023.csv")
-simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Network probability/Simulation_networkprobability_disjoint_2023.csv")
 
 seed_number = "2023"
 getwd()

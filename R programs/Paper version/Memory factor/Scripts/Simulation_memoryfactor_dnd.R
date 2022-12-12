@@ -32,7 +32,7 @@ set.seed(seed)
 
 #Graph
 dim = 1      # Graph dimension 
-nei = 15     # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
+nei = 18     # Number of neighbors that each node is connected to. They are neighbors on each side of the node, so they are 2*nei connections
              # before applying the randomization.
 p   = 0.1    # Probability of randomize a connection. It is applied to all connections
 

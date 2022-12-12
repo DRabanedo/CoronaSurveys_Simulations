@@ -13,11 +13,10 @@ library(stringr)
 ######################
 # Data import
 
-setwd("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Number of neighbors")
-simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Number of neighbors/Simulation_networkneighbours_disjoint207.csv")
-simulation_data =  read.csv("~/GitHub/CoronaSurveys_Simulations/Simulaciones pendientes (Uniforme)/CSV/Number of neighbors/Simulation_networkneighbours_notdisjoint207.csv")
+simulation_data_disjoint = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Number of neighbours/CSV/Simulation_networkneighbours_disjoint2023.csv")
+simulation_data = read.csv("~/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Number of neighbours/CSV/Simulation_networkneighbours_notdisjoint2023.csv")
 
-seed_number = "207"
+seed_number = "2023"
 getwd()
 
 simulation_data$data = simulation_data$data*2
@@ -933,7 +932,7 @@ png(filename = plot_name,
 
 ggplot(graph_data_median) + 
   
-  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) + 
+  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_real")) + 
   
   geom_line(aes(x = data, y =  Nh_basic_sum, col = "Nh_basic_sum")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum, col = "Nh_basicvis_sum")) + 
@@ -988,7 +987,7 @@ graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_MoS_disjoint =
 
 graph_data_median_disjoint = cbind(graph_data_median_disjoint, Nh_GNSUM_disjoint  =  Nh_GNSUM_analysis_disjoint$median)
 
-
+simulation_data_disjoint$Nh_real_1
 # Graph creation
 
 plot_name = str_c("Simulation_neighboursnumber_", seed_number, "_disjoint_mediana.png")
@@ -998,7 +997,7 @@ png(filename = plot_name,
     width = 1000, height = 600)
 
 ggplot(graph_data_median_disjoint) + 
-  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_real")) +
   
   geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 
@@ -1046,7 +1045,7 @@ png(filename = plot_name,
 
 ggplot(graph_data_median_total) + 
   
-  geom_line(aes(x = data, y =  Nh_real, col = "Nh_real")) +
+  geom_line(aes(x = data, y =  Nh_Real, col = "Nh_real")) +
   
   geom_line(aes(x = data, y =  Nh_basic_sum_disjoint, col = "Nh_basic_sum_disjoint")) + 
   #geom_line(aes(x = data, y =  Nh_basicvis_sum_disjoint, col = "Nh_basicvis_sum_disjoint")) + 

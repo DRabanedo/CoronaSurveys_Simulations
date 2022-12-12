@@ -317,6 +317,8 @@ gen_Subpopulation_memoryfactor = function(population_buc, M_vis, sub_mem_factor,
   n     = nrow(population_buc)
   n_pop = ncol(dplyr::select(population_buc, starts_with("subpop")))
   ind1  = 1:n
+  population_out = data.frame(data = 1:n)
+  
   
   for(j in 1:n_pop){
     v_1  = rep(NA,n)
@@ -331,11 +333,11 @@ gen_Subpopulation_memoryfactor = function(population_buc, M_vis, sub_mem_factor,
       v_1[i] = max(0,round(rtruncnorm(1, a = vis_yij - 0.5 , b = 2*vis_pob - vis_yij + 0.5,  mean = vis_pob, sd = sub_mem_factor*vis_pob)))
     }
     
-    population_buc = cbind(population_buc,Subpoblacion_total = v_1)
-    names(population_buc)[dim(population_buc)[2]] = str_c("kp_reach_",j)
+    population_out = cbind(population_out,Subpoblacion_total = v_1)
+    names(population_out)[dim(population_out)[2]] = str_c("kp_reach_",j)
   }
   
-  return(population_buc)
+  return(dplyr::select(population_out, -starts_with("data") ))
 }
 
 
@@ -354,6 +356,8 @@ gen_Subpopulation_alters_memoryfactor = function(population_buc, M_vis, sub_mem_
   n     = nrow(population_buc)
   n_pop = ncol(dplyr::select(population_buc, starts_with("subpop")))
   ind1  = 1:n
+  population_out = data.frame(data = 1:n)
+  
 
   for (i in 1:n_pop) {
     i_hp_vis = rep(NA,n)
@@ -361,10 +365,10 @@ gen_Subpopulation_alters_memoryfactor = function(population_buc, M_vis, sub_mem_
     for (j in ind1){
       i_hp_vis[j] = round(rtruncnorm(1, a = -0.5, b =  2*sum(M_vis[ind2,j]) + 0.5, mean = sum(M_vis[ind2,j]), sd = sum(M_vis[ind2,j])*sub_mem_factor)) 
     }
-    population_buc = cbind(population_buc, Subpoblacion_total = i_hp_vis)
-    names(population_buc)[dim(population_buc)[2]] = str_c("kp_alters_",i)
+    population_out = cbind(population_out, Subpoblacion_total = i_hp_vis)
+    names(population_out)[dim(population_out)[2]] = str_c("kp_alters_",i)
   }  
-  return(population_buc)
+  return(dplyr::select(population_out, -starts_with("data") ))
   
 }
 
@@ -550,8 +554,8 @@ gen_Data_uniform = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_m
   population_buc  = cbind(population_buc, gen_Reach_hp(M_hp)) # HP reach variable
   population_buc  = cbind(population_buc, gen_Reach_hp_memory(population_buc, M_vis, mem_factor)) # HP reach recall error variable
   population_buc  = cbind(population_buc, gen_Reach_memory(population_buc, mem_factor)) #Reach recall error variable
-  population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor, net)
-  population_buc  = gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor)
+  population_buc  = cbind(population_buc, gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor, net))
+  population_buc  = cbind(population_buc, gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor))
   
   # Returns the netwpork, the dataframe with the population data and the visibility matrix
   return(list(net, population_buc, M_vis))
@@ -585,8 +589,8 @@ gen_Data_SIR = function(n, prob_vect, prob_hp, vis_factor, mem_factor, sub_mem_f
   population_buc  = cbind(population_buc, gen_Reach_hp(M_hp)) # HP reach variable
   population_buc  = cbind(population_buc, gen_Reach_hp_memory(population_buc, M_vis, mem_factor)) # HP reach recall error variable
   population_buc  = cbind(population_buc, gen_Reach_memory(population_buc, mem_factor)) #Reach recall error variable
-  population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor, net)
-  population_buc  = gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor)
+  population_buc  = cbind(population_buc, gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor, net))
+  population_buc  = cbind(population_buc, gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor))
   
   # Returns the netwpork, the dataframe with the population data and the visibility matrix
   return(list(net, population_buc, M_vis))
@@ -606,8 +610,8 @@ gen_Population_disjoint <- function(n, net, prob_vect, HP, M_vis, sub_mem_factor
   population_buc  = cbind(population_buc, reach_memory = r_mem)
   population_buc  = cbind(population_buc, hp_total = hp_t)
   population_buc  = cbind(population_buc, hp_survey = hp_s)
-  population_buc  = gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor, net)
-  population_buc  = gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor)
+  population_buc  = cbind(population_buc, gen_Subpopulation_memoryfactor(population_buc, M_vis, sub_mem_factor, net))
+  population_buc  = cbind(population_buc, gen_Subpopulation_alters_memoryfactor(population_buc, M_vis, sub_mem_factor))
   
   return(population_buc)
 }

@@ -960,8 +960,8 @@ net_hplinks_distribution = function(net, pop){
 net_analysis = function(net, pop, p, nei){
   # Double plot
   plot1 =  net_degree_distribution(net, p, nei)
-  plot2 = net_hplinks_distribution(net, pop)
-  plt   = grid.arrange(plot1,plot2)
+  plot2 =  net_hplinks_distribution(net, pop)
+  plt   =  grid.arrange(plot1,plot2)
   
   #Variables analysis
   Global_cluster_coefficent = transitivity(net, type = "global")
