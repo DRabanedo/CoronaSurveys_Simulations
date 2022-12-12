@@ -2,21 +2,14 @@
 
 # This script generates the graphs automatically as a png archive #
 
-
-###### Packages ######
-
-library(dplyr)
-library(matrixStats)
-library(ggplot2)
-library(stringr)
+source("~/GitHub/Coronasurveys_paper/Functions script.R")
 
 ######################
 # Data import
-setwd("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Memory factor/Graphs")
+setwd("C:/Users/David Rabanedo/Documents/GitHub/Coronasurveys_paper/Memory factor/Graphs")
 simulation_data = read.csv("C:/Users/David Rabanedo/Documents/GitHub/CoronaSurveys_Simulations/R programs/Paper version/Memory factor/CSV/Simulations_memoryfactor_207.csv")
 
 seed_number = "207"
-getwd()
 
 ################################################################################
 ################################################################################

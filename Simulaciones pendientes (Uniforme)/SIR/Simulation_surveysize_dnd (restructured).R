@@ -61,8 +61,8 @@ v_pop_total_disjoint =  getV_pop(n_pop, Population_disjoint)
 b = 100 
 
 # Study parameters
-parameters    = round(seq(from = 1, to = N, length.out = 100))
-parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 100))
+parameters    = round(seq(from = 1, to = N, length.out = 20))
+parameters_hp = round(seq(from = 1, to = sum(Population$hidden_population), length.out = 20))
 
 simulaciones = data.frame(data = parameters)
 simulaciones_disjoint = data.frame(data = parameters)
